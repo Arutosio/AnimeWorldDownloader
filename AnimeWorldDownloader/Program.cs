@@ -16,6 +16,7 @@ namespace AnimeWorldDownloader
             int riprendiDalla = 0, nEpisodi = 0;
             /*Preparation Fase*/
             Console.WriteLine("--- ~~~Welcome to MultiDownloadFile whit a link Reference!~~~ ---");
+            Console.WriteLine("--- ~~~ https://www.animeworld.it/ ~~~ ---");
             pLink = getLinkT();
             nFile = getFileName(pLink);
             replace = getRemplaceChange();
