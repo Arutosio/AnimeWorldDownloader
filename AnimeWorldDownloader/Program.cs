@@ -40,8 +40,7 @@ namespace AnimeWorldDownloader
         }
         public static string getFileName(string pLink)
         {
-            //return pLink.Split("/")[pLink.Split("/").Length - 1];
-            return null;
+            return pLink.Split('/')[pLink.Split('/').Length - 1];
         }
         public static string getRemplaceChange()
         {
