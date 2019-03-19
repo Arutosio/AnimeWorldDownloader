@@ -10,4 +10,5 @@ You need a Extract for exsample [7zip](https://www.7-zip.org/).
   - [b](#b)
 
 # Guida all'utilizzo
+Per un corretto funzionamento estrarre il file EXE dal .zip 
 In elaborazione.....
