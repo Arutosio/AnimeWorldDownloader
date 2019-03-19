@@ -6,5 +6,8 @@ You need a Extract for exsample [7zip](https://www.7-zip.org/).
 
 - [AnimeWorldDownloader2.4.exe](https://puu.sh/D2s9g/4539aaccd2.zip)
 - [AnimeWorldDownloader1.0.exe](https://puu.sh/D1VgY/c9003a87f0.7z)
-- [z](#)
+- [Guida all'utilizzo](#Guida all'utilizzo)
   - [a](#a)
+
+# Guida all'utilizzo
+In elaborazione.....
