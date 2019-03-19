@@ -17,7 +17,7 @@ In elaborazione.....
 
 ### Note di Rilascio
  - [Versione 2.5]
-    Corezione Gramaticale da parte di Jamlegend
+    Corezione Grammaticale da parte di Jamlegend
  - [Versione 2.4]
     Implementazione dei Colori e miglioramenti della logica applicativa.
 Per un corretto funzionamento estrarre il file EXE dal .zip 
