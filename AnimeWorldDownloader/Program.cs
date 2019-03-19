@@ -105,7 +105,8 @@ namespace AnimeWorldDownloader
         public static string GetFolderName(string pLink)
         {
             string res = pLink.Split('/')[pLink.Split('/').Length - 1].Split('_')[0];
-            Console.WriteLine("Imposto per la creazione della cartella..  " + res );
+            Console.Write("Imposto per la creazione della cartella..  "); Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(res); Console.ResetColor();
             return res;
         }
         public static void CreateFolder(string path, string name)
