@@ -20,5 +20,4 @@ In elaborazione.....
     Corezione Grammaticale da parte di Jamlegend
  - [Versione 2.4]
     Implementazione dei Colori e miglioramenti della logica applicativa.
-Per un corretto funzionamento estrarre il file EXE dal .zip 
-In elaborazione.....
+    <br>
