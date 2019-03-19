@@ -14,7 +14,7 @@ namespace AnimeWorldDownloader
             path = path.Replace(path.Split('\\')[path.Split('\\').Length -1],"");
             int riprendiDalla = 0, nEpisodi = 0;
             /*Preparation Fase*/
-            Console.WriteLine("--- <-_ Benvenuti su AnimeWorldDownloader _-> ---");
+            Console.WriteLine("--- <-_ Benvenuti su AnimeWorldDownloader by Arutosio - Testo a cura di Jamlegend _-> ---");
             Console.Write("        ~  "); Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("Per informazione consultare la pagina GitHub della repository");
             Console.ResetColor(); Console.WriteLine("  ~       ");
@@ -50,7 +50,7 @@ namespace AnimeWorldDownloader
         }
         public static string GetPLink()
         {
-            Console.Write("--- Inserisci il link di del File da Scaricare: ");
+            Console.Write("--- Inserisci l'URL diretto dell'episodio da Scaricare: ");
             string res;
             Console.ForegroundColor = ConsoleColor.Cyan; res = Console.ReadLine(); Console.ResetColor();
             return res;
@@ -62,7 +62,7 @@ namespace AnimeWorldDownloader
         public static string GetRemplaceChange()
         {
             string res;
-            Console.Write("--- Inserisci la parte da incrementare che rapresenta il N di quel episodio ES 00, 04, 11: ");
+            Console.Write("--- Inserisci il Numero dell'episodio tratto dall'URL (ES:00, 04, 11): ");
             Console.ForegroundColor = ConsoleColor.Yellow; res = Console.ReadLine(); Console.ResetColor();
             return res;
         }
@@ -97,7 +97,7 @@ namespace AnimeWorldDownloader
             int res = 0;
             do
             {
-                Console.Write("--- Inserisci il numero del episodi che vuoi riprendere a scaricare: "); Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("--- Inserisci il numero dell'episodio da cui vuoi riprendere a scaricare: "); Console.ForegroundColor = ConsoleColor.Yellow;
                 try { res = Convert.ToInt32(Console.ReadLine()); repeatC = false; }
                 catch { Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("--- Non hai inserito un numero valido"); }
                 Console.ResetColor();
@@ -118,12 +118,12 @@ namespace AnimeWorldDownloader
                 // Determine whether the directory exists.
                 if (!Directory.Exists(path+name))
                 {
-                    Console.WriteLine("Vera creata una caretta con il nome di " + name);
+                    Console.WriteLine("Verrà creata una cartella con il nome: " + name);
                 } else return;
 
                 // Try to create the directory.
                 DirectoryInfo di = Directory.CreateDirectory(path+name);
-                Console.Write("La cartella e stata creata con successo at "); Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.Write("La cartella e stata creata con successo. "); Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine(Directory.GetCreationTime(path+name)); Console.ResetColor();
 
                 // Delete the directory.
