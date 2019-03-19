@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Net;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AnimeWorldDownloader
 {
@@ -12,84 +10,142 @@ namespace AnimeWorldDownloader
         static void Main(string[] args)
         {
             /*Declaration Fase */
-            string pLink, link, nFile, replace, wRepla;
+            string pLink, link, nFile, replace, wRepla, path = System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("AnimeWorldDownloader.exe", "");
             int riprendiDalla = 0, nEpisodi = 0;
             /*Preparation Fase*/
-            Console.WriteLine("--- ~~~Welcome to MultiDownloadFile whit a link Reference!~~~ ---");
-            Console.WriteLine("--- ~~~ https://www.animeworld.it/ ~~~ ---");
-            pLink = getLinkT();
-            nFile = getFileName(pLink);
-            replace = getRemplaceChange();
-            nEpisodi = getNEpisodi();
-            if (isRipresa()) { riprendiDalla = getNERiprendere(); }
+            Console.WriteLine("--- <-_ Benvenuti su AnimeWorldDownloader _-> ---");
+            Console.Write("        ~  "); Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("Per informazione consultare la pagina GitHub");
+            Console.ResetColor(); Console.WriteLine("  ~       ");
+            Console.ResetColor();
+            LineFase("Inizio fase PREPARATORIA");
+            pLink = GetPLink();
+            nFile = GetFileName(pLink);
+            replace = GetRemplaceChange();
+            nEpisodi = GetNEpisodi();
+            if (IsRipresa()) { riprendiDalla = GetNERiprendere(); }
             /*Star proces Fase*/
+            LineFase("Inizio fase SCARICAMENTO!");
+            CreateFolder(path, nFile.Split('_')[0]);
             for (int i = riprendiDalla; nEpisodi >= i; i++)
             {
                 wRepla = i < 10 ? "0" + i : "" + i;
                 link = pLink.Replace(replace, wRepla);
                 Console.WriteLine();
-                Console.WriteLine("--- GET ~ " + link);
-                DoAGetRequest(link, nFile.Replace(replace, wRepla));
+                Console.Write("GET> ");
+                Console.ForegroundColor = ConsoleColor.Cyan; Console.WriteLine(link); ; Console.ResetColor();
+                DoAGetRequest(link, path+ nFile.Split('_')[0]+@"\"+nFile.Replace(replace, wRepla));
             }
-            Console.WriteLine("--- PROCESS COMPETE! ---");
+            Console.Write("\r\n======"); Console.ForegroundColor = ConsoleColor.Green; Console.Write("PROCESSO COMPLETATO!"); Console.ResetColor(); Console.WriteLine("====== premi un tasto per chiudere il programma.");
             Console.ReadKey();
         }
-        public static string getLinkT()
+        public static void LineFase(String text)
         {
-            Console.Write("--- Inserisci il link di template: ");
-            return Console.ReadLine();
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.Write("::::::::::::::::::::::"); Console.ForegroundColor = ConsoleColor.Black;
+            Console.Write(text); Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("::::::::::::::::::::::\r\n"); Console.ResetColor();
         }
-        public static string getFileName(string pLink)
+        public static string GetPLink()
+        {
+            Console.Write("--- Inserisci il link di del File da Scaricare: ");
+            string res;
+            Console.ForegroundColor = ConsoleColor.Cyan; res = Console.ReadLine(); Console.ResetColor();
+            return res;
+        }
+        public static string GetFileName(string pLink)
         {
             return pLink.Split('/')[pLink.Split('/').Length - 1];
         }
-        public static string getRemplaceChange()
+        public static string GetRemplaceChange()
         {
-            Console.Write("--- Inserisci la parte da incrementare: ");
-            return Console.ReadLine();
+            string res;
+            Console.Write("--- Inserisci la parte da incrementare che rapresenta il N di quel episodio ES 00, 04, 11: ");
+            Console.ForegroundColor = ConsoleColor.Yellow; res = Console.ReadLine(); Console.ResetColor();
+            return res;
         }
-        public static int getNEpisodi()
+        public static int GetNEpisodi()
         {
             bool repeatC = true;
             int res = 0;
             do
             {
-                Console.Write("--- Inserisci il numero di episodi: ");
-                try { res = Convert.ToInt32(Console.ReadLine()); repeatC = false; }
-                catch { Console.WriteLine("--- Non hai inserito un numero valido"); }
+                Console.Write("--- Inserisci il numero di episodi: "); Console.ForegroundColor = ConsoleColor.Yellow;
+                try { res = Convert.ToInt32(Console.ReadLine()); Console.ResetColor(); repeatC = false; }
+                catch { Console.ResetColor(); Console.WriteLine("--- Non hai inserito un numero valido"); }
             } while (repeatC);
             return res;
         }
-        public static bool isRipresa()
+        public static bool IsRipresa()
         {
-            Console.Write("--- Devi riprendere da una certa puntata? [y = yes]: ");
-            if (Console.ReadKey().KeyChar.ToString().Equals("y"))
+            Console.Write("--- Devi riprendere da una certa puntata?["); Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("y"); Console.ResetColor(); Console.Write("= yes]: "); Console.ForegroundColor = ConsoleColor.Green;
+            if (Console.ReadKey().KeyChar.ToString().ToLower().Equals("y"))
+            {
+                Console.ResetColor();
+                Console.WriteLine();
                 return true;
+            }
+            Console.ResetColor();
             return false;
         }
-        public static int getNERiprendere()
+        public static int GetNERiprendere()
         {
             bool repeatC = true;
             int res = 0;
             do
             {
-                Console.Write("--- Inserisci il numero del episodi che vuoi riprendere a scaricare: ");
+                Console.Write("--- Inserisci il numero del episodi che vuoi riprendere a scaricare: "); Console.ForegroundColor = ConsoleColor.Yellow;
                 try { res = Convert.ToInt32(Console.ReadLine()); repeatC = false; }
-                catch { Console.WriteLine("--- Non hai inserito un numero valido"); }
+                catch { Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("--- Non hai inserito un numero valido"); }
+                Console.ResetColor();
             } while (repeatC);
             return res;
+        }
+        public static string GetFolderName(string pLink)
+        {
+            string res = pLink.Split('/')[pLink.Split('/').Length - 1].Split('_')[0];
+            Console.WriteLine("Imposto per la creazione della cartella..  " + res );
+            return res;
+        }
+        public static void CreateFolder(string path, string name)
+        {
+            try
+            {
+                // Determine whether the directory exists.
+                if (!Directory.Exists(path+name))
+                {
+                    Console.WriteLine("Vera creata una caretta con il nome di " + name);
+                } else return;
+
+                // Try to create the directory.
+                DirectoryInfo di = Directory.CreateDirectory(path+name);
+                Console.Write("La cartella e stata creata con successo at "); Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine(Directory.GetCreationTime(path+name)); Console.ResetColor();
+
+                // Delete the directory.
+                //di.Delete();
+                //Console.WriteLine("The directory was deleted successfully.");
+            }
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("The process failed: {0}");Console.WriteLine(e.ToString());
+                Console.ResetColor();
+            }
+            finally { }
         }
         public static void DoAGetRequest(string link, string nFileFix)
         {
             // Construct HTTP request to get the file
-            Console.Write("--- Dowloading... " + nFileFix);
+            Console.Write("--- Dowloading: "); Console.ForegroundColor = ConsoleColor.Yellow;  Console.WriteLine(GetFileName(link)); Console.ResetColor();
             try
             {
                 using (var client = new WebClient())
                 { client.DownloadFile(link, nFileFix); }
-                Console.WriteLine("---> DONE!");
+                Console.Write("   ===> "); Console.ForegroundColor = ConsoleColor.Green; Console.WriteLine("DONE!"); Console.ResetColor();
             }
-            catch { Console.WriteLine("--- Error File Not Found: " + nFileFix); }
+            catch { Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("   ### Error ###"); Console.ResetColor(); }
         }
     }
 }
