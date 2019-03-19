@@ -10,14 +10,16 @@ namespace AnimeWorldDownloader
         static void Main(string[] args)
         {
             /*Declaration Fase */
-            string pLink, link, nFile, replace, wRepla, path = System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("AnimeWorldDownloader.exe", "");
+            string pLink, link, nFile, replace, wRepla, path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            path = path.Replace(path.Split('\\')[path.Split('\\').Length -1],"");
             int riprendiDalla = 0, nEpisodi = 0;
             /*Preparation Fase*/
             Console.WriteLine("--- <-_ Benvenuti su AnimeWorldDownloader _-> ---");
             Console.Write("        ~  "); Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("Per informazione consultare la pagina GitHub");
+            Console.Write("Per informazione consultare la pagina GitHub della repository");
             Console.ResetColor(); Console.WriteLine("  ~       ");
             Console.ResetColor();
+            Console.Write("Path: "); Console.ForegroundColor = ConsoleColor.Yellow; Console.WriteLine(path); Console.ResetColor();
             LineFase("Inizio fase PREPARATORIA");
             pLink = GetPLink();
             nFile = GetFileName(pLink);
