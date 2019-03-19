@@ -1,8 +1,10 @@
 # AnimeWorldDownloader
-Link Download [AnimeWorldDownloader.exe](https://puu.sh/D1VgY/c9003a87f0.7z). <br>
-Extract with [7zip](https://www.7-zip.org/).
+Link Download Last Versione[AnimeWorldDownloader.exe](https://puu.sh/D1VgY/c9003a87f0.7z). <br>
+You need a Extract for exsample [7zip](https://www.7-zip.org/).
 
-**If you have problems with the driver, please read the FAQ:**
+**All Versione:**
 
-- [z](#z)
+- [AnimeWorldDownloader2.4.exe](https://puu.sh/D2s9g/4539aaccd2.zip)
+- [AnimeWorldDownloader1.0.exe](https://puu.sh/D1VgY/c9003a87f0.7z)
+- [z](#)
   - [a](#a)
