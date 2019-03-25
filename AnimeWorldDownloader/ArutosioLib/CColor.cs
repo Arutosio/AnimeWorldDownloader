@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnimeWorldDownloader.TerminalColor
+namespace AnimeWorldDownloader.ArutosioLib
 {
     public static class CColor
     {

@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Net;
 using System.IO;
-using AnimeWorldDownloader.TerminalColor;
+using AnimeWorldDownloader.ArutosioLib;
+using System.ComponentModel;
 
 namespace AnimeWorldDownloader
 {
     class Program
     {
+        public static ProgressLine pL;
+        
         static void Main(string[] args)
         {
-            //Console.WriteLine("{0:0.00}%", PersentageCalculation(103.7, 253.3));
             /*Declaration Fase */
             string pLink, link, nFile, replace, wRepla, path = System.Reflection.Assembly.GetExecutingAssembly().Location;
             path = path.Replace(path.Split('\\')[path.Split('\\').Length - 1], "");
             int riprendiDalla = 0, nEpisodi = 0;
             /*Preparation FASE*/
             Console.WriteLine("--- <-_ Benvenuti su AnimeWorldDownloader by Arutosio - Testo a cura di Jamlegend _-> ---");
-            Console.Write("        ~  "); CColor.WriteC("Per informazione consultare la pagina GitHub della repository", "cyan"); Console.WriteLine("  ~       ");
+            Console.Write("         ~  "); CColor.WriteC("Per informazione consultare la pagina GitHub della repository", "cyan"); Console.WriteLine("  ~        ");
 
             Console.Write("Path: "); CColor.WriteC(path,"yellow");
             do
@@ -34,20 +36,24 @@ namespace AnimeWorldDownloader
 
                 nEpisodi = GetNumberOfC("--- Inserisci il numero di episodi: ", "yellow");
 
-                if (IsRipresa()) { riprendiDalla = GetNumberOfC("--- Inserisci il numero dell'episodio da cui vuoi riprendere a scaricare: ", "yellow"); }
+                if (IsRipresa()) { riprendiDalla = GetNumberOfC("--- Inserisci il numero dell'episodio da cui vuoi riprendere a scaricare: ", "yellow"); } else riprendiDalla = 0;
 
                 /*Procces FASE*/
                 LineFase("Inizio fase SCARICAMENTO!");
 
                 CreateFolder(path, nFile.Split('_')[0]);
+                //Console.CursorVisible = false;
                 for (int i = riprendiDalla; nEpisodi >= i; i++)
                 {
+                    pL = new ProgressLine(20);
                     wRepla = i < 10 ? "0" + i : "" + i;
                     link = pLink.Replace(replace, wRepla);
-                    Console.Write("GET> "); CColor.WriteLineC(link,"cyan");
-                    DoAGetRequest(link, path + nFile.Split('_')[0] + @"\" + nFile.Replace(replace, wRepla));
+                    Console.Write(" GET> "); CColor.WriteLineC(link,"cyan");
+                    FileDownloader.DoAGetRequest(link, path + nFile.Split('_')[0] + @"\" + nFile.Replace(replace, wRepla));
+                    pL.SincePrintProgress();
                 }
-                Console.Write("======"); CColor.WriteC("PROCESSO CONCLUSO!","green"); Console.WriteLine("======");
+                //Console.CursorVisible = true;
+                Console.Write("\r\n======> "); CColor.WriteC("PROCESSO CONCLUSO!","green"); Console.WriteLine(" <======");
                 Console.Write("Premi "); CColor.WriteC("Y", "green"); Console.Write(" se vuoi scaricare un'altro anime, altrimenti premi un altro tasto per "); CColor.WriteC("USCIRE", "red"); Console.Write(": ");
             } while (Console.ReadKey().KeyChar.ToString().ToLower().Equals("y"));
         }
@@ -83,6 +89,7 @@ namespace AnimeWorldDownloader
                 Console.WriteLine();
                 return true;
             }
+            Console.WriteLine();
             return false;
         }
         public static void CreateFolder(string path, string name)
@@ -111,18 +118,6 @@ namespace AnimeWorldDownloader
                 Console.ResetColor();
             }
             finally { }
-        }
-        public static void DoAGetRequest(string link, string nFileFix)
-        {
-            // Construct HTTP request to get the file
-            Console.Write("--- Dowloading: "); CColor.WriteLineC(link.Split('/')[link.Split('/').Length - 1], "yellow");
-            try
-            {
-                using (var client = new WebClient())
-                { client.DownloadFile(link, nFileFix); }
-                Console.Write("   ===> "); CColor.WriteLineC("DONE! \r\n", "green");
-            }
-            catch { CColor.WriteLineC("   ### Error ### \r\n", "red"); }
         }
     }
 }

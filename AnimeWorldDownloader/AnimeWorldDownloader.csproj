@@ -80,7 +80,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TerminalColor\CColor.cs" />
+    <Compile Include="ArutosioLib\CColor.cs" />
+    <Compile Include="ArutosioLib\FileDownloader.cs" />
+    <Compile Include="ArutosioLib\ProgressBar.cs" />
+    <Compile Include="ArutosioLib\ProgressLine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
