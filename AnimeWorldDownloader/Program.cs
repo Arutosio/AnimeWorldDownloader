@@ -45,7 +45,7 @@ namespace AnimeWorldDownloader
                 //Console.CursorVisible = false;
                 for (int i = riprendiDalla; nEpisodi >= i; i++)
                 {
-                    pL = new ProgressLine(20);
+                    pL = new ProgressLine(30);
                     wRepla = i < 10 ? "0" + i : "" + i;
                     link = pLink.Replace(replace, wRepla);
                     Console.Write(" GET> "); CColor.WriteLineC(link,"cyan");

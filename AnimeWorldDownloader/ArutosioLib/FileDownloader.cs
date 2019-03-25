@@ -40,8 +40,7 @@ namespace AnimeWorldDownloader.ArutosioLib
             catch (WebException ex)
             {
                 Program.pL.Percent = -1;
-                CColor.WriteLineC(" ### " + ex.Message, "red");
-                valid = false;
+                Console.Write(" =====> "); CColor.WriteLineC(" ### " + ex.Message, "red");
             }
             return valid;
         }
