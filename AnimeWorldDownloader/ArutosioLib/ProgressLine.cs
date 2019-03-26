@@ -51,24 +51,21 @@ namespace AnimeWorldDownloader.ArutosioLib
         public void SincePrintProgress()
         {
             Console.CursorVisible = false;
-            if (Percent != -1)
+            Console.Write(" =====> ");
+            while (Percent <= stepProgress)
             {
-                Console.Write(" =====> ");
-                while (Percent <= stepProgress)
-                {
-                    if (stepProgress == Percent)
-                        stepProgress = 99;
-                    // Generate new state 
-                    int width = (int)(Percent / 100 * barLength);
-                    int fill = barLength - width;
-                    //Delete Last String
-                    string clear = string.Empty.PadRight(LastOutputLength, '\b');
-                    Console.Write(clear);
-                    Console.Write((Percent < 10 ? "  " : (Percent >= 10 && Percent < 100) ? " " : "") + "{0:0.0}% [ ", Percent); CColor.WriteC(string.Empty.PadLeft(width, '█'), "green"); Console.Write("{0} ] - ", string.Empty.PadLeft(fill, ' '));
-                    LastOutputLength = 5 + "% [ ".Length + barLength + " ] - ".Length;
-                }
-                CColor.WriteC(" DONE", "green"); Console.WriteLine('!');
+                if (stepProgress == Percent)
+                    stepProgress = 99;
+                // Generate new state 
+                int width = (int)(Percent / 100 * barLength);
+                int fill = barLength - width;
+                //Delete Last String
+                string clear = string.Empty.PadRight(LastOutputLength, '\b');
+                Console.Write(clear);
+                Console.Write((Percent < 10 ? "  " : (Percent >= 10 && Percent < 100) ? " " : "") + "{0:0.0}% [ ", Percent); CColor.WriteC(string.Empty.PadLeft(width, '█'), "green"); Console.Write("{0} ] - ", string.Empty.PadLeft(fill, ' '));
+                LastOutputLength = 5 + "% [ ".Length + barLength + " ] - ".Length;
             }
+            CColor.WriteC(" DONE", "green"); Console.WriteLine('!');
             Console.CursorVisible = true;
         }
     }

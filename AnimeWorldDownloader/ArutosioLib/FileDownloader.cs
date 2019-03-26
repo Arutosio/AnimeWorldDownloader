@@ -14,23 +14,21 @@ namespace AnimeWorldDownloader.ArutosioLib
     {
         public static void DoAGetRequest(string link, string nFileFix)
         {
-            //if (CheckURLValid(link)) {
-                // Construct HTTP request to get the file
-                Console.Write("--- Dowloading: "); CColor.WriteLineC(link.Split('/').Last(), "yellow");
-                using (WebClient client = new WebClient())
+            // Construct HTTP request to get the file
+            Console.Write("--- Dowloading: "); CColor.WriteLineC(link.Split('/').Last(), "yellow");
+            using (WebClient client = new WebClient())
+            {
+                try
                 {
-                    try
-                    {
-                        // Specify that the DownloadFileCallback method gets called
-                        // Specify a progress notification handler.
-                        client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressCallback);
-                        // when the download completes.
-                        //client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadFileCallback);
-                        client.DownloadFileAsync(new Uri(link), nFileFix);
-                    }
-                    catch(Exception ex){ Program.pL.Percent = -1; CColor.WriteLineC(" ### Error # \r\n" + ex.Message, "red"); }
+                    // Specify that the DownloadFileCallback method gets called
+                    // Specify a progress notification handler.
+                    client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressCallback);
+                    // when the download completes.
+                    //client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadFileCallback);
+                    client.DownloadFileAsync(new Uri(link), nFileFix);
                 }
-            //}else { Program.pL.Percent = -1; CColor.WriteLineC(" ### Error # Link non valido o non trovato. \r\n", "red"); }
+                catch(Exception ex){ Program.pL.Percent = -1; CColor.WriteLineC(" ### Error # \r\n" + ex.Message, "red"); }
+            }
         }
         public static bool CheckURLValid(string source)
         {
@@ -72,7 +70,6 @@ namespace AnimeWorldDownloader.ArutosioLib
             }
             catch (WebException ex)
             {
-                Program.pL.Percent = -1;
                 Console.Write(" =====> "); CColor.WriteLineC(" ### " + ex.Message, "red");
             }
             return valid;
