@@ -4,7 +4,7 @@ You need a Extract for exsample [7zip](https://www.7-zip.org/).
 
 ## Guida all'utilizzo
  - Note: la guida non è ancora conclusa per tanto è in fase di creazione. <br>
- -                          SI ACCETANO VOLONTARI PER LA SCRITTURA DELLA GUIDA.
+ -                SI ACCETANO VOLONTARI PER LA SCRITTURA DELLA GUIDA [Discord](https://discord.gg/K9NHNrx).
 Per un corretto funzionamento estrarre il file EXE dall'archivio .7z o .zip <br>
 **Immagine dimostrativa.**
 ![](https://puu.sh/D5M6I/a1083533c4.png)
@@ -21,8 +21,10 @@ la causa dell'errore al primo episodio sta sul fatto che non non esista un episo
 
 ### Note di Rilascio
  - [Versione 3.0.1]
-    Nuovo aggiornamento che introduce una progressbar che mostra la percentuale del download corrente.
-    fix vari.
+    Nuovo aggiornamento che introduce una progress bar che mostra la percentuale del download corrente.
+    Nel caso il link dia errore restituisce l'errore 404 Not Found.
+    Aggiunta di una funzionalita non ancora in uso per una versione futura.
+    Fix vari.
  - [Versione 2.8]
     Aggiunta la possibilita a fine dowload di poter ripetere con un altro download o uscire. 
     Miglioramento del codice con funzionalita non aggiunte non ancora abbilitate.
