@@ -48,8 +48,11 @@ namespace AnimeWorldDownloader
                     wRepla = i < 10 ? "0" + i : "" + i;
                     link = pLink.Replace(replace, wRepla);
                     Console.Write(" GET> "); CColor.WriteLineC(link,"cyan");
-                    FileDownloader.DoAGetRequest(link, path + nFile.Split('_')[0] + @"\" + nFile.Replace(replace, wRepla));
-                    pL.SincePrintProgress();
+                    if(FileDownloader.IsURLExist(link))
+                    {
+                        FileDownloader.DoAGetRequest(link, path + nFile.Split('_')[0] + @"\" + nFile.Replace(replace, wRepla));
+                        pL.SincePrintProgress();
+                    }
                 }
                 Console.Write("\r\n======> "); CColor.WriteC("PROCESSO CONCLUSO!","green"); Console.WriteLine(" <======");
                 Console.Write("Premi "); CColor.WriteC("Y", "green"); Console.Write(" se vuoi scaricare un'altro anime, altrimenti premi un altro tasto per "); CColor.WriteC("USCIRE", "red"); Console.Write(": ");
