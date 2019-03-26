@@ -3,11 +3,12 @@ Link Download a LastVersione [AnimeWorldDownloader.exe](https://puu.sh/D5L7d/2ef
 You need a Extract for exsample [7zip](https://www.7-zip.org/).
 
 ## Guida all'utilizzo
-Per un corretto funzionamento estrarre il file EXE dal .zip
+Per un corretto funzionamento estrarre il file EXE dal .zip <br>
 **Immagine dimostrativa.**
 ![](https://puu.sh/D5M6I/a1083533c4.png)
-la causa dell'errore nell'ultimo episodio sta sul fatto che non sia ancora uscito, quindi non essendoci un link non da error 404 
+la causa dell'errore al primo episodio sta sul fatto che non non esista un episodio 00(prologo solitamente), quindi non essendoci un link da error 404 
 In elaborazione.....
+
 **All Versione:**
 - [AnimeWorldDownloader3.0.1.exe](https://puu.sh/D5L7d/2efe8766b0.7z)
 - [AnimeWorldDownloader2.8.exe](https://puu.sh/D3sxu/23bab32ff5.zip)
