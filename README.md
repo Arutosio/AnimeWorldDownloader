@@ -2,7 +2,7 @@
 [Discord](https://discord.gg/K9NHNrx)
 Link Download a LastVersione [AnimeWorldDownloader.7z](https://puu.sh/D5L7d/2efe8766b0.7z). <br>
 You need a Extract for exsample [7zip](https://www.7-zip.org/).
-
+ 
 ## Guida all'utilizzo
  - Note: la guida non è ancora conclusa per tanto è in fase di creazione. <br>
  -                SI ACCETANO VOLONTARI PER LA SCRITTURA DELLA GUIDA.
@@ -11,13 +11,21 @@ Per un corretto funzionamento estrarre il file EXE dall'archivio .7z o .zip <br>
 ![](https://puu.sh/D5M6I/a1083533c4.png)
 la causa dell'errore al primo episodio sta sul fatto che non non esista un episodio 00(prologo solitamente), quindi non essendoci un link causa l'error 404 Page Not Found. <br>
 
+### Da sapere sul funzionamento
+- Il programma si puo utilizare anche per scaricare altre cose purche mantenganolo lo stesso protocollo utilizato da AnimeWorldDownloader. 
+- Il nome del file scaricato viene applicato in base al nome del file originale sul URL.
+- il numero che va sostituito non fa altro che editare il link impostando i numeri che vanno a incrementare. Importante che se il numero è minore di 10 viene aggiunto 0 davanti al numero del link da noi inserito nella fase iniziale dopo la sostituzione esempio:
+  - Link inserito nella all'inizio (http://www.planetwith.it/...aiorita/WatashiNiTenshiGaMaiorita_Ep_12_SUB_ITA.mp4) 
+  - Numero da sostituire nel nostro caso il 12 perche il link ha il 12 ma poteva essere anche un 02, 07, 10, ecc.. <br>
+  questo serve a indicare quale sara la parte da rimpiazare sul link per determinare il link dell'episodio.
+
 **All Versione:**
 - [AnimeWorldDownloader3.0.1.7z](https://puu.sh/D5L7d/2efe8766b0.7z)
 - [AnimeWorldDownloader2.8.zip](https://puu.sh/D3sxu/23bab32ff5.zip)
 - [AnimeWorldDownloader2.5.7z](https://puu.sh/D2tGW/ccb612501c.7z)
 - [AnimeWorldDownloader2.4.zip](https://puu.sh/D2s9g/4539aaccd2.zip)
 - [AnimeWorldDownloader1.0.7z](https://puu.sh/D1VgY/c9003a87f0.7z)
-- [a](#a) - [b](#b) - [b](#b)
+- [a](#a) - [b](#b) - [c](#b) - [d](#d) - [e](#e) - [f](#f) - [g](#g)
 
 ### Note di Rilascio
  - [Versione 3.0.1]
