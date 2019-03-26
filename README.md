@@ -2,7 +2,7 @@
 [Discord](https://discord.gg/K9NHNrx)
 Link Download a LastVersione [AnimeWorldDownloader.7z](https://puu.sh/D5L7d/2efe8766b0.7z). <br>
 You need a Extract for exsample [7zip](https://www.7-zip.org/).
-Gramatica a cura di Jamlegend 
+
 ## Guida all'utilizzo
  - Note: la guida non è ancora conclusa per tanto è in fase di creazione. <br>
  -                SI ACCETANO VOLONTARI PER LA SCRITTURA DELLA GUIDA.
@@ -41,3 +41,5 @@ la causa dell'errore al primo episodio, sta' sul fatto che non esiste un episodi
  - [Versione 2.4]
     Implementazione dei Colori e miglioramenti della logica applicativa.
     <br>
+    
+#### Gramatica a cura di Jamlegend 
