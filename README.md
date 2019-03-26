@@ -1,10 +1,11 @@
 # AnimeWorldDownloader
+[Discord](https://discord.gg/K9NHNrx)
 Link Download a LastVersione [AnimeWorldDownloader.7z](https://puu.sh/D5L7d/2efe8766b0.7z). <br>
 You need a Extract for exsample [7zip](https://www.7-zip.org/).
 
 ## Guida all'utilizzo
  - Note: la guida non è ancora conclusa per tanto è in fase di creazione. <br>
- -                SI ACCETANO VOLONTARI PER LA SCRITTURA DELLA GUIDA [Discord](https://discord.gg/K9NHNrx).
+ -                SI ACCETANO VOLONTARI PER LA SCRITTURA DELLA GUIDA.
 Per un corretto funzionamento estrarre il file EXE dall'archivio .7z o .zip <br>
 **Immagine dimostrativa.**
 ![](https://puu.sh/D5M6I/a1083533c4.png)
