@@ -4,7 +4,7 @@ You need a Extract for exsample [7zip](https://www.7-zip.org/).
 
 ## Guida all'utilizzo
  - Note: la guida non è ancora conclusa per tanto è in fase di elaborazione <br>
-Per un corretto funzionamento estrarre il file EXE dallarchivio .7z o .zip <br>
+Per un corretto funzionamento estrarre il file EXE dall'archivio .7z o .zip <br>
 **Immagine dimostrativa.**
 ![](https://puu.sh/D5M6I/a1083533c4.png)
 la causa dell'errore al primo episodio sta sul fatto che non non esista un episodio 00(prologo solitamente), quindi non essendoci un link causa l'error 404 Page Not Found. <br>
