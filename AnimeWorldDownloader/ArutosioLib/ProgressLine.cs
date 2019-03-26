@@ -64,8 +64,8 @@ namespace AnimeWorldDownloader.ArutosioLib
                     //Delete Last String
                     string clear = string.Empty.PadRight(LastOutputLength, '\b');
                     Console.Write(clear);
-                    Console.Write((Percent < 10 ? "  " : (Percent >= 10 && Percent < 100) ? " " : "") + "{0:0}% [ ", Percent); CColor.WriteC(string.Empty.PadLeft(width, '█'), "green"); Console.Write("{0} ] - ", string.Empty.PadLeft(fill, ' '));
-                    LastOutputLength = 3 + "% [ ".Length + barLength + " ] - ".Length;
+                    Console.Write((Percent < 10 ? "  " : (Percent >= 10 && Percent < 100) ? " " : "") + "{0:0.0}% [ ", Percent); CColor.WriteC(string.Empty.PadLeft(width, '█'), "green"); Console.Write("{0} ] - ", string.Empty.PadLeft(fill, ' '));
+                    LastOutputLength = 5 + "% [ ".Length + barLength + " ] - ".Length;
                 }
                 CColor.WriteC(" DONE", "green"); Console.WriteLine('!');
             }

@@ -16,8 +16,8 @@ namespace AnimeWorldDownloader.ArutosioLib
             if (IsURLExist(link))
             {
                 // Construct HTTP request to get the file
-                Console.Write("--- Dowloading: "); CColor.WriteLineC(link.Split('/')[link.Split('/').Length - 1], "yellow");
-                using (var client = new WebClient())
+                Console.Write("--- Dowloading: "); CColor.WriteLineC(link.Split('/').Last(), "yellow");
+                using (WebClient client = new WebClient())
                 {
                     // Specify that the DownloadFileCallback method gets called
                     // Specify a progress notification handler.
@@ -44,15 +44,13 @@ namespace AnimeWorldDownloader.ArutosioLib
             }
             return valid;
         }
-        [MethodImpl(MethodImplOptions.Synchronized)]
         private static  void DownloadProgressCallback(object sender, DownloadProgressChangedEventArgs e)
         {
             Program.pL.Percent = e.ProgressPercentage;
         }
-        [MethodImpl(MethodImplOptions.Synchronized)]
         private static void DownloadFileCallback(object sender, AsyncCompletedEventArgs e)
         {
-            //CColor.WriteC(" DONE", "green"); Console.WriteLine("!");
+           CColor.WriteC(" DONE", "green"); Console.WriteLine("!");
         }
     }
 }

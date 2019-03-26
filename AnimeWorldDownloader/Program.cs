@@ -42,7 +42,6 @@ namespace AnimeWorldDownloader
                 LineFase("Inizio fase SCARICAMENTO!");
 
                 CreateFolder(path, nFile.Split('_')[0]);
-                //Console.CursorVisible = false;
                 for (int i = riprendiDalla; nEpisodi >= i; i++)
                 {
                     pL = new ProgressLine(30);
@@ -52,7 +51,6 @@ namespace AnimeWorldDownloader
                     FileDownloader.DoAGetRequest(link, path + nFile.Split('_')[0] + @"\" + nFile.Replace(replace, wRepla));
                     pL.SincePrintProgress();
                 }
-                //Console.CursorVisible = true;
                 Console.Write("\r\n======> "); CColor.WriteC("PROCESSO CONCLUSO!","green"); Console.WriteLine(" <======");
                 Console.Write("Premi "); CColor.WriteC("Y", "green"); Console.Write(" se vuoi scaricare un'altro anime, altrimenti premi un altro tasto per "); CColor.WriteC("USCIRE", "red"); Console.Write(": ");
             } while (Console.ReadKey().KeyChar.ToString().ToLower().Equals("y"));
