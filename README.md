@@ -5,7 +5,7 @@ You need a Extract for exsample [7zip](https://www.7-zip.org/).
 ## Guida all'utilizzo
 Per un corretto funzionamento estrarre il file EXE dal .zip
 **Immagine dimostrativa.**
-![](https://puu.sh/D5G4v/6b12e3033f.jpg)
+![](https://puu.sh/D5GeX/e5d7f78069.png)
 la causa dell'errore nell'ultimo episodio sta sul fatto che non sia ancora uscito, quindi non essendoci un link non da error 404 
 In elaborazione.....
 **All Versione:**
