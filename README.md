@@ -4,7 +4,7 @@ You need a Extract for exsample [7zip](https://www.7-zip.org/).
 
 ## Guida all'utilizzo
  - Note: la guida non è ancora conclusa per tanto è in fase di creazione. <br>
- -                          SI ACCETANO VOLONTARI PER LA SCRITTURA DELLA GUIDA. <br>
+ -                          SI ACCETANO VOLONTARI PER LA SCRITTURA DELLA GUIDA.
 Per un corretto funzionamento estrarre il file EXE dall'archivio .7z o .zip <br>
 **Immagine dimostrativa.**
 ![](https://puu.sh/D5M6I/a1083533c4.png)
