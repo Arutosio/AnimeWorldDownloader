@@ -2,6 +2,12 @@
 Link Download a LastVersione [AnimeWorldDownloader.exe](https://puu.sh/D3sxu/23bab32ff5.zip). <br>
 You need a Extract for exsample [7zip](https://www.7-zip.org/).
 
+## Guida all'utilizzo
+Per un corretto funzionamento estrarre il file EXE dal .zip
+**Immagine dimostrativa.**
+![](https://puu.sh/D5G4v/6b12e3033f.jpg)
+la causa dell'errore nell'ultimo episodio sta sul fatto che non sia ancora uscito, quindi non essendoci un link non da error 404 
+In elaborazione.....
 **All Versione:**
 - [AnimeWorldDownloader2.8.exe](https://puu.sh/D3sxu/23bab32ff5.zip)
 - [AnimeWorldDownloader2.5.exe](https://puu.sh/D2tGW/ccb612501c.7z)
@@ -9,11 +15,6 @@ You need a Extract for exsample [7zip](https://www.7-zip.org/).
 - [AnimeWorldDownloader1.0.exe](https://puu.sh/D1VgY/c9003a87f0.7z)
 - [a](#)
   - [b](#b)
-
-## Guida all'utilizzo
-Per un corretto funzionamento estrarre il file EXE dal .zip 
-In elaborazione.....
-
 
 ### Note di Rilascio
  - [Versione 2.8]
