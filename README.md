@@ -6,8 +6,8 @@ You need a Extract for exsample [7zip](https://www.7-zip.org/).
 Per un corretto funzionamento estrarre il file EXE dal .zip <br>
 **Immagine dimostrativa.**
 ![](https://puu.sh/D5M6I/a1083533c4.png)
-la causa dell'errore al primo episodio sta sul fatto che non non esista un episodio 00(prologo solitamente), quindi non essendoci un link da error 404 
-In elaborazione.....
+la causa dell'errore al primo episodio sta sul fatto che non non esista un episodio 00(prologo solitamente), quindi non essendoci un link causa l'error 404 Page Not Found. <br>
+# In elaborazione.....
 
 **All Versione:**
 - [AnimeWorldDownloader3.0.1.exe](https://puu.sh/D5L7d/2efe8766b0.7z)
