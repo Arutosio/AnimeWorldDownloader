@@ -2,22 +2,22 @@
 [Discord](https://discord.gg/K9NHNrx)
 Link Download a LastVersione [AnimeWorldDownloader.7z](https://puu.sh/D5L7d/2efe8766b0.7z). <br>
 You need a Extract for exsample [7zip](https://www.7-zip.org/).
- 
+Gramatica a cura di Jamlegend 
 ## Guida all'utilizzo
  - Note: la guida non è ancora conclusa per tanto è in fase di creazione. <br>
  -                SI ACCETANO VOLONTARI PER LA SCRITTURA DELLA GUIDA.
 Per un corretto funzionamento estrarre il file EXE dall'archivio .7z o .zip <br>
 **Immagine dimostrativa.**
 ![](https://puu.sh/D5M6I/a1083533c4.png)
-la causa dell'errore al primo episodio sta sul fatto che non non esista un episodio 00(prologo solitamente), quindi non essendoci un link causa l'error 404 Page Not Found. <br>
+la causa dell'errore al primo episodio, sta' sul fatto che non esiste un episodio 00(prologo solitamente), quindi, non essendoci un link causa l'error 404 Page Not Found. . <br>
 
-### Da sapere sul funzionamento
-- Il programma si puo utilizare anche per scaricare altre cose purche mantenganolo lo stesso protocollo utilizato da AnimeWorldDownloader. 
+### Da sapere sul funzionamento:
+- Il programma sì può utilizzare anche per scaricare altre cose purché mantengano lo stesso protocollo utilizzato da AnimeWorldDownloader. 
 - Il nome del file scaricato viene applicato in base al nome del file originale sul URL.
-- il numero che va sostituito non fa altro che editare il link impostando i numeri che vanno a incrementare. Importante che se il numero è minore di 10 viene aggiunto 0 davanti al numero del link da noi inserito nella fase iniziale dopo la sostituzione esempio:
-  - Link inserito nella all'inizio (http://www.planetwith.it/...aiorita/WatashiNiTenshiGaMaiorita_Ep_12_SUB_ITA.mp4) 
-  - Numero da sostituire nel nostro caso il 12 perche il link ha il 12 ma poteva essere anche un 02, 07, 10, ecc.. <br>
-  questo serve a indicare quale sara la parte da rimpiazare sul link per determinare il link dell'episodio.
+- Il numero che va sostituito non fa altro che editare il link, impostando i numeri che vanno a incrementare. Importante che sé il numero è minore di 10, viene aggiunto 0 davanti al numero del link da noi inserito nella fase iniziale dopo la sostituzione esempio:
+  - Link inserito all'inizio (http://www.planetwith.it/...aiorita/WatashiNiTenshiGaMaiorita_Ep_12_SUB_ITA.mp4) 
+  - Numero da sostituire nel nostro caso il 12 perché il link ha il 12 ma poteva essere anche un 02, 07, 10, ecc...  <br>
+  questo serve a indicare quale sarà la parte da rimpiazzare sul link per determinare il link dell'episodio.
 
 **All Versione:**
 - [AnimeWorldDownloader3.0.1.7z](https://puu.sh/D5L7d/2efe8766b0.7z)
