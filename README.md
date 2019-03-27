@@ -1,5 +1,5 @@
 # AnimeWorldDownloader
-[Discord](https://discord.gg/K9NHNrx)
+[Discord](https://discord.gg/K9NHNrx) <br>
 Link Download a LastVersione [AnimeWorldDownloader.7z](https://puu.sh/D5L7d/2efe8766b0.7z). <br>
 You need a Extract for exsample [7zip](https://www.7-zip.org/).
 
