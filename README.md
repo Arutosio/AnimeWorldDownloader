@@ -44,3 +44,7 @@ la causa dell'errore al primo episodio, sta' sul fatto che non esiste un episodi
     <br>
     
 #### Gramatica a cura di Jamlegend 
+
+```shell
+LD_LIBRARY_PATH="$(pwd)/osu.Desktop/bin/Debug/netcoreapp2.2" dotnet run --project osu.Desktop
+```
