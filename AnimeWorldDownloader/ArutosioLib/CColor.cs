@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace AnimeWorldDownloader.ArutosioLib
 {
+    public enum SetColor: short { Black, DarkBlue, DarkGreen, DarkCyan, DarkRed, DarkMagenta, DarkYellow, DarkGray, Gray, Blue, Green, Cyan, Red, Magenta, Yellow, White };
     public static class CColor
     {
         public static void WriteC(string write, string color)

@@ -9,7 +9,6 @@ namespace AnimeWorldDownloader.ArutosioLib
     public sealed class ProgressLine
     {
         // Declaratuion Fase
-
         private readonly int barLength = 16;
         public string vuoto = "", full = "";
         public int stepProgress = 100;

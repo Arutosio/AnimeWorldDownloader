@@ -13,7 +13,7 @@ namespace AnimeWorldDownloader
         static void Main(string[] args)
         {
             /*Declaration Fase */
-            string pLink, link, nFile, replace, wRepla, path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            string pLink, link, nFile, replace ="", wRepla, path = System.Reflection.Assembly.GetExecutingAssembly().Location;
             path = path.Replace(path.Split('\\')[path.Split('\\').Length - 1], "");
             int riprendiDalla = 0, nEpisodi = 0;
             /*Preparation FASE*/
@@ -30,10 +30,17 @@ namespace AnimeWorldDownloader
                 pLink = CColor.ReadLineC("cyan");
 
                 nFile = pLink.Split('/')[pLink.Split('/').Length - 1];
-
-                Console.Write("--- Inserisci il Numero dell'episodio tratto dall'URL (ES:00, 04, 11): ");
-                replace = CColor.ReadLineC("Yellow");
-
+                try {
+                    if(Convert.ToInt32(nFile.Split('_')[2]) != -1) {
+                        replace = nFile.Split('_')[2];
+                        Console.Write("Numero dell'episodio riconosciuto con sucesso: ");
+                        CColor.WriteLineC(replace, "yellow");
+                    }
+                } catch {
+                    CColor.WriteLineC("Numero dell'episodio on riconosciuto, inserire manualmente.","red");
+                    Console.Write("--- Inserisci il Numero dell'episodio tratto dall'URL (ES:00, 04, 11): ");
+                    replace = CColor.ReadLineC("Yellow");
+                }
                 nEpisodi = GetNumberOfC("--- Inserisci il numero di episodi: ", "yellow");
 
                 if (IsRipresa()) { riprendiDalla = GetNumberOfC("--- Inserisci il numero dell'episodio da cui vuoi riprendere a scaricare: ", "yellow"); } else riprendiDalla = 0;
