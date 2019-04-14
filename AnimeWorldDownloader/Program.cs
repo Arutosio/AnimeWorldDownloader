@@ -12,7 +12,7 @@ namespace AnimeWorldDownloader
         
         static void Main(string[] args)
         {
-            /*Declaration Fase */
+            /*Declaration FASE */
             string pLink, link, nFile, replace ="", wRepla, path = System.Reflection.Assembly.GetExecutingAssembly().Location;
             path = path.Replace(path.Split('\\')[path.Split('\\').Length - 1], "");
             int riprendiDalla = 0, nEpisodi = 0;
