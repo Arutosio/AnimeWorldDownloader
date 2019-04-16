@@ -33,7 +33,7 @@ la causa dell'errore al primo episodio, sta' sul fatto che non esiste un episodi
 
 ### Note di Rilascio
  - [Versione 3.1]
-   Aggiunto l'auto riconoscimento del episodio del link, nel caso non riesca a rivelarlo, richiedera l'inseriemnto manuale.
+   Aggiunto l'auto riconoscimento dell'episodio del link, nel caso non riesca a rivelarlo, richiedera l'inseriemnto manuale.
  - [Versione 3.0.1]
    Nuovo aggiornamento che introduce una progress bar che mostra la percentuale del download corrente.
    Nel caso il link dia errore restituisce l'errore 404 Not Found.
