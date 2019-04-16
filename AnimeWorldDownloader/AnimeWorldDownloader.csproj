@@ -95,7 +95,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="AnimeWorldDownloader.pfx" />
     <None Include="App.config" />
     <None Include="Properties\app.manifest" />
   </ItemGroup>
