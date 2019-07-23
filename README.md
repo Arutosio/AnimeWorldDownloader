@@ -3,7 +3,7 @@
 [![Ecchi Style](https://static-cdn.jtvnw.net/jtv_user_pictures/panel-55778697-image-21f6cc49-c9fd-4ae5-8224-c901119f1505)](https://streamlabs.com/arutosio)
 [![Build Status](https://dev.azure.com/Arutosio/Arutosio/_apis/build/status/Arutosio.AnimeWorldDownloader?branchName=master)](https://dev.azure.com/Arutosio/Arutosio/_build/latest?definitionId=3&branchName=master)
  <br>
-Link Download a LastVersione [AnimeWorldDownloader.7z](https://puu.sh/DezAR/7a34e8db31.7z). <br>
+Link Download [AnimeWorldDownloader](https://github.com/Arutosio/AnimeWorldDownloader/releases). <br>
 You need a Extract for exsample [7zip](https://www.7-zip.org/).
 
 ## Guida all'utilizzo
@@ -21,15 +21,6 @@ la causa dell'errore al primo episodio, sta' sul fatto che non esiste un episodi
   - Link inserito all'inizio (http://www.planetwith.it/...aiorita/WatashiNiTenshiGaMaiorita_Ep_12_SUB_ITA.mp4) 
   - Numero da sostituire nel nostro caso il 12 perché il link ha il 12 ma poteva essere anche un 02, 07, 10, ecc...  <br>
   questo serve a indicare quale sarà la parte da rimpiazzare sul link per determinare il link dell'episodio.
-
-**All Versione:**
-- [AnimeWorldDownloader3.1v.7z](https://puu.sh/DezAR/7a34e8db31.7z)
-- [AnimeWorldDownloader3.0.1v.7z](https://puu.sh/D5L7d/2efe8766b0.7z)
-- [AnimeWorldDownloader2.8v.zip](https://puu.sh/D3sxu/23bab32ff5.zip)
-- [AnimeWorldDownloader2.5v.7z](https://puu.sh/D2tGW/ccb612501c.7z)
-- [AnimeWorldDownloader2.4v.zip](https://puu.sh/D2s9g/4539aaccd2.zip)
-- [AnimeWorldDownloader1.0v.7z](https://puu.sh/D1VgY/c9003a87f0.7z)
-- [a](#a) - [b](#b) - [c](#b) - [d](#d) - [e](#e) - [f](#f) - [g](#g)
 
 ### Note di Rilascio
  - [Versione 3.1]
