@@ -39,4 +39,4 @@ la causa dell'errore al primo episodio, sta' sul fatto che non esiste un episodi
    Implementazione dei Colori e miglioramenti della logica applicativa.
    <br>
     
-##### Gamatica a cura di Jamlegend 
+##### Gramatica a cura di Jamlegend 
