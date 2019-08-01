@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.489
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeWorldDownloader", "AnimeWorldDownloader\AnimeWorldDownloader.csproj", "{3AF8DB51-28C0-48CD-B21D-636E3DB4F2EF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeWorldDownloader", "AnimeWorldDownloader.csproj", "{3AF8DB51-28C0-48CD-B21D-636E3DB4F2EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +20,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {6982F8A4-2AA6-456C-8EE9-9A9C4A5123F0}
+		SolutionGuid = {B77365ED-FAFF-42BC-ABC3-23555E7E583A}
 	EndGlobalSection
 EndGlobal
