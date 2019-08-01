@@ -48,7 +48,7 @@ namespace AnimeWorldDownloader
                 /*Procces FASE*/
                 LineFase("Inizio fase SCARICAMENTO!");
 
-                CreateFolder(path, nFile.Split('_')[0]);
+                CreateFolder(path, CheckStringChar(nFile.Split('_')[0]));
                 for (int i = riprendiDalla; nEpisodi >= i; i++)
                 {
                     pL = new ProgressLine(30);
@@ -99,6 +99,10 @@ namespace AnimeWorldDownloader
             }
             Console.WriteLine();
             return false;
+        }
+        public static string CheckStringChar(string name) {
+            
+            return name;
         }
         public static void CreateFolder(string path, string name)
         {
