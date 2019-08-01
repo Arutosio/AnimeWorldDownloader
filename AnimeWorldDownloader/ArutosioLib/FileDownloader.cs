@@ -15,7 +15,7 @@ namespace AnimeWorldDownloader.ArutosioLib
         public static void DoAGetRequest(string link, string nFileFix)
         {
             // Construct HTTP request to get the file
-            Console.Write("--- Dowloading: "); CColor.WriteLineC(link.Split('/').Last(), "yellow");
+            Console.Write("--- Dowloading: "); CColor.WriteLineC(Program.FixStringChar(link.Split('/').Last()), "yellow");
             using (WebClient client = new WebClient())
             {
                 try
@@ -27,7 +27,7 @@ namespace AnimeWorldDownloader.ArutosioLib
                     //client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadFileCallback);
                     client.DownloadFileAsync(new Uri(link), nFileFix);
                 }
-                catch(Exception ex){ Program.pL.Percent = -1; CColor.WriteLineC(" ### Error # \r\n" + ex.Message, "red"); }
+                catch (Exception ex) { Program.pL.Percent = -1; CColor.WriteLineC(" ### Error # \r\n" + ex.Message, "red"); }
             }
         }
         public static bool CheckURLValid(string source)
@@ -74,13 +74,13 @@ namespace AnimeWorldDownloader.ArutosioLib
             }
             return valid;
         }
-        private static  void DownloadProgressCallback(object sender, DownloadProgressChangedEventArgs e)
+        private static void DownloadProgressCallback(object sender, DownloadProgressChangedEventArgs e)
         {
             Program.pL.Percent = e.ProgressPercentage;
         }
         private static void DownloadFileCallback(object sender, AsyncCompletedEventArgs e)
         {
-           CColor.WriteC(" DONE", "green"); Console.WriteLine("!");
+            CColor.WriteC(" DONE", "green"); Console.WriteLine("!");
         }
     }
 }

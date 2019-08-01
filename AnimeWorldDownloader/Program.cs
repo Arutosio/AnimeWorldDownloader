@@ -9,18 +9,18 @@ namespace AnimeWorldDownloader
     class Program
     {
         public static ProgressLine pL;
-        
+
         static void Main(string[] args)
         {
             /*Declaration FASE */
-            string pLink, link, nFile, replace ="", wRepla, path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            string pLink, link, nFile, replace = "", wRepla, path = System.Reflection.Assembly.GetExecutingAssembly().Location;
             path = path.Replace(path.Split('\\')[path.Split('\\').Length - 1], "");
             int riprendiDalla = 0, nEpisodi = 0;
             /*Preparation FASE*/
             Console.WriteLine("--- <-_ Benvenuti su AnimeWorldDownloader by Arutosio - Testo a cura di Jamlegend _-> ---");
             Console.Write("         ~  "); CColor.WriteC("Per informazione consultare la pagina GitHub della repository", "cyan"); Console.WriteLine("  ~        ");
 
-            Console.Write("Path: "); CColor.WriteC(path,"yellow");
+            Console.Write("Path: "); CColor.WriteC(path, "yellow");
             do
             {
                 Console.WriteLine();
@@ -29,15 +29,19 @@ namespace AnimeWorldDownloader
                 Console.WriteLine("--- Inserisci l'URL diretto dell'episodio da Scaricare: ");
                 pLink = CColor.ReadLineC("cyan");
 
-                nFile = pLink.Split('/')[pLink.Split('/').Length - 1];
-                try {
-                    if(Convert.ToInt32(nFile.Split('_')[2]) != -1) {
+                nFile = FixStringChar(pLink.Split('/')[pLink.Split('/').Length - 1]);
+                try
+                {
+                    if (Convert.ToInt32(nFile.Split('_')[2]) != -1)
+                    {
                         replace = nFile.Split('_')[2];
                         Console.Write("Numero dell'episodio riconosciuto con sucesso: ");
                         CColor.WriteLineC(replace, "yellow");
                     }
-                } catch {
-                    CColor.WriteLineC("Numero dell'episodio on riconosciuto, inserire manualmente.","red");
+                }
+                catch
+                {
+                    CColor.WriteLineC("Numero dell'episodio on riconosciuto, inserire manualmente.", "red");
                     Console.Write("--- Inserisci il Numero dell'episodio tratto dall'URL (ES:00, 04, 11): ");
                     replace = CColor.ReadLineC("Yellow");
                 }
@@ -48,20 +52,20 @@ namespace AnimeWorldDownloader
                 /*Procces FASE*/
                 LineFase("Inizio fase SCARICAMENTO!");
 
-                CreateFolder(path, CheckStringChar(nFile.Split('_')[0]));
+                CreateFolder(path, nFile.Split('_')[0].Split('.')[0]);
                 for (int i = riprendiDalla; nEpisodi >= i; i++)
                 {
                     pL = new ProgressLine(30);
                     wRepla = i < 10 ? "0" + i : "" + i;
                     link = pLink.Replace(replace, wRepla);
-                    Console.Write(" GET> "); CColor.WriteLineC(link,"cyan");
-                    if(FileDownloader.IsURLExist(link))
+                    Console.Write(" GET> "); CColor.WriteLineC(link, "cyan");
+                    if (FileDownloader.IsURLExist(link))
                     {
                         FileDownloader.DoAGetRequest(link, path + nFile.Split('_')[0] + @"\" + nFile.Replace(replace, wRepla));
                         pL.SincePrintProgress();
                     }
                 }
-                Console.Write("\r\n======> "); CColor.WriteC("PROCESSO CONCLUSO!","green"); Console.WriteLine(" <======");
+                Console.Write("\r\n======> "); CColor.WriteC("PROCESSO CONCLUSO!", "green"); Console.WriteLine(" <======");
                 Console.Write("Premi "); CColor.WriteC("Y", "green"); Console.Write(" se vuoi scaricare un'altro anime, altrimenti premi un altro tasto per "); CColor.WriteC("USCIRE", "red"); Console.Write(": ");
             } while (Console.ReadKey().KeyChar.ToString().ToLower().Equals("y"));
         }
@@ -74,7 +78,7 @@ namespace AnimeWorldDownloader
         {
             Console.BackgroundColor = ConsoleColor.White; Console.Write("::::::::::::::::::::::");
             CColor.WriteC(text, "black");
-            Console.BackgroundColor = ConsoleColor.White;  Console.WriteLine("::::::::::::::::::::::\r\n");
+            Console.BackgroundColor = ConsoleColor.White; Console.WriteLine("::::::::::::::::::::::\r\n");
             Console.ResetColor();
         }
         public static int GetNumberOfC(string print, string color)
@@ -91,7 +95,7 @@ namespace AnimeWorldDownloader
         }
         public static bool IsRipresa()
         {
-            Console.Write("--- Devi riprendere da una certa puntata? ["); CColor.WriteC("Y", "Green"); Console.Write(" = "); CColor.WriteC("Yes", "green");  Console.Write("]: ");
+            Console.Write("--- Devi riprendere da una certa puntata? ["); CColor.WriteC("Y", "Green"); Console.Write(" = "); CColor.WriteC("Yes", "green"); Console.Write("]: ");
             if (Console.ReadKey().KeyChar.ToString().ToLower().Equals("y"))
             {
                 Console.WriteLine();
@@ -100,24 +104,28 @@ namespace AnimeWorldDownloader
             Console.WriteLine();
             return false;
         }
-        public static string CheckStringChar(string name) {
-            
-            return name;
+        public static string FixStringChar(string str)
+        {
+            str = str.Replace("%5B", "[");
+            str = str.Replace("%5D", "]");
+            str = str.Replace("%20", " ");
+            return str;
         }
         public static void CreateFolder(string path, string name)
         {
             try
             {
                 // Determine whether the directory exists.
-                if (!Directory.Exists(path+name))
+                if (!Directory.Exists(path + name))
                 {
                     Console.Write("Verrà creata una cartella con il nome: "); CColor.WriteLineC(name, "yellow");
-                } else return;
+                }
+                else return;
 
                 // Try to create the directory.
-                DirectoryInfo di = Directory.CreateDirectory(path+name);
+                DirectoryInfo di = Directory.CreateDirectory(path + name);
                 Console.Write("La cartella e stata creata con successo il ");
-                CColor.WriteLineC(Directory.GetCreationTime(path+name).ToString(),"magenta"); 
+                CColor.WriteLineC(Directory.GetCreationTime(path + name).ToString(), "magenta");
 
                 // Delete the directory.
                 //di.Delete();
@@ -126,7 +134,7 @@ namespace AnimeWorldDownloader
             catch (Exception e)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("The process failed: {0}");Console.WriteLine(e.ToString());
+                Console.Write("The process failed: {0}"); Console.WriteLine(e.ToString());
                 Console.ResetColor();
             }
             finally { }
