@@ -9,9 +9,10 @@ namespace AnimeWorldDownloader
     class Program
     {
         public static ProgressLine pL;
-
+        private static int numOfZeroOnNumberEp = 0, tmpNum = 10;
         static void Main(string[] args)
         {
+            //string res = ""; res += "0";Console.WriteLine();
             /*Declaration FASE */
             string pLink, link, nFile, replace = "", wRepla, path = System.Reflection.Assembly.GetExecutingAssembly().Location;
             path = path.Replace(path.Split('\\')[path.Split('\\').Length - 1], "");
@@ -35,19 +36,23 @@ namespace AnimeWorldDownloader
                     if (Convert.ToInt32(nFile.Split('_')[2]) != -1)
                     {
                         replace = nFile.Split('_')[2];
+                        numOfZeroOnNumberEp = (nFile.Split('_')[2].Length);
                         Console.Write("Numero dell'episodio riconosciuto con sucesso: ");
                         CColor.WriteLineC(replace, "yellow");
                     }
                 }
                 catch
                 {
-                    CColor.WriteLineC("Numero dell'episodio on riconosciuto, inserire manualmente.", "red");
+                    CColor.WriteLineC("Numero dell'episodio non riconosciuto, inserire manualmente.", "red");
                     Console.Write("--- Inserisci il Numero dell'episodio tratto dall'URL (ES:00, 04, 11): ");
                     replace = CColor.ReadLineC("Yellow");
                 }
                 nEpisodi = GetNumberOfC("--- Inserisci il numero di episodi: ", "yellow");
 
-                if (IsRipresa()) { riprendiDalla = GetNumberOfC("--- Inserisci il numero dell'episodio da cui vuoi riprendere a scaricare: ", "yellow"); } else riprendiDalla = 0;
+                if (IsRipresa()) { 
+                    riprendiDalla = GetNumberOfC("--- Inserisci il numero dell'episodio da cui vuoi riprendere a scaricare: ", "yellow");
+                    numOfZeroOnNumberEp -= Convert.ToString(riprendiDalla).Length;
+                } else riprendiDalla = 0;
 
                 /*Procces FASE*/
                 LineFase("Inizio fase SCARICAMENTO!");
@@ -56,7 +61,15 @@ namespace AnimeWorldDownloader
                 for (int i = riprendiDalla; nEpisodi >= i; i++)
                 {
                     pL = new ProgressLine(30);
-                    wRepla = i < 10 ? "0" + i : "" + i;
+                    if((i / tmpNum) == 1) {
+                        numOfZeroOnNumberEp--;
+                        if (numOfZeroOnNumberEp > 0) {
+                            tmpNum = tmpNum*10;
+                        }
+                    }
+                    /*
+                     */
+                    wRepla =  $"{AddZeroStr()}{i.ToString()}";
                     link = pLink.Replace(replace, wRepla);
                     Console.Write(" GET> "); CColor.WriteLineC(link, "cyan");
                     if (FileDownloader.IsURLExist(link))
@@ -73,6 +86,15 @@ namespace AnimeWorldDownloader
         public static double PersentageCalculation(double current, double maximum)
         {
             return (current / maximum) * 100;
+        }
+        public static string AddZeroStr()
+        {
+            string res = string.Empty;
+            for (int j = 0; j < numOfZeroOnNumberEp-1; j++)
+            {
+                res += "0";
+            }
+            return res;
         }
         public static void LineFase(string text)
         {
