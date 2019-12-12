@@ -26,9 +26,12 @@ namespace AnimeWorldDownloader
             {
                 Console.WriteLine();
                 LineFase("Inizio fase PREPARATORIA");
+                do
+                {
+                    Console.WriteLine("--- Inserisci l'URL diretto dell'episodio da Scaricare: ");
+                    pLink = CColor.ReadLineC("cyan");
 
-                Console.WriteLine("--- Inserisci l'URL diretto dell'episodio da Scaricare: ");
-                pLink = CColor.ReadLineC("cyan");
+                } while (!isValidUri(pLink));
 
                 nFile = FixStringChar(pLink.Split('/')[pLink.Split('/').Length - 1]);
                 try
@@ -83,6 +86,18 @@ namespace AnimeWorldDownloader
             } while (Console.ReadKey().KeyChar.ToString().ToLower().Equals("y"));
         }
         ///STATIC Method!
+        public static bool isValidUri(string link)
+        {
+            Uri uriResult;
+            bool result = Uri.TryCreate(link, UriKind.Absolute, out uriResult)
+                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            if (result)
+            {
+                //result = FileDownloader.CheckURLValid(link); TO DO!
+            }
+            else { Console.WriteLine("non hai inserito un url valido. Riprova."); }
+            return result;
+        }
         public static double PersentageCalculation(double current, double maximum)
         {
             return (current / maximum) * 100;
