@@ -3,22 +3,32 @@ using System.Net;
 using System.IO;
 using AnimeWorldDownloader.ArutosioLib;
 using System.ComponentModel;
+using System.Deployment;
+
 
 namespace AnimeWorldDownloader
 {
     class Program
     {
         public static ProgressLine pL;
-        private static int numOfZeroOnNumberEp = 0, tmpNum = 10;
+        public static readonly string version = "3.5";
+        //public static System.Deployment.Application.ApplicationDeployment CurrentDeployment { get; }
         static void Main(string[] args)
         {
-            //string res = ""; res += "0";Console.WriteLine();
             /*Declaration FASE */
-            string pLink, link, nFile, replace = "", wRepla, path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            string pLink;
+            string link;
+            string fullNameFile;
+            string baseNameFile;
+            string replace = "";
+            string wRepla;
+            string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
             path = path.Replace(path.Split('\\')[path.Split('\\').Length - 1], "");
             int riprendiDalla = 0, nEpisodi = 0;
+            NumberEpisode objNEs;
+            Serie serie;
             /*Preparation FASE*/
-            Console.WriteLine("--- <-_ Benvenuti su AnimeWorldDownloader by Arutosio - Testo a cura di Jamlegend _-> ---");
+            Console.WriteLine($"--- <-_ Benvenuti su AnimeWorldDownloader v{version} by Arutosio - Testo a cura di Jamlegend _-> ---");
             Console.Write("         ~  "); CColor.WriteC("Per informazione consultare la pagina GitHub della repository", "cyan"); Console.WriteLine("  ~        ");
 
             Console.Write("Path: "); CColor.WriteC(path, "yellow");
@@ -31,15 +41,16 @@ namespace AnimeWorldDownloader
                     Console.WriteLine("--- Inserisci l'URL diretto dell'episodio da Scaricare: ");
                     pLink = CColor.ReadLineC("cyan");
 
-                } while (!isValidUri(pLink));
+                } while (!IsValidUri(pLink));
 
-                nFile = FixStringChar(pLink.Split('/')[pLink.Split('/').Length - 1]);
+                fullNameFile = FixStringChar(pLink.Split('/')[pLink.Split('/').Length - 1]);
+                baseNameFile = fullNameFile.Split('_')[0];
                 try
                 {
-                    if (Convert.ToInt32(nFile.Split('_')[2]) != -1)
+                    if (Convert.ToInt32(fullNameFile.Split('_')[2]) != -1)
                     {
-                        replace = nFile.Split('_')[2];
-                        numOfZeroOnNumberEp = (nFile.Split('_')[2].Length);
+                        replace = fullNameFile.Split('_')[2];
+                        //numOfZeroOnNumberEp = (fullNameFile.Split('_')[2].Length);
                         Console.Write("Numero dell'episodio riconosciuto con sucesso: ");
                         CColor.WriteLineC(replace, "yellow");
                     }
@@ -51,42 +62,34 @@ namespace AnimeWorldDownloader
                     replace = CColor.ReadLineC("Yellow");
                 }
                 nEpisodi = GetNumberOfC("--- Inserisci il numero di episodi: ", "yellow");
-
                 if (IsRipresa()) { 
                     riprendiDalla = GetNumberOfC("--- Inserisci il numero dell'episodio da cui vuoi riprendere a scaricare: ", "yellow");
-                    numOfZeroOnNumberEp -= Convert.ToString(riprendiDalla).Length;
-                } else riprendiDalla = 0;
+                    objNEs = new NumberEpisode(riprendiDalla, replace);
+                } else objNEs = new NumberEpisode(replace);
 
+                serie = new Serie(baseNameFile, nEpisodi, fullNameFile, objNEs);
                 /*Procces FASE*/
                 LineFase("Inizio fase SCARICAMENTO!");
-
-                CreateFolder(path, nFile.Split('_')[0].Split('.')[0]);
-                for (int i = riprendiDalla; nEpisodi >= i; i++)
+                CreateFolder(path, baseNameFile);
+                while(serie.nEpisodes >= serie.numberEpisode.GetNumber())
                 {
                     pL = new ProgressLine(30);
-                    if((i / tmpNum) == 1) {
-                        numOfZeroOnNumberEp--;
-                        if (numOfZeroOnNumberEp > 0) {
-                            tmpNum = tmpNum*10;
-                        }
-                    }
-                    /*
-                     */
-                    wRepla =  $"{AddZeroStr()}{i.ToString()}";
-                    link = pLink.Replace(replace, wRepla);
+                    link = pLink.Replace(replace, serie.numberEpisode.ToString());
                     Console.Write(" GET> "); CColor.WriteLineC(link, "cyan");
                     if (FileDownloader.IsURLExist(link))
                     {
-                        FileDownloader.DoAGetRequest(link, path + nFile.Split('_')[0] + @"\" + nFile.Replace(replace, wRepla));
+                        string filePath = path + serie.nameSerie + @"\" + serie.GetNameFile();
+                        FileDownloader.DoAGetRequest(link, filePath);
                         pL.SincePrintProgress();
                     }
+                    serie.numberEpisode.IncrementNumber();
                 }
                 Console.Write("\r\n======> "); CColor.WriteC("PROCESSO CONCLUSO!", "green"); Console.WriteLine(" <======");
                 Console.Write("Premi "); CColor.WriteC("Y", "green"); Console.Write(" se vuoi scaricare un'altro anime, altrimenti premi un altro tasto per "); CColor.WriteC("USCIRE", "red"); Console.Write(": ");
             } while (Console.ReadKey().KeyChar.ToString().ToLower().Equals("y"));
         }
         ///STATIC Method!
-        public static bool isValidUri(string link)
+        public static bool IsValidUri(string link)
         {
             Uri uriResult;
             bool result = Uri.TryCreate(link, UriKind.Absolute, out uriResult)
@@ -101,15 +104,6 @@ namespace AnimeWorldDownloader
         public static double PersentageCalculation(double current, double maximum)
         {
             return (current / maximum) * 100;
-        }
-        public static string AddZeroStr()
-        {
-            string res = string.Empty;
-            for (int j = 0; j < numOfZeroOnNumberEp-1; j++)
-            {
-                res += "0";
-            }
-            return res;
         }
         public static void LineFase(string text)
         {
@@ -126,7 +120,7 @@ namespace AnimeWorldDownloader
             do
             {
                 try { res = Convert.ToInt32(CColor.ReadLineC(color)); Console.ResetColor(); repeatC = false; }
-                catch { Console.WriteLine("--- Non hai inserito un numero valido, Riprova: "); }
+                catch { Console.Write("--- Non hai inserito un numero valido, Riprova: "); }
             } while (repeatC);
             return res;
         }
