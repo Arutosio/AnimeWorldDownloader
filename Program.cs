@@ -21,7 +21,6 @@ namespace AnimeWorldDownloader
             string fullNameFile;
             string baseNameFile;
             string replace = "";
-            string wRepla;
             string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
             path = path.Replace(path.Split('\\')[path.Split('\\').Length - 1], "");
             int riprendiDalla = 0, nEpisodi = 0;
@@ -30,7 +29,8 @@ namespace AnimeWorldDownloader
             /*Preparation FASE*/
             Console.WriteLine($"--- <-_ Benvenuti su AnimeWorldDownloader v{version} by Arutosio - Testo a cura di Jamlegend _-> ---");
             Console.Write("         ~  "); CColor.WriteC("Per informazione consultare la pagina GitHub della repository", "cyan"); Console.WriteLine("  ~        ");
-
+            CColor.WriteLineC("Nota: si consiglia fortemente di scaricare l'eseguibile dal sito dello sviluppatore al seguente link", "darkyellow");
+            CColor.WriteLineC("       https://github.com/Arutosio/AnimeWorldDownloader/releases", "cyan");
             Console.Write("Path: "); CColor.WriteC(path, "yellow");
             do
             {
