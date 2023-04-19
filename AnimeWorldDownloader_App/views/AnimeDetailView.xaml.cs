@@ -13,4 +13,9 @@ public partial class AnimeDetailView : ContentPage
 		animeDetailViewModel = new AnimeDetailViewModel(uriDetail);
 		this.BindingContext = animeDetailViewModel;
 	}
+
+    private void OnButtonClickedGoToSearch(object sender, EventArgs e)
+    {
+        Application.Current.MainPage.Navigation.PushModalAsync(new MainPage(), true);
+    }
 }

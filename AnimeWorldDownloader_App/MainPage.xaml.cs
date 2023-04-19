@@ -10,9 +10,7 @@ namespace AnimeWorldDownloader_App
 
     public partial class MainPage : ContentPage
     {
-        SearchAnimeViewModel searchAnimeViewModel;   
-
-        int count = 0;
+        SearchAnimeViewModel searchAnimeViewModel;  
 
         public MainPage()
         {
@@ -24,16 +22,17 @@ namespace AnimeWorldDownloader_App
             this.BindingContext = searchAnimeViewModel;
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private void OnButtonSearchClicked(object sender, EventArgs e)
         {
-            count++;
+            searchAnimeViewModel.GetSearchAnime();
+            //count++;
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} {searchAnimeViewModel.SearchText} time";
-            else
-                CounterBtn.Text = $"Clicked {count} {searchAnimeViewModel.SearchText} times";
+            //if (count == 1)
+            //    CounterBtn.Text = $"Clicked {count} {searchAnimeViewModel.SearchText} time";
+            //else
+            //    CounterBtn.Text = $"Clicked {count} {searchAnimeViewModel.SearchText} times";
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            //SemanticScreenReader.Announce(CounterBtn.Text);
         }
 
         private void Entry_TextChanged(object sender, TextChangedEventArgs e)

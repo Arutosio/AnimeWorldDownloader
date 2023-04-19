@@ -4,65 +4,75 @@
              xmlns:local="clr-namespace:AnimeWorldDownloader_App.ViewModels"
              x:Class="AnimeWorldDownloader_App.MainPage"
              x:DataType="local:SearchAnimeViewModel"
-             Title="Welcome to AnimeWorldDownloader MAUI App" >
+             Title="AnimeWorldDownloader MAUI App" >
 
     <ScrollView>
         <StackLayout>
-            <Grid Margin="10" RowSpacing="6" ColumnSpacing="6">
+            <Grid Margin="10" RowSpacing="6" ColumnSpacing="6" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <HorizontalStackLayout Grid.Column="0" Grid.Row="0"
-                    HorizontalOptions="Start">
-                    <Label 
-                        Text="Search: "
-                        SemanticProperties.Description="Search Anime"
-                        FontSize="18"
-                        VerticalTextAlignment="Center"
-                        HorizontalOptions="Start"/>
-                    <Entry
-                        Placeholder="Enter anime name here..."
-                        Text="{Binding SearchText, Mode=TwoWay}"
-                        FontSize="18"
-                        
-                        VerticalTextAlignment="Center"
-                        HorizontalTextAlignment="Start"
-                        TextChanged="Entry_TextChanged"
-                        Completed="Entry_Completed" />
-                    <Button
-                        x:Name="CounterBtn"
-                        Text="Click me"
-                        SemanticProperties.Hint="Counts the number of times you click"
-                        Clicked="OnCounterClicked"
-                        HorizontalOptions="End" />
-                </HorizontalStackLayout>
+                <Label Grid.Column="0" Grid.Row="0"
+                    Text="Anime: "
+                    SemanticProperties.Description="Search Anime"
+                    FontSize="Title"
+                    FontAttributes="Bold"
+                    VerticalTextAlignment="Center"
+                    HorizontalOptions="Start"/>
+                <Entry Grid.Column="1" Grid.Row="0"
+                    Placeholder="Enter anime name here..."
+                    Text="{Binding SearchText, Mode=TwoWay}"
+                    FontSize="20"
+                    VerticalTextAlignment="Center"
+                    HorizontalTextAlignment="Start"
+                    TextChanged="Entry_TextChanged"
+                    Completed="Entry_Completed" />
+                <Button Grid.Column="2" Grid.Row="0"
+                    x:Name="SearchClicked"
+                    Text="Search"
+                    FontSize="Title"
+                    FontAttributes="Bold"
+                    BackgroundColor="Grey"
+                    TextColor="White"
+                    SemanticProperties.Hint=""
+                    Clicked="OnButtonSearchClicked"
+                    HorizontalOptions="End" />
             </Grid>
             <VerticalStackLayout Margin="10">
                 <ListView ItemsSource="{Binding AnimeViewModels}" HasUnevenRows="True" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell x:DataType="local:AnimeViewModel">
-                                <HorizontalStackLayout Margin="5">
+                                <HorizontalStackLayout Margin="10">
                                     <Image
                                         Source="{Binding ImageUrl}"
-                                        Aspect="AspectFill"
+                                        HeightRequest="186"
                                         HorizontalOptions="Start"/>
-                                    <Label
-                                        Text="{Binding Name}"
-                                        FontAttributes="Bold"
-                                        VerticalOptions="Center"
-                                        HorizontalOptions="Center" />
-                                    <Button
-                                        Text="Info Page"
-                                        FontAttributes="Bold"
-                                        Clicked="OnButtonClickedGoDetail"
-                                        VerticalOptions="Center"
-                                        HorizontalOptions="Center"
-                                        CommandParameter="{Binding UriDetail}" />
+                                    <VerticalStackLayout Margin="10">
+                                        <Label 
+                                            Text="{Binding Name}"
+                                            FontAttributes="Bold"
+                                            FontSize="Title"
+                                            Margin="10"
+                                            VerticalOptions="Center"
+                                            HorizontalOptions="Center" />
+                                        <Button
+                                            Text="Info Page"
+                                            FontSize="Title"
+                                            FontAttributes="Bold"
+                                            Margin="10"
+                                            Clicked="OnButtonClickedGoDetail"
+                                            VerticalOptions="Center"
+                                            HorizontalOptions="Center"
+                                            CommandParameter="{Binding UriDetail}" />
+                                    
+                                    </VerticalStackLayout>
                                 </HorizontalStackLayout>
                             </ViewCell>
                         </DataTemplate>
