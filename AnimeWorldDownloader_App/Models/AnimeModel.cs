@@ -2,15 +2,17 @@
 
 namespace AnimeWorldDownloader_App.Models
 {
+    public class Anime
+    {
+        public string Name { get; set; }
+        public string ImageUrl { get; set; }
+        public string UriDetail { get; set; }
+    }
+
     internal class AnimeModel
     {
         public string Name { get; set; }
         public string ImageUrl { get; set; }
-
-        public AnimeModel(Anime anime)
-        {
-            Name = anime.Name;
-            ImageUrl = anime.ImageUrl;
-        }
+        public string UriDetail { get; set; }
     }
 }
