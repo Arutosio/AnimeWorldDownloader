@@ -18,6 +18,16 @@ namespace AnimeWorldDownloader_App.ViewModels
 
         private string _name = string.Empty;
         private string _imageUrl = string.Empty;
+        private string _uriDetail = string.Empty;
+
+        public AnimeViewModel() { }
+
+        public AnimeViewModel(Anime anime)
+        {
+            this.Name = anime.Name;
+            this.ImageUrl = anime.ImageUrl;
+            this.UriDetail = anime.UriDetail;
+        }
 
         public void OnPropertyChanged([CallerMemberName] string name = "") =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -48,17 +58,17 @@ namespace AnimeWorldDownloader_App.ViewModels
             }
         }
 
-        public AnimeViewModel(Anime anime)
+        public string UriDetail
         {
-            this.Name = anime.Name;
-            this.ImageUrl = anime.ImageUrl;
+            get { return _uriDetail; }
+            set
+            {
+                if (_uriDetail != value)
+                {
+                    _uriDetail = value;
+                    OnPropertyChanged(); // reports this property
+                }
+            }
         }
-
-        public AnimeViewModel(string name, string imageUrl)
-        {
-            this.Name = name;
-            this.ImageUrl = imageUrl;
-        }
-
     }
 }

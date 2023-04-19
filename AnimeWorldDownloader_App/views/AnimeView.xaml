@@ -6,7 +6,7 @@
              x:DataType="local:AnimeViewModel">
              
     <VerticalStackLayout>
-        <Grid Padding="10">
+        <Grid Padding="10" Grid.Column="1" Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -15,19 +15,18 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Image Grid.RowSpan="2"
-            Source="{Binding ImageUrl}"
-            Aspect="AspectFill"
-            HeightRequest="60"
-            WidthRequest="60" />
-            <Label Grid.Column="1"
-            Text="{Binding Name}"
-            FontAttributes="Bold" />
-            <!--<Label Grid.Row="1"
-            Grid.Column="1"
-            Text="{Binding Location}"
-            FontAttributes="Italic"
-            VerticalOptions="End" />-->
-            </Grid>
+            <Image Grid.Column="0" Grid.RowSpan="2"
+                Source="{Binding ImageUrl}"
+                Aspect="AspectFill"/>
+            <Label Grid.Column="2" Grid.Row="1"
+                Text="{Binding Name}"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+            <Button Grid.Column="2" Grid.Row="2"
+                Text="Info Page"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                CommandParameter="{Binding UriDetail}"/>
+        </Grid>
     </VerticalStackLayout>
 </ContentView>

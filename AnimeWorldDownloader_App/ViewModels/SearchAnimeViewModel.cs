@@ -3,6 +3,7 @@ using AnimeWorldDownloader_App.Models;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace AnimeWorldDownloader_App.ViewModels
 {
@@ -37,7 +38,6 @@ namespace AnimeWorldDownloader_App.ViewModels
                     OnPropertyChanged(); // reports this property
                 }
             }
-            
         }
 
         public void OnPropertyChanged([CallerMemberName] string name = "") =>
@@ -55,12 +55,13 @@ namespace AnimeWorldDownloader_App.ViewModels
             // Esempio di codice di esempio 
             if (!string.IsNullOrWhiteSpace(SearchText))
             {
-                animes.Add(new Anime { Name = "Alice", ImageUrl = "https://img.animeworld.tv/locandine/68073l.jpg" });
-                animes.Add(new Anime { Name = "Bob", ImageUrl = "https://img.animeworld.tv/locandine/68073l.jpg" });
-                animes.Add(new Anime { Name = "Charlie", ImageUrl = "https://img.animeworld.tv/locandine/68073l.jpg" });
+                animes.Add(new Anime { Name = "Alice", ImageUrl = "https://img.animeworld.tv/locandine/68073l.jpg", UriDetail = "strin_uriDetail" });
+                animes.Add(new Anime { Name = "Bob", ImageUrl = "https://img.animeworld.tv/locandine/68073l.jpg", UriDetail = "strin_uriDetail" });
+                animes.Add(new Anime { Name = "Charlie", ImageUrl = "https://img.animeworld.tv/locandine/68073l.jpg", UriDetail = "strin_uriDetail" });
             }
 
-            AnimeViewModels = new(animes.Select(a => new AnimeViewModel(a)).ToList());
+            List<AnimeViewModel> tmpAnimeViewModels = animes.Select(a => new AnimeViewModel(a)).ToList();
+            AnimeViewModels = new ObservableCollection<AnimeViewModel>(tmpAnimeViewModels);
         }
     }
 }

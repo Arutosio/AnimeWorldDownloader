@@ -3,83 +3,73 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:AnimeWorldDownloader_App.ViewModels"
              x:Class="AnimeWorldDownloader_App.MainPage"
-             Title="AnimeWorldDownloader_App"
-             x:DataType="local:SearchAnimeViewModel" >
-    
+             x:DataType="local:SearchAnimeViewModel"
+             Title="Welcome to AnimeWorldDownloader MAUI App" >
+
     <ScrollView>
-        <VerticalStackLayout
-            Spacing="25"
-            Padding="10,0">
-
-            <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Search Anime"
-                FontSize="18"
-                HorizontalOptions="Center" />
-
-            <Entry Placeholder="Enter text here..."
-                   Text="{Binding SearchText, Mode=TwoWay}"
-                   WidthRequest="200"
-                   TextChanged="Entry_TextChanged"
-                   Completed="Entry_Completed" />
-
-            <Label
-                Text="{Binding SearchText }"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Search Anime"
-                FontSize="18"
-                HorizontalOptions="Center" />
-
-            <Button
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
-
-            <StackLayout >
-
-                <ListView ItemsSource="{Binding AnimeViewModels}" HasUnevenRows="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
+        <StackLayout>
+            <Grid Margin="10" RowSpacing="6" ColumnSpacing="6">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <HorizontalStackLayout Grid.Column="0" Grid.Row="0"
+                    HorizontalOptions="Start">
+                    <Label 
+                        Text="Search: "
+                        SemanticProperties.Description="Search Anime"
+                        FontSize="18"
+                        VerticalTextAlignment="Center"
+                        HorizontalOptions="Start"/>
+                    <Entry
+                        Placeholder="Enter anime name here..."
+                        Text="{Binding SearchText, Mode=TwoWay}"
+                        FontSize="18"
+                        
+                        VerticalTextAlignment="Center"
+                        HorizontalTextAlignment="Start"
+                        TextChanged="Entry_TextChanged"
+                        Completed="Entry_Completed" />
+                    <Button
+                        x:Name="CounterBtn"
+                        Text="Click me"
+                        SemanticProperties.Hint="Counts the number of times you click"
+                        Clicked="OnCounterClicked"
+                        HorizontalOptions="End" />
+                </HorizontalStackLayout>
+            </Grid>
+            <VerticalStackLayout Margin="10">
+                <ListView ItemsSource="{Binding AnimeViewModels}" HasUnevenRows="True" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell x:DataType="local:AnimeViewModel">
-                                <Grid Padding="10">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <Image Grid.RowSpan="2"
-                                   Source="{Binding ImageUrl}"
-                                   Aspect="AspectFill"
-                                   HeightRequest="60"
-                                   WidthRequest="60" />
-                                    <Label Grid.Column="1"
-                                   Text="{Binding Name}"
-                                   FontAttributes="Bold" />
-                                    <!--<Label Grid.Row="1"
-                                   Grid.Column="1"
-                                   Text="{Binding Location}"
-                                   FontAttributes="Italic"
-                                   VerticalOptions="End" />-->
-                                </Grid>
+                                <HorizontalStackLayout Margin="5">
+                                    <Image
+                                        Source="{Binding ImageUrl}"
+                                        Aspect="AspectFill"
+                                        HorizontalOptions="Start"/>
+                                    <Label
+                                        Text="{Binding Name}"
+                                        FontAttributes="Bold"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="Center" />
+                                    <Button
+                                        Text="Info Page"
+                                        FontAttributes="Bold"
+                                        Clicked="OnButtonClickedGoDetail"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="Center"
+                                        CommandParameter="{Binding UriDetail}" />
+                                </HorizontalStackLayout>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-
-            </StackLayout>
-        </VerticalStackLayout>
+            </VerticalStackLayout>
+        </StackLayout>
     </ScrollView>
 
 </ContentPage>

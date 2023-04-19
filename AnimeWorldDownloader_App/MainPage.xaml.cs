@@ -2,14 +2,15 @@
 using AnimeWorldDownloader_App.Models;
 using AnimeWorldDownloader_App.ViewModels;
 using System.Collections.ObjectModel;
+using Windows.UI.ApplicationSettings;
+using AnimeWorldDownloader_App.Views;
 
 namespace AnimeWorldDownloader_App
 {
 
     public partial class MainPage : ContentPage
     {
-        SearchAnimeViewModel searchAnimeViewModel;
-        //ObservableCollection<AnimeModel> animeCollection;    
+        SearchAnimeViewModel searchAnimeViewModel;   
 
         int count = 0;
 
@@ -19,13 +20,8 @@ namespace AnimeWorldDownloader_App
 
             // istanzia il view-model
             searchAnimeViewModel = new();
-            //animeCollection = animeViewModel.AnimeModels;
-            //AnimeModelsCollection.ItemsSource = animeCollection;
-
             // assegna il view-model alla proprietà BindingContext del ContentPage
             this.BindingContext = searchAnimeViewModel;
-            //AnimeModelsCollection.SetBinding(animeViewModel.AnimeModels, )
-
         }
 
         private void OnCounterClicked(object sender, EventArgs e)
@@ -48,6 +44,16 @@ namespace AnimeWorldDownloader_App
         private void Entry_Completed(object sender, EventArgs e)
         {
             searchAnimeViewModel.GetSearchAnime();
+        }
+
+        private void OnButtonClickedGoDetail(object sender, EventArgs e)
+        {
+            // assuming your Model class is "Student"
+            var botton = (Button)sender;
+            var item = (AnimeViewModel)botton.BindingContext;
+            var uriDetail = item.UriDetail;
+
+            Application.Current.MainPage.Navigation.PushModalAsync(new AnimeDetailView(uriDetail), true);
         }
     }
 }

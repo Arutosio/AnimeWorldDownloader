@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:AnimeWorldDownloader_App.ViewModels"
+             x:Class="AnimeWorldDownloader_App.Views.AnimeDetailView"
+             x:DataType="local:AnimeDetailViewModel"
+             Title="AnimeDetailView" >
+    
+    <VerticalStackLayout>
+        <ScrollView>
+            <Grid Padding="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="1" Grid.RowSpan="5"
+                    Source="{Binding ImageUrl}"
+                    Aspect="AspectFill"
+                    HeightRequest="620"
+                    WidthRequest="400" />
+                <Label Grid.Column="1"
+                    Text="{Binding Name}"
+                    FontAttributes="Bold" />
+                <Label Grid.Column="1"
+                    Text="{Binding State}"
+                    FontAttributes="Bold" />
+                <Label Grid.Column="1"
+                    Text="{Binding DateRelease}"
+                    FontAttributes="Bold" />
+                <Label Grid.Column="1"
+                    Text="{Binding NumEpisodes}"
+                    FontAttributes="Bold" />
+                <!--<Button Grid.Row="5"
+                    Text="Info Page"
+                    FontAttributes="Bold"
+                    Grid.Row="3"
+                    Clicked="OnButtonClicked"
+                    HorizontalOptions="Center" />-->
+            </Grid>
+        </ScrollView>
+    </VerticalStackLayout>
+</ContentPage>
