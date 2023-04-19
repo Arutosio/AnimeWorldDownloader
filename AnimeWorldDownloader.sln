@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeWorldDownloader_Console", "AnimeWorldDownloader_Console\AnimeWorldDownloader_Console.csproj", "{3AF8DB51-28C0-48CD-B21D-636E3DB4F2EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeWorldDownloader_App", "AnimeWorldDownloader_App\AnimeWorldDownloader_App.csproj", "{E9E84636-CB3D-4DCF-A8B2-D7D227132EFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimeWorldDownloader_App", "AnimeWorldDownloader_App\AnimeWorldDownloader_App.csproj", "{E9E84636-CB3D-4DCF-A8B2-D7D227132EFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

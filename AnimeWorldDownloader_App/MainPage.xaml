@@ -1,13 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AnimeWorldDownloader_App.MainPage">
-
+             xmlns:local="clr-namespace:AnimeWorldDownloader_App.ViewModels"
+             x:Class="AnimeWorldDownloader_App.MainPage"
+             Title="AnimeWorldDownloader_App"
+             x:DataType="local:AnimeViewModel" >
+    
     <ScrollView>
         <VerticalStackLayout
             Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
+            Padding="10,0">
 
             <Image
                 Source="dotnet_bot.png"
@@ -16,15 +18,20 @@
                 HorizontalOptions="Center" />
 
             <Label
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
-
-            <Label
                 Text="Welcome to .NET Multi-platform App UI"
                 SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
+                SemanticProperties.Description="Search Anime"
+                FontSize="18"
+                HorizontalOptions="Center" />
+
+            <Entry Placeholder="Enter text here..."
+                   Text="{Binding SearchText, Mode=TwoWay}"
+                   WidthRequest="200" />
+
+            <Label
+                Text="{x:Reference SearchText}"
+                SemanticProperties.HeadingLevel="Level2"
+                SemanticProperties.Description="Search Anime"
                 FontSize="18"
                 HorizontalOptions="Center" />
 
@@ -34,6 +41,41 @@
                 SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Center" />
+
+            <!--<ListView ItemsSource="{Binding AnimeModels}"
+                ItemTemplate="{StaticResource AnimeViewTemplate}" />-->
+
+            <StackLayout >
+                <CollectionView x:Name="AnimeModelsCollection">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.RowSpan="2"
+                                   Source="{Binding ImageUrl}"
+                                   Aspect="AspectFill"
+                                   HeightRequest="60"
+                                   WidthRequest="60" />
+                                <Label Grid.Column="1"
+                                   Text="{Binding Name}"
+                                   FontAttributes="Bold" />
+                                <!--<Label Grid.Row="1"
+                                   Grid.Column="1"
+                                   Text="{Binding Location}"
+                                   FontAttributes="Italic"
+                                   VerticalOptions="End" />-->
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
 
         </VerticalStackLayout>
     </ScrollView>
