@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:AnimeWorldDownloader_App.ViewModels"
              x:Class="AnimeWorldDownloader_App.MainPage"
              Title="AnimeWorldDownloader_App"
-             x:DataType="local:AnimeViewModel" >
+             x:DataType="local:SearchAnimeViewModel" >
     
     <ScrollView>
         <VerticalStackLayout
@@ -26,10 +26,12 @@
 
             <Entry Placeholder="Enter text here..."
                    Text="{Binding SearchText, Mode=TwoWay}"
-                   WidthRequest="200" />
+                   WidthRequest="200"
+                   TextChanged="Entry_TextChanged"
+                   Completed="Entry_Completed" />
 
             <Label
-                Text="{x:Reference SearchText}"
+                Text="{Binding SearchText }"
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description="Search Anime"
                 FontSize="18"
@@ -42,41 +44,41 @@
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Center" />
 
-            <!--<ListView ItemsSource="{Binding AnimeModels}"
-                ItemTemplate="{StaticResource AnimeViewTemplate}" />-->
-
             <StackLayout >
-                <CollectionView x:Name="AnimeModelsCollection">
-                    <CollectionView.ItemTemplate>
+
+                <ListView ItemsSource="{Binding AnimeViewModels}" HasUnevenRows="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
+                    <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid Padding="10">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Image Grid.RowSpan="2"
+                            <ViewCell x:DataType="local:AnimeViewModel">
+                                <Grid Padding="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Image Grid.RowSpan="2"
                                    Source="{Binding ImageUrl}"
                                    Aspect="AspectFill"
                                    HeightRequest="60"
                                    WidthRequest="60" />
-                                <Label Grid.Column="1"
+                                    <Label Grid.Column="1"
                                    Text="{Binding Name}"
                                    FontAttributes="Bold" />
-                                <!--<Label Grid.Row="1"
+                                    <!--<Label Grid.Row="1"
                                    Grid.Column="1"
                                    Text="{Binding Location}"
                                    FontAttributes="Italic"
                                    VerticalOptions="End" />-->
-                            </Grid>
+                                </Grid>
+                            </ViewCell>
                         </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </StackLayout>
+                    </ListView.ItemTemplate>
+                </ListView>
 
+            </StackLayout>
         </VerticalStackLayout>
     </ScrollView>
 

@@ -8,7 +8,7 @@ namespace AnimeWorldDownloader_App
 
     public partial class MainPage : ContentPage
     {
-        AnimeViewModel animeViewModel;
+        SearchAnimeViewModel searchAnimeViewModel;
         //ObservableCollection<AnimeModel> animeCollection;    
 
         int count = 0;
@@ -18,12 +18,13 @@ namespace AnimeWorldDownloader_App
             InitializeComponent();
 
             // istanzia il view-model
-            animeViewModel = new();
+            searchAnimeViewModel = new();
             //animeCollection = animeViewModel.AnimeModels;
             //AnimeModelsCollection.ItemsSource = animeCollection;
 
             // assegna il view-model alla proprietà BindingContext del ContentPage
-            this.BindingContext = animeViewModel;
+            this.BindingContext = searchAnimeViewModel;
+            //AnimeModelsCollection.SetBinding(animeViewModel.AnimeModels, )
 
         }
 
@@ -32,12 +33,21 @@ namespace AnimeWorldDownloader_App
             count++;
 
             if (count == 1)
-                CounterBtn.Text = $"Clicked {count} {animeViewModel.SearchText} time";
+                CounterBtn.Text = $"Clicked {count} {searchAnimeViewModel.SearchText} time";
             else
-                CounterBtn.Text = $"Clicked {count} {animeViewModel.SearchText} times";
+                CounterBtn.Text = $"Clicked {count} {searchAnimeViewModel.SearchText} times";
 
             SemanticScreenReader.Announce(CounterBtn.Text);
         }
 
+        private void Entry_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            searchAnimeViewModel.GetSearchAnime();
+        }
+
+        private void Entry_Completed(object sender, EventArgs e)
+        {
+            searchAnimeViewModel.GetSearchAnime();
+        }
     }
 }
