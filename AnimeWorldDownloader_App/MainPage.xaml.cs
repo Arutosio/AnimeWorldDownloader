@@ -37,7 +37,8 @@ namespace AnimeWorldDownloader_App
 
         private void Entry_TextChanged(object sender, TextChangedEventArgs e)
         {
-            searchAnimeViewModel.GetSearchAnime();
+            // Da migliorare, per adesso la disattivo
+            // searchAnimeViewModel.GetSearchAnime();
         }
 
         private void Entry_Completed(object sender, EventArgs e)

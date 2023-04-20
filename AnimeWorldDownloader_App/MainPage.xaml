@@ -8,7 +8,7 @@
 
     <ScrollView>
         <StackLayout>
-            <Border
+            <!--<Border
                 StrokeThickness="4"
                 StrokeShape="RoundRectangle 10,10,10,10"
                 Background="Black"
@@ -21,7 +21,7 @@
                         <GradientStop Color="Grey"
                           Offset="1.0" />
                     </LinearGradientBrush>
-                </Border.Stroke>
+                </Border.Stroke>-->
                 
                 <Grid Margin="10" RowSpacing="6" ColumnSpacing="6" >
                 <Grid.RowDefinitions>
@@ -31,6 +31,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" Grid.Row="0"
@@ -48,7 +49,14 @@
                     HorizontalTextAlignment="Start"
                     TextChanged="Entry_TextChanged"
                     Completed="Entry_Completed" />
-                <Button Grid.Column="2" Grid.Row="0"
+                <Label Grid.Column="2" Grid.Row="0"
+                    Text="{Binding AnimeViewModels.Count}"
+                    SemanticProperties.Description="Count Resoult"
+                    FontSize="Title"
+                    FontAttributes="Bold"
+                    VerticalTextAlignment="Center"
+                    HorizontalOptions="Start"/>
+                <Button Grid.Column="3" Grid.Row="0"
                     x:Name="SearchClicked"
                     Text="Search"
                     FontSize="Title"
@@ -59,7 +67,7 @@
                     Clicked="OnButtonSearchClicked"
                     HorizontalOptions="End" />
             </Grid>
-            </Border>
+            <!--</Border>-->
             <VerticalStackLayout Margin="10">
                 <ListView ItemsSource="{Binding AnimeViewModels}" HasUnevenRows="True" >
                     <ListView.ItemTemplate>
@@ -87,7 +95,6 @@
                                             VerticalOptions="Center"
                                             HorizontalOptions="Center"
                                             CommandParameter="{Binding UriDetail}" />
-                                    
                                     </VerticalStackLayout>
                                 </HorizontalStackLayout>
                             </ViewCell>

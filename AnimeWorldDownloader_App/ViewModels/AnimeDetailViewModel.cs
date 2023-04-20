@@ -66,15 +66,14 @@ namespace AnimeWorldDownloader_App.ViewModels
         private void GetAnimeInfo(string uriDetail)
         {
             AnimeDetail animeDetail = new();
-            // Recupera i dati dalla sorgente ""
-            // supponiamo che i dati siano recuperati da un database
-            // Esempio di codice di esempio 
+
             if (!string.IsNullOrWhiteSpace(uriDetail))
             {
                 HttpTalker httpTalker =  HttpTalker.GetInstance();
                 string html = httpTalker.GetResoultFromUri(uriDetail);
 
-                string valueTag = HtmlReader.GetTagValue(html, "");
+                // 'film-list' è la classe del div dove si trovano gli anime
+                List<string> elements = HtmlReader.GetItemsWithClass(html, "film-list", "div.item");
 
                 animeDetail = new AnimeDetail {Name = "Charlie", ImageUrl = "https://img.animeworld.tv/locandine/68073l.jpg", NumEpisodes = 12, State = "Finito", DateRelease = DateTime.Now};
 
