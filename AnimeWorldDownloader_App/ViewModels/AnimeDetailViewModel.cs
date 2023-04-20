@@ -1,9 +1,15 @@
-﻿using AnimeWorldDownloader_App.Models;
+﻿using AnimeWorldDownloader_App.Data;
+using AnimeWorldDownloader_App.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using AngleSharp;
+using AngleSharp.Dom;
+
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AnimeWorldDownloader_App.ViewModels
 {
@@ -65,6 +71,11 @@ namespace AnimeWorldDownloader_App.ViewModels
             // Esempio di codice di esempio 
             if (!string.IsNullOrWhiteSpace(uriDetail))
             {
+                HttpTalker httpTalker =  HttpTalker.GetInstance();
+                string html = httpTalker.GetResoultFromUri(uriDetail);
+
+                string valueTag = HtmlReader.GetTagValue(html, "");
+
                 animeDetail = new AnimeDetail {Name = "Charlie", ImageUrl = "https://img.animeworld.tv/locandine/68073l.jpg", NumEpisodes = 12, State = "Finito", DateRelease = DateTime.Now};
 
                 this.Name = animeDetail.Name;

@@ -8,7 +8,22 @@
 
     <ScrollView>
         <StackLayout>
-            <Grid Margin="10" RowSpacing="6" ColumnSpacing="6" >
+            <Border
+                StrokeThickness="4"
+                StrokeShape="RoundRectangle 10,10,10,10"
+                Background="Black"
+                Padding="16,8"
+                HorizontalOptions="Center">
+                <Border.Stroke>
+                    <LinearGradientBrush EndPoint="0,1">
+                        <GradientStop Color="White"
+                          Offset="0.1" />
+                        <GradientStop Color="Grey"
+                          Offset="1.0" />
+                    </LinearGradientBrush>
+                </Border.Stroke>
+                
+                <Grid Margin="10" RowSpacing="6" ColumnSpacing="6" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -44,6 +59,7 @@
                     Clicked="OnButtonSearchClicked"
                     HorizontalOptions="End" />
             </Grid>
+            </Border>
             <VerticalStackLayout Margin="10">
                 <ListView ItemsSource="{Binding AnimeViewModels}" HasUnevenRows="True" >
                     <ListView.ItemTemplate>
