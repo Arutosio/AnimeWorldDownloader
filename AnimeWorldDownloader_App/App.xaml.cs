@@ -13,8 +13,8 @@
             var windows = base.CreateWindow(activationState);
 
             // Add here your sizing code
-            windows.Height = 1020;
-            windows.Width = 720;
+            windows.Height = 700;
+            windows.Width = 520;
             // Add here your positioning code
             //windows.X = 600;
             //windows.Y = 30;

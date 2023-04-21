@@ -8,83 +8,131 @@
              BackgroundImageSource="{Binding ImageUrl}">
 
 
-    <VerticalStackLayout Opacity="1">
-        <ScrollView>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                
-                <HorizontalStackLayout Grid.Column="0" Grid.Row="0">
-                    <Button x:Name="SearchClicked"
-                        Text="Back"
-                        FontSize="Title"
-                        FontAttributes="Bold"
-                        BackgroundColor="Grey"
-                        TextColor="White"
-                        SemanticProperties.Hint=""
-                        Clicked="OnButtonClickedGoToSearch"
-                        HorizontalOptions="End"/>
-                    
-                    <Label
-                        Text="{Binding Name}"
-                        FontSize="Title"
-                        HorizontalTextAlignment="Center"
-                        VerticalTextAlignment="Center"
-                        FontAttributes="Bold" />
-                </HorizontalStackLayout>
+    <Grid BackgroundColor="#98000000"
+          HorizontalOptions="FillAndExpand" 
+          VerticalOptions="FillAndExpand">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-                <!--STATO-->
-                <Label Grid.Column="0" Grid.Row="2"
-                    Text="{Binding State}"
-                    FontSize="20"
-                    Margin="10"
-                    FontAttributes="Bold" />
-                <Label Grid.Column="1" Grid.Row="2"
-                    Text="{Binding State}"
-                    FontSize="20"
-                    FontAttributes="Bold" />
+        <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" 
+                BackgroundColor="#99000000" Padding="3">
+            <Label
+                LineBreakMode="WordWrap"
+                Text="{Binding Name}"
+                FontSize="18"
+                Margin="0,0,0,10"
+                HorizontalTextAlignment="Center"
+                VerticalTextAlignment="Center"
+                FontAttributes="Bold" />
+        </Border>
+        
+        <!--STATO-->
+        <Label Grid.Column="0" Grid.Row="2"
+            Text="Stato"
+            FontSize="16"
+            Margin="10"
+            FontAttributes="Bold" 
+            VerticalTextAlignment="Start"/>
+        <Label Grid.Column="1" Grid.Row="2"
+            Text="{Binding State}"
+            FontSize="14"
+            Margin="10"
+            FontAttributes="Bold"
+            VerticalTextAlignment="Start"/>
 
-                <!--DATA DI USCITA-->
-                <Label Grid.Column="0" Grid.Row="3"
-                    Text="Data di RIlascio"
-                    FontSize="20"
-                    Margin="10"
-                    FontAttributes="Bold" />
-                <Label Grid.Column="1" Grid.Row="3"
-                    Text="{Binding DateRelease}"
-                    FontAttributes="Bold"
-                    FontSize="20" />
-                
-                <!--NUMERO DI EPISODI-->
-                <Label Grid.Column="0" Grid.Row="4"
-                    Text="Numero di episodi"
-                    FontSize="20"
-                    Margin="10"
-                    FontAttributes="Bold" />
-                <Label Grid.Column="1" Grid.Row="4"
-                    Text="{Binding NumEpisodes}"
-                    FontAttributes="Bold"
-                    FontSize="20"/>
-                
-                <Button Grid.Column="1"  Grid.Row="7"
-                    Text="Download"
-                    FontAttributes="Bold"
-                    HorizontalOptions="Center" />
-            </Grid>
-        </ScrollView>
-    </VerticalStackLayout>
+        <!--DATA DI USCITA-->
+        <Label Grid.Column="0" Grid.Row="3"
+            Text="Data di Rilascio"
+            FontSize="16"
+            Margin="10"
+            FontAttributes="Bold"
+            VerticalTextAlignment="Start" />
+        <Label Grid.Column="1" Grid.Row="3"
+            Text="{Binding DateRelease}"
+            FontAttributes="Bold"
+            FontSize="14"
+            Margin="10"
+            VerticalTextAlignment="Start" />
+
+        <!--NUMERO DI EPISODI-->
+        <Label Grid.Column="0" Grid.Row="4"
+            Text="Numero di episodi"
+            FontSize="18"
+            Margin="10"
+            FontAttributes="Bold"
+            VerticalTextAlignment="Start" />
+        <Label Grid.Column="1" Grid.Row="4"
+            Text="{Binding NumEpisodes}"
+            FontAttributes="Bold"
+            FontSize="16"
+            Margin="10"
+            VerticalTextAlignment="Start" />
+
+        <!--DURATA-->
+        <Label Grid.Column="0" Grid.Row="5"
+            Text="Durata"
+            FontSize="18"
+            Margin="10"
+            FontAttributes="Bold"
+            VerticalTextAlignment="Start" />
+        <Label Grid.Column="1" Grid.Row="5"
+            Text="{Binding Time}"
+            FontAttributes="Bold"
+            FontSize="16"
+            Margin="10"
+            VerticalTextAlignment="Start" />
+
+        <!--GENERE-->
+        <Label Grid.Column="0" Grid.Row="6"
+            Text="Genere"
+            FontSize="18"
+            Margin="10"
+            FontAttributes="Bold"
+            VerticalTextAlignment="Start" />
+        <Label Grid.Column="1" Grid.Row="6"
+            Text="{Binding Genere}"
+            FontAttributes="Bold"
+            FontSize="16"
+            Margin="10"
+            VerticalTextAlignment="Start" />
+
+        <Button Grid.Column="0" Grid.Row="7"
+            x:Name="SearchClicked"
+            Text="Back"
+            FontSize="Title"
+            FontAttributes="Bold"
+            Margin="2"
+            BackgroundColor="Black"
+            TextColor="White"
+            BorderColor="AntiqueWhite"
+            BorderWidth="3"
+            Clicked="OnButtonClickedGoToSearch"
+            HorizontalOptions="Start"
+            VerticalOptions="End"/>
+
+        <Button Grid.Column="1"  Grid.Row="7"
+            Text="Download"
+            FontSize="Title"
+            FontAttributes="Bold"
+            Margin="2"
+            BackgroundColor="DeepSkyBlue"
+            TextColor="White"
+            BorderColor="AntiqueWhite"
+            BorderWidth="3"
+            HorizontalOptions="End"
+            VerticalOptions="End" />
+    </Grid>
 </ContentPage>

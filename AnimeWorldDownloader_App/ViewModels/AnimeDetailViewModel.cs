@@ -13,12 +13,14 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AnimeWorldDownloader_App.ViewModels
 {
-    internal class AnimeDetailViewModel : AnimeViewModel
+    public class AnimeDetailViewModel : AnimeViewModel
     {
         private string _state;
-        private DateTime _dateRelease;
+        private string _dateRelease;
         private int _numEpisodes;
-        private List<string> _genere;
+        private string _genere;
+        private string _time;
+        private double _views;
 
         public AnimeDetailViewModel(string uriDetail)
         {
@@ -27,8 +29,11 @@ namespace AnimeWorldDownloader_App.ViewModels
             this.UriDetail = animeDetailModel.UriDetail;
             this.ImageUrl = animeDetailModel.ImageUrl;
             this.State = animeDetailModel.State;
+            this.DateRelease = animeDetailModel.DateRelease;
             this.NumEpisodes = animeDetailModel.NumEpisodes;
-            this.Genere = animeDetailModel.Genere;
+            this.Genere = string.Join(", ", animeDetailModel.Genere);
+            this.Time = animeDetailModel.Time;
+            this.Views = animeDetailModel.Views;
         }
 
         public string State
@@ -44,7 +49,7 @@ namespace AnimeWorldDownloader_App.ViewModels
             }
         }
 
-        public DateTime DateRelease
+        public string DateRelease
         {
             get { return _dateRelease; }
             set
@@ -70,7 +75,7 @@ namespace AnimeWorldDownloader_App.ViewModels
             }
         }
 
-        public List<string> Genere
+        public string Genere
         {
             get { return _genere; }
             set
@@ -79,6 +84,30 @@ namespace AnimeWorldDownloader_App.ViewModels
                 {
                     _genere = value;
                     OnPropertyChanged(); // reports this property
+                }
+            }
+        }
+
+        public string Time
+        {
+            get { return _time; }
+            set
+            {
+                if (_time != value)
+                {
+                    _time = value;
+                }
+            }
+        }
+
+        public double Views
+        {
+            get { return _views; }
+            set
+            {
+                if (_views != value)
+                {
+                    _views = value;
                 }
             }
         }

@@ -4,15 +4,15 @@
              xmlns:local="clr-namespace:AnimeWorldDownloader_App.ViewModels"
              x:Class="AnimeWorldDownloader_App.MainPage"
              x:DataType="local:SearchAnimeViewModel"
-             Title="AnimeWorldDownloader MAUI App" >
+             Title="AnimeWorldDownloader" >
 
     <ScrollView>
-        <StackLayout>
+        <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <!--<Border
                 StrokeThickness="4"
                 StrokeShape="RoundRectangle 10,10,10,10"
-                Background="Black"
-                Padding="16,8"
+                Background="#1B181A"
+                Padding="0"
                 HorizontalOptions="Center">
                 <Border.Stroke>
                     <LinearGradientBrush EndPoint="0,1">
@@ -22,78 +22,88 @@
                           Offset="1.0" />
                     </LinearGradientBrush>
                 </Border.Stroke>-->
-                
-                <Grid Margin="10" RowSpacing="6" ColumnSpacing="6" >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" Grid.Row="0"
-                    Text="Anime: "
-                    SemanticProperties.Description="Search Anime"
-                    FontSize="Title"
-                    FontAttributes="Bold"
-                    VerticalTextAlignment="Center"
-                    HorizontalOptions="Start"/>
-                <Entry Grid.Column="1" Grid.Row="0"
-                    Placeholder="Enter anime name here..."
-                    Text="{Binding SearchText, Mode=TwoWay}"
-                    FontSize="20"
-                    VerticalTextAlignment="Center"
-                    HorizontalTextAlignment="Start"
-                    TextChanged="Entry_TextChanged"
-                    Completed="Entry_Completed" />
-                <Label Grid.Column="2" Grid.Row="0"
-                    Text="{Binding AnimeViewModels.Count}"
-                    SemanticProperties.Description="Count Resoult"
-                    FontSize="Title"
-                    FontAttributes="Bold"
-                    VerticalTextAlignment="Center"
-                    HorizontalOptions="Start"/>
-                <Button Grid.Column="3" Grid.Row="0"
-                    x:Name="SearchClicked"
-                    Text="Search"
-                    FontSize="Title"
-                    FontAttributes="Bold"
-                    BackgroundColor="Grey"
-                    TextColor="White"
-                    SemanticProperties.Hint=""
-                    Clicked="OnButtonSearchClicked"
-                    HorizontalOptions="End" />
-            </Grid>
+
+                <Grid Margin="10" RowSpacing="6" ColumnSpacing="6" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" 
+                        Text="Anime: "
+                        SemanticProperties.Description="Search Anime"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        VerticalTextAlignment="Center"
+                        HorizontalOptions="Start"/>
+                    <Entry Grid.Column="1" Grid.Row="0"
+                        Placeholder="Enter anime name here..."
+                        Text="{Binding SearchText, Mode=TwoWay}"
+                        FontSize="18"
+                        VerticalTextAlignment="Center"
+                        HorizontalTextAlignment="Start"
+                        TextChanged="Entry_TextChanged"
+                        Completed="Entry_Completed" />
+                    <Button Grid.Column="2" Grid.Row="0"
+                        x:Name="SearchClicked"
+                        Text="Search"
+                        FontSize="14"
+                        FontAttributes="Bold"
+                        BackgroundColor="Grey"
+                        TextColor="White"
+                        SemanticProperties.Hint=""
+                        Clicked="OnButtonSearchClicked"
+                        HorizontalOptions="End" />
+                    <Label Grid.Column="3" Grid.Row="0"
+                        Text="{Binding AnimeViewModels.Count}"
+                        SemanticProperties.Description="Count Resoult"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        VerticalTextAlignment="Center"
+                        HorizontalOptions="End" />
+                </Grid>
             <!--</Border>-->
             <VerticalStackLayout Margin="10">
                 <ListView ItemsSource="{Binding AnimeViewModels}" HasUnevenRows="True" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell x:DataType="local:AnimeViewModel">
-                                <HorizontalStackLayout Margin="10">
+                                <HorizontalStackLayout Margin="10" >
                                     <Image
                                         Source="{Binding ImageUrl}"
-                                        HeightRequest="186"
-                                        HorizontalOptions="Start"/>
-                                    <VerticalStackLayout Margin="10">
+                                        HeightRequest="156"
+                                        HorizontalOptions="Start" />
+                                    <VerticalStackLayout Margin="5">
+                                        <!--<Label 
+                                            Text="{Binding BindingContext.AnimeViewModels.IndexOf(this), StringFormat='Index: {0}'}"
+                                            FontAttributes="Bold"
+                                            FontSize="16"
+                                            Margin="5"
+                                            VerticalOptions="Center"
+                                            HorizontalOptions="Start" 
+                                            LineBreakMode="WordWrap" />-->
                                         <Label 
                                             Text="{Binding Name}"
                                             FontAttributes="Bold"
-                                            FontSize="Title"
-                                            Margin="10"
+                                            FontSize="16"
+                                            Margin="5"
                                             VerticalOptions="Center"
-                                            HorizontalOptions="Center" />
+                                            HorizontalOptions="Start" 
+                                            LineBreakMode="WordWrap" />
                                         <Button
                                             Text="Info Page"
-                                            FontSize="Title"
+                                            FontSize="16"
                                             FontAttributes="Bold"
-                                            Margin="10"
+                                            Margin="5"
+                                            BorderColor="Grey" BorderWidth="3"
                                             Clicked="OnButtonClickedGoDetail"
-                                            VerticalOptions="Center"
-                                            HorizontalOptions="Center"
+                                            VerticalOptions="End"
+                                            HorizontalOptions="Start"
                                             CommandParameter="{Binding UriDetail}" />
                                     </VerticalStackLayout>
                                 </HorizontalStackLayout>
