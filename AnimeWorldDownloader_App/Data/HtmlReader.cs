@@ -11,24 +11,17 @@ namespace AnimeWorldDownloader_App.Data
 {
     public static class HtmlReader
     {
-        internal static List<string> GetItemsWithClass(string strHtml, string strClass, string strPattern)
+        internal static IHtmlCollection<AngleSharp.Dom.IElement> GetItemsWithClass(string htmlContent, string strClass, string strPattern)
         {
-            List<string> ret = new ();
             // crea un contesto e apre il documento HTML
-            var context = BrowsingContext.New(Configuration.Default);
-            var document = context.OpenAsync(req => req.Content(strHtml)).Result;
+            IBrowsingContext context = BrowsingContext.New(Configuration.Default);
+            IDocument document = context.OpenAsync(req => req.Content(htmlContent)).Result;
 
             // seleziona il div padre e tutti i div figli con la classe "item"
-            var parent = document.QuerySelector($"div.{strClass}");
-            var items = parent.QuerySelectorAll($"{strPattern}");
+            AngleSharp.Dom.IElement parent = document.QuerySelector($"{strClass}");
+            IHtmlCollection<AngleSharp.Dom.IElement> items = parent.QuerySelectorAll($"{strPattern}");
 
-            // itera tutti i div "item" e stampa il loro contenuto
-            foreach (var item in items)
-            {
-                ret.Add(item.InnerHtml);
-            }
-
-            return ret;
+            return items;
         }
 
         public static string GetTagValue(string html, string tag)
@@ -46,17 +39,11 @@ namespace AnimeWorldDownloader_App.Data
             }
         }
 
-        public static string GetImageSrcFromHtml(string htmlString)
+        public static string GetImageSrcFromHtml(AngleSharp.Dom.IElement htmlElement)
         {
-            // Creazione del parser HTML
-            var parser = new HtmlParser();
-
-            // Parsing del documento HTML
-            var document = parser.ParseDocument(htmlString);
-
             // Recupero del primo elemento immagine e del valore dell'attributo src
-            var imageElement = document.QuerySelector("img");
-            var imageSrc = imageElement?.GetAttribute("src");
+            AngleSharp.Dom.IElement imageElement = htmlElement.QuerySelector("img");
+            string imageSrc = imageElement?.GetAttribute("src");
 
             // Ritorna il valore dell'attributo src
             return imageSrc;
@@ -108,18 +95,12 @@ namespace AnimeWorldDownloader_App.Data
             return firstChildTags;
         }
 
-        public static List<string> GetLinkHrefsFromHtml(string htmlString)
+        public static List<string> GetLinkHrefsFromHtml(AngleSharp.Dom.IElement element)
         {
             List<string> hrefs = new List<string>();
 
-            // Crea il parser HTML
-            var parser = new HtmlParser();
-
-            // Parsing del documento HTML
-            var document = parser.ParseDocument(htmlString);
-
             // Recupera tutti i tag "a" nel documento
-            var aTags = document.QuerySelectorAll("a");
+            var aTags = element.QuerySelectorAll("a");
 
             // Itera su tutti gli elementi "a" e recupera il valore dell'attributo "href"
             foreach (var aTag in aTags)

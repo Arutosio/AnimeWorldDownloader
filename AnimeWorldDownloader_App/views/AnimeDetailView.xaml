@@ -5,9 +5,7 @@
              x:Class="AnimeWorldDownloader_App.Views.AnimeDetailView"
              x:DataType="local:AnimeDetailViewModel"
              Title="AnimeDetailView"
-             >
-
-    <!--BackgroundImageSource="{Binding ImageUrl}"-->
+             BackgroundImageSource="{Binding ImageUrl}">
 
 
     <VerticalStackLayout Opacity="1">
@@ -23,11 +21,11 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 
                 <HorizontalStackLayout Grid.Column="0" Grid.Row="0">
@@ -49,19 +47,39 @@
                         FontAttributes="Bold" />
                 </HorizontalStackLayout>
 
-                <Label Grid.Column="0" Grid.Row="3"
+                <!--STATO-->
+                <Label Grid.Column="0" Grid.Row="2"
+                    Text="{Binding State}"
+                    FontSize="20"
+                    Margin="10"
+                    FontAttributes="Bold" />
+                <Label Grid.Column="1" Grid.Row="2"
                     Text="{Binding State}"
                     FontSize="20"
                     FontAttributes="Bold" />
-                <Label Grid.Column="0" Grid.Row="4"
-                    Text="{Binding State}"
+
+                <!--DATA DI USCITA-->
+                <Label Grid.Column="0" Grid.Row="3"
+                    Text="Data di RIlascio"
+                    FontSize="20"
+                    Margin="10"
                     FontAttributes="Bold" />
-                <Label Grid.Column="0" Grid.Row="5"
+                <Label Grid.Column="1" Grid.Row="3"
                     Text="{Binding DateRelease}"
+                    FontAttributes="Bold"
+                    FontSize="20" />
+                
+                <!--NUMERO DI EPISODI-->
+                <Label Grid.Column="0" Grid.Row="4"
+                    Text="Numero di episodi"
+                    FontSize="20"
+                    Margin="10"
                     FontAttributes="Bold" />
-                <Label Grid.Column="0" Grid.Row="6"
+                <Label Grid.Column="1" Grid.Row="4"
                     Text="{Binding NumEpisodes}"
-                    FontAttributes="Bold" />
+                    FontAttributes="Bold"
+                    FontSize="20"/>
+                
                 <Button Grid.Column="1"  Grid.Row="7"
                     Text="Download"
                     FontAttributes="Bold"
