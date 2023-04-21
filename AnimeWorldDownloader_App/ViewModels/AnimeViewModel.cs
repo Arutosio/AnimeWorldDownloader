@@ -22,11 +22,11 @@ namespace AnimeWorldDownloader_App.ViewModels
 
         public AnimeViewModel() { }
 
-        public AnimeViewModel(Anime anime)
+        public AnimeViewModel(AnimeModel animeModel)
         {
-            this.Name = anime.Name;
-            this.ImageUrl = anime.ImageUrl;
-            this.UriDetail = anime.UriDetail;
+            this.Name = animeModel.Name;
+            this.ImageUrl = animeModel.ImageUrl;
+            this.UriDetail = animeModel.UriDetail;
         }
 
         public void OnPropertyChanged([CallerMemberName] string name = "") =>

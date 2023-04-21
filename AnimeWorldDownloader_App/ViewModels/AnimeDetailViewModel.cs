@@ -18,10 +18,17 @@ namespace AnimeWorldDownloader_App.ViewModels
         private string _state;
         private DateTime _dateRelease;
         private int _numEpisodes;
+        private List<string> _genere;
 
         public AnimeDetailViewModel(string uriDetail)
         {
-            GetAnimeInfo(uriDetail);
+            AnimeDetailModel animeDetailModel = GetAnimeDetail(uriDetail);
+            this.Name = animeDetailModel.Name;
+            this.UriDetail = animeDetailModel.UriDetail;
+            this.ImageUrl = animeDetailModel.ImageUrl;
+            this.State = animeDetailModel.State;
+            this.NumEpisodes = animeDetailModel.NumEpisodes;
+            this.Genere = animeDetailModel.Genere;
         }
 
         public string State
@@ -63,26 +70,27 @@ namespace AnimeWorldDownloader_App.ViewModels
             }
         }
 
-        private void GetAnimeInfo(string uriDetail)
+        public List<string> Genere
         {
-            AnimeDetail animeDetail = new();
+            get { return _genere; }
+            set
+            {
+                if (_genere != value)
+                {
+                    _genere = value;
+                    OnPropertyChanged(); // reports this property
+                }
+            }
+        }
 
+        private AnimeDetailModel GetAnimeDetail(string uriDetail)
+        {
+            AnimeDetailModel animeDetailModel = new();
             if (!string.IsNullOrWhiteSpace(uriDetail))
             {
-                HttpTalker httpTalker =  HttpTalker.GetInstance();
-                string html = httpTalker.GetResoultFromUri(uriDetail);
-
-                // 'film-list' è la classe del div dove si trovano gli anime
-                List<string> elements = HtmlReader.GetItemsWithClass(html, "film-list", "div.item");
-
-                animeDetail = new AnimeDetail {Name = "Charlie", ImageUrl = "https://img.animeworld.tv/locandine/68073l.jpg", NumEpisodes = 12, State = "Finito", DateRelease = DateTime.Now};
-
-                this.Name = animeDetail.Name;
-                this.ImageUrl = animeDetail.ImageUrl;
-                this.State = animeDetail.State;
-                this.DateRelease = animeDetail.DateRelease;
-                this.NumEpisodes = animeDetail.NumEpisodes;
+                animeDetailModel = AnimeDetailModel.GetAnimeDetail(uriDetail);
             }
+            return animeDetailModel;
         }
     }
 }
