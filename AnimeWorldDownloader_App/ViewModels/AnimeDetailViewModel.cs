@@ -17,10 +17,11 @@ namespace AnimeWorldDownloader_App.ViewModels
     {
         private string _state;
         private string _dateRelease;
-        private int _numEpisodes;
+        private string _numEpisodes;
         private string _genere;
         private string _time;
         private double _views;
+        private string _description;
 
         public AnimeDetailViewModel(string uriDetail)
         {
@@ -34,6 +35,7 @@ namespace AnimeWorldDownloader_App.ViewModels
             this.Genere = string.Join(", ", animeDetailModel.Genere);
             this.Time = animeDetailModel.Time;
             this.Views = animeDetailModel.Views;
+            this.Description = animeDetailModel.Description;
         }
 
         public string State
@@ -62,7 +64,7 @@ namespace AnimeWorldDownloader_App.ViewModels
             }
         }
 
-        public int NumEpisodes
+        public string NumEpisodes
         {
             get { return _numEpisodes; }
             set
@@ -108,6 +110,19 @@ namespace AnimeWorldDownloader_App.ViewModels
                 if (_views != value)
                 {
                     _views = value;
+                }
+            }
+        }
+
+        public string Description
+        {
+            get { return _description; }
+            set
+            {
+                if (_description != value)
+                {
+                    _description = value;
+                    OnPropertyChanged(); // reports this property
                 }
             }
         }

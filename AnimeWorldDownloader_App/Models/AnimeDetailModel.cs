@@ -14,11 +14,12 @@ namespace AnimeWorldDownloader_App.Models
     public class AnimeDetailModel : AnimeModel
     {
         public string State { get; set; }
-        public int NumEpisodes { get; set; }
+        public string NumEpisodes { get; set; }
         public string DateRelease { get; set; }
         public List<string> Genere { get; set; }
         public string Time { get; set; }
         public double Views { get; set; }
+        public string Description { get; set; }
 
         public static AnimeDetailModel GetAnimeDetail(string uriDetail)
         {
@@ -43,6 +44,9 @@ namespace AnimeWorldDownloader_App.Models
  
                 // valorizazione Uri
                 animeDetailModel.UriDetail = uriDetail;
+
+                // Descrizione
+                animeDetailModel.Description = document.QuerySelector("div.desc").InnerHtml;
 
                 // seleziona il div padre e tutti i div figli con la classe "item"
                 IHtmlCollection<AngleSharp.Dom.IElement> eDLs = document.QuerySelectorAll("dl.meta.col-sm-6");
@@ -80,7 +84,7 @@ namespace AnimeWorldDownloader_App.Models
                         }
                         if (valueCase.Contains("EPISODI"))
                         {
-                            animeDetailModel.NumEpisodes = Convert.ToInt32(eDDs[i].InnerHtml);
+                            animeDetailModel.NumEpisodes = eDDs[i].InnerHtml;
                         }
                         if (valueCase.Contains("STATO") && string.IsNullOrEmpty(animeDetailModel.State))
                         {

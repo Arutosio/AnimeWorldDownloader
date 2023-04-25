@@ -6,7 +6,7 @@
              x:DataType="local:SearchAnimeViewModel"
              Title="AnimeWorldDownloader" >
 
-    <ScrollView>
+    <ScrollView >
         <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <!--<Border
                 StrokeThickness="4"
@@ -23,7 +23,7 @@
                     </LinearGradientBrush>
                 </Border.Stroke>-->
 
-                <Grid Margin="10" RowSpacing="6" ColumnSpacing="6" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <Grid Margin="10" RowSpacing="6" ColumnSpacing="6" HorizontalOptions="FillAndExpand">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -68,7 +68,7 @@
                         HorizontalOptions="End" />
                 </Grid>
             <!--</Border>-->
-            <VerticalStackLayout Margin="10">
+            <VerticalStackLayout Margin="10" VerticalOptions="Start">
                 <ListView ItemsSource="{Binding AnimeViewModels}" HasUnevenRows="True" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -76,7 +76,7 @@
                                 <HorizontalStackLayout Margin="10" >
                                     <Image
                                         Source="{Binding ImageUrl}"
-                                        HeightRequest="156"
+                                        HeightRequest="146"
                                         HorizontalOptions="Start" />
                                     <VerticalStackLayout Margin="5">
                                         <!--<Label 

@@ -8,7 +8,6 @@ using AnimeWorldDownloader_App.Data;
 
 namespace AnimeWorldDownloader_App.ViewModels
 {
-
     internal class SearchAnimeViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -55,7 +54,18 @@ namespace AnimeWorldDownloader_App.ViewModels
             if (!string.IsNullOrWhiteSpace(SearchText))
             {
                 animeModels = AnimeModel.GetAnimes(SearchText);
-                // animeModels = AnimeModel.GetAnimeResultsSync(SearchText);
+            }
+
+            List<AnimeViewModel> animeViewModels = animeModels.Select(a => new AnimeViewModel(a)).ToList();
+            AnimeViewModels = new ObservableCollection<AnimeViewModel>(animeViewModels);
+        }
+
+        public async void GetSearchAnimeAsync()
+        {
+            List<AnimeModel> animeModels = new();
+            if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                animeModels = await AnimeModel.GetAnimesAsync(SearchText);
             }
 
             List<AnimeViewModel> animeViewModels = animeModels.Select(a => new AnimeViewModel(a)).ToList();

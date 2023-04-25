@@ -7,132 +7,144 @@
              Title="AnimeDetailView"
              BackgroundImageSource="{Binding ImageUrl}">
 
-
-    <Grid BackgroundColor="#98000000"
+        <Grid BackgroundColor="#98000000"
           HorizontalOptions="FillAndExpand" 
           VerticalOptions="FillAndExpand">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" 
+            <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" 
                 BackgroundColor="#99000000" Padding="3">
-            <Label
-                LineBreakMode="WordWrap"
-                Text="{Binding Name}"
+                <Label
+                    LineBreakMode="WordWrap"
+                    Text="{Binding Name}"
+                    FontSize="18"
+                    Margin="0"
+                    HorizontalTextAlignment="Center"
+                    VerticalTextAlignment="Center"
+                    FontAttributes="Bold" />
+            </Border>
+            <!--STATO-->
+            <Label Grid.Column="0" Grid.Row="2"
+                Text="Stato"
+                FontSize="16"
+                Margin="10"
+                FontAttributes="Bold" 
+                VerticalTextAlignment="Start"/>
+            <Label Grid.Column="1" Grid.Row="2"
+                Text="{Binding State}"
+                FontSize="14"
+                Margin="10"
+                FontAttributes="Bold"
+                VerticalTextAlignment="Start"/>
+
+            <!--DATA DI USCITA-->
+            <Label Grid.Column="0" Grid.Row="3"
+                Text="Data di Rilascio"
+                FontSize="16"
+                Margin="10"
+                FontAttributes="Bold"
+                VerticalTextAlignment="Start" />
+            <Label Grid.Column="1" Grid.Row="3"
+                Text="{Binding DateRelease}"
+                FontAttributes="Bold"
+                FontSize="14"
+                Margin="10"
+                VerticalTextAlignment="Start" />
+
+            <!--NUMERO DI EPISODI-->
+            <Label Grid.Column="0" Grid.Row="4"
+                Text="Numero di episodi"
                 FontSize="18"
-                Margin="0,0,0,10"
-                HorizontalTextAlignment="Center"
-                VerticalTextAlignment="Center"
-                FontAttributes="Bold" />
-        </Border>
-        
-        <!--STATO-->
-        <Label Grid.Column="0" Grid.Row="2"
-            Text="Stato"
-            FontSize="16"
-            Margin="10"
-            FontAttributes="Bold" 
-            VerticalTextAlignment="Start"/>
-        <Label Grid.Column="1" Grid.Row="2"
-            Text="{Binding State}"
-            FontSize="14"
-            Margin="10"
-            FontAttributes="Bold"
-            VerticalTextAlignment="Start"/>
+                Margin="10"
+                FontAttributes="Bold"
+                VerticalTextAlignment="Start" />
+            <Label Grid.Column="1" Grid.Row="4"
+                Text="{Binding NumEpisodes}"
+                FontAttributes="Bold"
+                FontSize="16"
+                Margin="10"
+                VerticalTextAlignment="Start" />
 
-        <!--DATA DI USCITA-->
-        <Label Grid.Column="0" Grid.Row="3"
-            Text="Data di Rilascio"
-            FontSize="16"
-            Margin="10"
-            FontAttributes="Bold"
-            VerticalTextAlignment="Start" />
-        <Label Grid.Column="1" Grid.Row="3"
-            Text="{Binding DateRelease}"
-            FontAttributes="Bold"
-            FontSize="14"
-            Margin="10"
-            VerticalTextAlignment="Start" />
+            <!--DURATA-->
+            <Label Grid.Column="0" Grid.Row="5"
+                Text="Durata"
+                FontSize="18"
+                Margin="10"
+                FontAttributes="Bold"
+                VerticalTextAlignment="Start" />
+            <Label Grid.Column="1" Grid.Row="5"
+                Text="{Binding Time}"
+                FontAttributes="Bold"
+                FontSize="16"
+                Margin="10"
+                VerticalTextAlignment="Start" />
 
-        <!--NUMERO DI EPISODI-->
-        <Label Grid.Column="0" Grid.Row="4"
-            Text="Numero di episodi"
-            FontSize="18"
-            Margin="10"
-            FontAttributes="Bold"
-            VerticalTextAlignment="Start" />
-        <Label Grid.Column="1" Grid.Row="4"
-            Text="{Binding NumEpisodes}"
-            FontAttributes="Bold"
-            FontSize="16"
-            Margin="10"
-            VerticalTextAlignment="Start" />
+            <!--GENERE-->
+            <Label Grid.Column="0" Grid.Row="6"
+                Text="Genere"
+                FontSize="18"
+                Margin="10"
+                FontAttributes="Bold"
+                VerticalTextAlignment="Start" />
+            <Label Grid.Column="1" Grid.Row="6"
+                Text="{Binding Genere}"
+                FontAttributes="Bold"
+                FontSize="16"
+                Margin="10"
+                VerticalTextAlignment="Start" />
 
-        <!--DURATA-->
-        <Label Grid.Column="0" Grid.Row="5"
-            Text="Durata"
-            FontSize="18"
-            Margin="10"
-            FontAttributes="Bold"
-            VerticalTextAlignment="Start" />
-        <Label Grid.Column="1" Grid.Row="5"
-            Text="{Binding Time}"
-            FontAttributes="Bold"
-            FontSize="16"
-            Margin="10"
-            VerticalTextAlignment="Start" />
+            <!--DESCRIZIONE-->
+            <ScrollView Margin="20" Grid.Column="0" Grid.ColumnSpan="2"  Grid.Row="7"
+                VerticalScrollBarVisibility="Always"
+                VerticalOptions="FillAndExpand">
+                <Label
+                    Text="{Binding Description}"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    Margin="10"
+                    VerticalTextAlignment="Start" />
+            </ScrollView>
 
-        <!--GENERE-->
-        <Label Grid.Column="0" Grid.Row="6"
-            Text="Genere"
-            FontSize="18"
-            Margin="10"
-            FontAttributes="Bold"
-            VerticalTextAlignment="Start" />
-        <Label Grid.Column="1" Grid.Row="6"
-            Text="{Binding Genere}"
-            FontAttributes="Bold"
-            FontSize="16"
-            Margin="10"
-            VerticalTextAlignment="Start" />
+            <!--TASTI FINALI-->
+            <Button Grid.Column="0" Grid.Row="9"
+                x:Name="SearchClicked"
+                Text="Back"
+                FontSize="Title"
+                FontAttributes="Bold"
+                Margin="2"
+                BackgroundColor="Black"
+                TextColor="White"
+                BorderColor="AntiqueWhite"
+                BorderWidth="3"
+                Clicked="OnButtonClickedGoToSearch"
+                HorizontalOptions="Start"
+                VerticalOptions="End"/>
 
-        <Button Grid.Column="0" Grid.Row="7"
-            x:Name="SearchClicked"
-            Text="Back"
-            FontSize="Title"
-            FontAttributes="Bold"
-            Margin="2"
-            BackgroundColor="Black"
-            TextColor="White"
-            BorderColor="AntiqueWhite"
-            BorderWidth="3"
-            Clicked="OnButtonClickedGoToSearch"
-            HorizontalOptions="Start"
-            VerticalOptions="End"/>
-
-        <Button Grid.Column="1"  Grid.Row="7"
-            Text="Download"
-            FontSize="Title"
-            FontAttributes="Bold"
-            Margin="2"
-            BackgroundColor="DeepSkyBlue"
-            TextColor="White"
-            BorderColor="AntiqueWhite"
-            BorderWidth="3"
-            HorizontalOptions="End"
-            VerticalOptions="End" />
-    </Grid>
+            <Button Grid.Column="1"  Grid.Row="9"
+                Text="Download"
+                FontSize="Title"
+                FontAttributes="Bold"
+                Margin="2"
+                BackgroundColor="DeepSkyBlue"
+                TextColor="White"
+                BorderColor="AntiqueWhite"
+                BorderWidth="3"
+                Clicked="OnButtonClickedGoToDownload"
+                HorizontalOptions="End"
+                VerticalOptions="End" />
+        </Grid>
 </ContentPage>

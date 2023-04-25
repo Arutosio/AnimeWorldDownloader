@@ -63,5 +63,36 @@ namespace AnimeWorldDownloader_App.Models
             return animeModels;
         }
 
+
+        public static async Task<List<AnimeModel>> GetAnimesAsync(string searchText)
+        {
+            List<AnimeModel> animeModels = new();
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                string searchTextAdatpting = searchText.Replace(" ", "+");
+                string searchUri = $"https://www.animeworld.tv/search?keyword={searchTextAdatpting}";
+
+                HttpTalker httpTalker = HttpTalker.GetInstance();
+                // Recupero la sorgente html
+                string html = await httpTalker.GetAsyncResoultFromUri(searchUri);
+
+                // crea un contesto e apre il documento HTML
+                IBrowsingContext context = BrowsingContext.New(Configuration.Default);
+                IDocument document = context.OpenAsync(req => req.Content(html)).Result;
+
+                // seleziona il div padre e tutti i div figli con la classe "item"
+                AngleSharp.Dom.IElement parent = document.QuerySelector($"div.film-list");
+                IHtmlCollection<AngleSharp.Dom.IElement> childrens = parent.QuerySelectorAll($"div.item");
+
+                // itera tutti i i contenuti di ogni div "item"
+                foreach (AngleSharp.Dom.IElement elements in childrens)
+                {
+                    animeModels.Add(GetAnime(elements));
+                }
+            }
+
+            return animeModels;
+        }
+
     }
 }

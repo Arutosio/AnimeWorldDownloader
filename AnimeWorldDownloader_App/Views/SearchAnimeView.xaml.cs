@@ -2,7 +2,7 @@
 using AnimeWorldDownloader_App.Models;
 using AnimeWorldDownloader_App.ViewModels;
 using System.Collections.ObjectModel;
-using Windows.UI.ApplicationSettings;
+//using Windows.UI.ApplicationSettings;
 using AnimeWorldDownloader_App.Views;
 
 namespace AnimeWorldDownloader_App
@@ -10,7 +10,8 @@ namespace AnimeWorldDownloader_App
 
     public partial class MainPage : ContentPage
     {
-        SearchAnimeViewModel searchAnimeViewModel;  
+        SearchAnimeViewModel searchAnimeViewModel;
+       // Task task = new(searchAnimeViewModel.GetSearchAnimeAsync());
 
         public MainPage()
         {
@@ -43,12 +44,12 @@ namespace AnimeWorldDownloader_App
 
         private void Entry_Completed(object sender, EventArgs e)
         {
-            searchAnimeViewModel.GetSearchAnime();
+            //searchAnimeViewModel.GetSearchAnime();
+            searchAnimeViewModel.GetSearchAnimeAsync();
         }
 
         private void OnButtonClickedGoDetail(object sender, EventArgs e)
         {
-            // assuming your Model class is "Student"
             var botton = (Button)sender;
             var item = (AnimeViewModel)botton.BindingContext;
             var uriDetail = item.UriDetail;
