@@ -54,7 +54,8 @@ namespace AnimeWorldDownloader_App
             var item = (AnimeViewModel)botton.BindingContext;
             var uriDetail = item.UriDetail;
 
-            Application.Current.MainPage.Navigation.PushModalAsync(new AnimeDetailView(uriDetail), true);
+            //Application.Current.MainPage.Navigation.PushModalAsync(new AnimeDetailView(uriDetail), true);
+            this.Navigation.PushModalAsync(new AnimeDetailView(uriDetail), true);
         }
     }
 }

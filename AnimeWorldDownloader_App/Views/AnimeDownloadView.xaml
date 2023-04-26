@@ -1,28 +1,78 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:AnimeWorldDownloader_App.ViewModels"
              x:Class="AnimeWorldDownloader_App.Views.AnimeDownloadView"
-             Title="AnimeDownloadView">
-    <VerticalStackLayout>
-        
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+             Title="AnimeDownloadView"
+             x:DataType="local:AnimeDownloadViewModel"
+             BackgroundImageSource="{Binding ImageUrl}" >
 
-        <Button Grid.Column="0" Grid.Row="8"
-            x:Name="SearchClicked"
-            Text="Back"
-            FontSize="Title"
-            FontAttributes="Bold"
-            Margin="2"
-            BackgroundColor="Black"
-            TextColor="White"
-            BorderColor="AntiqueWhite"
-            BorderWidth="3"
-            Clicked="OnButtonClickedGoBackToDetail"
-            HorizontalOptions="Start"
-            VerticalOptions="End"/>
+    <VerticalStackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+
+            <FlexLayout Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1"
+                Direction="Row"
+                AlignItems="Start"
+                JustifyContent="SpaceAround"
+                Wrap="Wrap"
+                Padding="20">
+
+                <!--<Label Text="Contenuto 1"
+                   BackgroundColor="LightBlue"
+                   WidthRequest="100"
+                   HeightRequest="100"
+                   FlexLayout.Basis="100" />
+
+                <Label Text="Contenuto 2"
+                   BackgroundColor="LightCoral"
+                   WidthRequest="100"
+                   HeightRequest="100"
+                   FlexLayout.Basis="100"/>
+
+                <Label Text="Contenuto 3"
+                   BackgroundColor="LightGreen"
+                   WidthRequest="100"
+                   HeightRequest="100"
+                   FlexLayout.Basis="100"/>
+
+                <Label Text="Contenuto 4"
+                   BackgroundColor="LightYellow"
+                   WidthRequest="100"
+                   HeightRequest="100"
+                   FlexLayout.Basis="100"/>-->
+
+            </FlexLayout>
+            <HorizontalStackLayout Grid.Column="1" Grid.Row="2" HorizontalOptions="Fill">
+
+                <Button
+                    x:Name="GoToDetailClicked"
+                    Text="Back"
+                    FontSize="Title"
+                    FontAttributes="Bold"
+                    Margin="2"
+                    BackgroundColor="Black"
+                    TextColor="White"
+                    BorderColor="AntiqueWhite"
+                    BorderWidth="3"
+                    Clicked="OnButtonClickedGoBackToDetail"
+                    HorizontalOptions="Start"
+                    VerticalOptions="End" />
+
+                <ProgressBar x:Name="progressBar" Progress="0.5"
+                    ProgressColor="Orange" />
+            </HorizontalStackLayout>
+
+        </Grid>
     </VerticalStackLayout>
-    
+
 </ContentPage>

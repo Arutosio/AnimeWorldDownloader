@@ -130,7 +130,7 @@
                 TextColor="White"
                 BorderColor="AntiqueWhite"
                 BorderWidth="3"
-                Clicked="OnButtonClickedGoToSearch"
+                Clicked="OnButtonClickedGoBackToSearch"
                 HorizontalOptions="Start"
                 VerticalOptions="End"/>
 

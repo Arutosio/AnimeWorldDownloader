@@ -76,26 +76,37 @@ namespace AnimeWorldDownloader_App.Data
             }
         }
 
-        public static async Task DownloadFileAsync(string url, string destinationFolder)
+        private void DownloadProgressCallback(object sender, DownloadProgressChangedEventArgs e)
         {
-            // crea un client HTTP
-            using (var client = new HttpClient())
+            Console.WriteLine("{0}% scaricato", e.ProgressPercentage);
+        }
+
+        public async Task DownloadFileAsync(string url, string savePath, Action<double> UpdateDownloadProgress)
+        {
+            using (HttpClient httpClient = new HttpClient())
             {
-                // crea una richiesta HTTP GET per scaricare il file dal URL
-                using (var response = await client.GetAsync(url))
+                httpClient.DefaultRequestHeaders.TransferEncodingChunked = true;
+
+                HttpResponseMessage response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+                response.EnsureSuccessStatusCode();
+
+                long? totalBytes = response.Content.Headers.ContentLength;
+                long readBytes = 0L;
+                byte[] buffer = new byte[4096];
+
+                using (FileStream fileStream = new FileStream(savePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (Stream stream = await response.Content.ReadAsStreamAsync())
                 {
-                    // verifica se la risposta ha successo (HTTP 2xx)
-                    response.EnsureSuccessStatusCode();
-
-                    // costruisce il percorso completo alla destinazione file
-                    var destinationPath = Path.Combine(destinationFolder, Path.GetFileName(url));
-
-                    // apre in scrittura il file di destinazione usando Stream
-                    using (var fileStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    int bytesRead;
+                    do
                     {
-                        // scarica il contenuto del file nella memoria usando Stream
-                        await response.Content.CopyToAsync(fileStream);
-                    }
+                        bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+                        readBytes += bytesRead;
+
+                        double percentage = (double)Math.Round((decimal)readBytes / totalBytes.Value * 100);
+                        UpdateDownloadProgress.Invoke(percentage);
+                        await fileStream.WriteAsync(buffer, 0, bytesRead);
+                    } while (bytesRead > 0);
                 }
             }
         }

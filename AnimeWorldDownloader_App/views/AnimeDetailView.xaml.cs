@@ -14,9 +14,9 @@ public partial class AnimeDetailView : ContentPage
 		this.BindingContext = animeDetailViewModel;
 	}
 
-    private void OnButtonClickedGoToSearch(object sender, EventArgs e)
+    private void OnButtonClickedGoBackToSearch(object sender, EventArgs e)
     {
-        Application.Current.MainPage.Navigation.PopAsync();
+        this.Navigation.PopModalAsync();
     }
 
     private void OnButtonClickedGoToDownload(object sender, EventArgs e)
@@ -25,7 +25,6 @@ public partial class AnimeDetailView : ContentPage
 		var item = (AnimeViewModel)botton.BindingContext;
 		var uriDetail = item.UriDetail;
 
-		//Application.Current.MainPage.Navigation.PushModalAsync(new AnimeDetailView(uriDetail), true);
 		this.Navigation.PushModalAsync(new AnimeDownloadView(uriDetail), true);
     }
 }

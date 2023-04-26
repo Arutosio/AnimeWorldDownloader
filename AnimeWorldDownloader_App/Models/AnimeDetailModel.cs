@@ -16,17 +16,18 @@ namespace AnimeWorldDownloader_App.Models
         public string State { get; set; }
         public string NumEpisodes { get; set; }
         public string DateRelease { get; set; }
-        public List<string> Genere { get; set; }
+        public string Genere { get; set; }
         public string Time { get; set; }
         public double Views { get; set; }
         public string Description { get; set; }
 
         public static AnimeDetailModel GetAnimeDetail(string uriDetail)
         {
-            AnimeDetailModel animeDetailModel = new();
-
+            AnimeDetailModel animeDetailModel = new();  
+            
             if (!string.IsNullOrWhiteSpace(uriDetail))
             {
+
                 HttpTalker httpTalker = HttpTalker.GetInstance();
                 // Recupero la sorgente html
                 string html = httpTalker.GetResoultFromUri(uriDetail);
@@ -41,9 +42,6 @@ namespace AnimeWorldDownloader_App.Models
                 // valorizazione immagine
                 AngleSharp.Dom.IElement eDivDelImag = document.QuerySelector("#mobile-thumbnail-watch");
                 animeDetailModel.ImageUrl = eDivDelImag.QuerySelector("img").GetAttribute("src");
- 
-                // valorizazione Uri
-                animeDetailModel.UriDetail = uriDetail;
 
                 // Descrizione
                 animeDetailModel.Description = document.QuerySelector("div.desc").InnerHtml;
@@ -73,7 +71,8 @@ namespace AnimeWorldDownloader_App.Models
                         if (valueCase.Contains("GENERE"))
                         {
                             IHtmlCollection<AngleSharp.Dom.IElement> x = eDDs[i].QuerySelectorAll("a");
-                            animeDetailModel.Genere = x.Select(g => g.InnerHtml).ToList();
+                            List<string> generi = x.Select(g => g.InnerHtml).ToList();
+                            animeDetailModel.Genere = string.Join(", ", generi); ;
                         }
 
                         // Casi del secondo elemento DL

@@ -25,14 +25,15 @@ namespace AnimeWorldDownloader_App.ViewModels
 
         public AnimeDetailViewModel(string uriDetail)
         {
-            AnimeDetailModel animeDetailModel = GetAnimeDetail(uriDetail);
+            AnimeDetailModel animeDetailModel = AnimeDetailModel.GetAnimeDetail(uriDetail);
+
             this.Name = animeDetailModel.Name;
             this.UriDetail = animeDetailModel.UriDetail;
             this.ImageUrl = animeDetailModel.ImageUrl;
             this.State = animeDetailModel.State;
             this.DateRelease = animeDetailModel.DateRelease;
             this.NumEpisodes = animeDetailModel.NumEpisodes;
-            this.Genere = string.Join(", ", animeDetailModel.Genere);
+            this.Genere = animeDetailModel.Genere;
             this.Time = animeDetailModel.Time;
             this.Views = animeDetailModel.Views;
             this.Description = animeDetailModel.Description;
@@ -98,6 +99,7 @@ namespace AnimeWorldDownloader_App.ViewModels
                 if (_time != value)
                 {
                     _time = value;
+                    OnPropertyChanged();
                 }
             }
         }
@@ -110,6 +112,7 @@ namespace AnimeWorldDownloader_App.ViewModels
                 if (_views != value)
                 {
                     _views = value;
+                    OnPropertyChanged();
                 }
             }
         }
@@ -125,16 +128,6 @@ namespace AnimeWorldDownloader_App.ViewModels
                     OnPropertyChanged(); // reports this property
                 }
             }
-        }
-
-        private AnimeDetailModel GetAnimeDetail(string uriDetail)
-        {
-            AnimeDetailModel animeDetailModel = new();
-            if (!string.IsNullOrWhiteSpace(uriDetail))
-            {
-                animeDetailModel = AnimeDetailModel.GetAnimeDetail(uriDetail);
-            }
-            return animeDetailModel;
         }
     }
 }

@@ -13,8 +13,16 @@ namespace AnimeWorldDownloader_App.Models
     public class AnimeDownloadModel : AnimeModel
     {
         public List<EpisodeModel> EpisodeModels { get; set; } = new();
+        public double DownloadProgress { get; set; }
 
+        private void UpdateDownloadProgress(double progress) { DownloadProgress = progress; }
         public AnimeDownloadModel() { }
+
+        public async void DownloadEpisode(EpisodeModel episodeModel)
+        {
+            HttpTalker httpTalker = HttpTalker.GetInstance();
+            await httpTalker.DownloadFileAsync(episodeModel.UriEpisode, episodeModel.FileLocation, UpdateDownloadProgress);
+        }
 
         public static AnimeDownloadModel GetAnimeDownloadModel(string uriDetail)
         {
@@ -47,7 +55,8 @@ namespace AnimeWorldDownloader_App.Models
             return animeDownloadModel;
         }
 
-        private string AnimeDirectoryPath() { return Path.Combine(Directory.GetCurrentDirectory(), Name.Replace(" ", "")); }
+        //Directory.GetCurrentDirectory()
+        private string AnimeDirectoryPath() { return Path.Combine(@"D:\GitHub\AnimeWorldDownloader\AnimeWorldDownloader_App\bin", Name.Replace(" ", "")); }
 
         private static List<EpisodeModel> GetEpisodes(IDocument document, string animePath)
         {
@@ -77,8 +86,6 @@ namespace AnimeWorldDownloader_App.Models
                 Uri urlDowloadEpisode = new(eidownloadLink.GetAttribute("href"));
                 
                 EpisodeModel episodeModel = EpisodeModel.GetEpisode(urlDowloadEpisode, animePath);
-
-                httpTalker.DownloadFile(episodeModel.UriEpisode, episodeModel.FileLocation);
 
                 episodeModels.Insert(i, episodeModel);
             }

@@ -12,6 +12,8 @@ namespace AnimeWorldDownloader_App.ViewModels
     {
         private ObservableCollection<EpisodeModel> _episodeModels = new();
 
+        private double _downloadProgress;
+
         public AnimeDownloadViewModel(string uriAnimeDetail)
         {
             AnimeDownloadModel animeDownloadModel = AnimeDownloadModel.GetAnimeDownloadModel(uriAnimeDetail);
@@ -19,6 +21,7 @@ namespace AnimeWorldDownloader_App.ViewModels
             this.UriDetail = animeDownloadModel.UriDetail;
             this.ImageUrl = animeDownloadModel.ImageUrl;
             this.EpisodeModels = new(animeDownloadModel.EpisodeModels);
+            this.DownloadProgress = animeDownloadModel.DownloadProgress;
         }
 
         public ObservableCollection<EpisodeModel> EpisodeModels
@@ -29,6 +32,19 @@ namespace AnimeWorldDownloader_App.ViewModels
                 if (_episodeModels != null && _episodeModels != value)
                 {
                     _episodeModels = value;
+                    OnPropertyChanged(); // reports this property
+                }
+            }
+        }
+
+        public double DownloadProgress
+        {
+            get { return _downloadProgress; }
+            set
+            {
+                if (_downloadProgress != value)
+                {
+                    _downloadProgress = value;
                     OnPropertyChanged(); // reports this property
                 }
             }
