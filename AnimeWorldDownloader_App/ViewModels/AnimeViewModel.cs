@@ -14,7 +14,7 @@ namespace AnimeWorldDownloader_App.ViewModels
 
     public class AnimeViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         private string _name = string.Empty;
         private string _imageUrl = string.Empty;

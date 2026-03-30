@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AngleSharp;
-using AngleSharp.Dom;
 using AnimeWorldDownloader_App.Data;
+using System.Text.RegularExpressions;
 
 namespace AnimeWorldDownloader_App.Models
 {
@@ -14,80 +8,108 @@ namespace AnimeWorldDownloader_App.Models
     {
         public List<EpisodeModel> EpisodeModels { get; set; } = new();
         public double DownloadProgress { get; set; }
+        public string Year { get; set; } = string.Empty;
+        public string DownloadFolderPath { get; set; } = string.Empty;
 
-        private void UpdateDownloadProgress(double progress) { DownloadProgress = progress; }
-        public AnimeDownloadModel() { }
-
-        public async void DownloadEpisode(EpisodeModel episodeModel)
+        public static async Task<AnimeDownloadModel> GetAnimeDownloadModelAsync(string uriDetail)
         {
-            HttpTalker httpTalker = HttpTalker.GetInstance();
-            await httpTalker.DownloadFileAsync(episodeModel.UriEpisode, episodeModel.FileLocation, UpdateDownloadProgress);
-        }
-
-        public static AnimeDownloadModel GetAnimeDownloadModel(string uriDetail)
-        {
-            AnimeDownloadModel animeDownloadModel = new();
+            AnimeDownloadModel model = new();
 
             if (!string.IsNullOrWhiteSpace(uriDetail))
             {
                 HttpTalker httpTalker = HttpTalker.GetInstance();
-                // Recupero la sorgente html
-                string html = httpTalker.GetResoultFromUri(uriDetail);
+                string html = await httpTalker.GetResultFromUriAsync(uriDetail);
 
-                // crea un contesto e apre il documento HTML
-                IBrowsingContext context = BrowsingContext.New(Configuration.Default);
-                IDocument document = context.OpenAsync(req => req.Content(html)).Result;
+                var context = BrowsingContext.New(Configuration.Default);
+                var document = await context.OpenAsync(req => req.Content(html));
 
-                // valorizazione il nome
-                animeDownloadModel.Name = document.QuerySelector("h2.title").TextContent;
+                model.Name = document.QuerySelector("h2.title")?.TextContent ?? string.Empty;
 
-                // valorizazione immagine
-                AngleSharp.Dom.IElement eDivDelImag = document.QuerySelector("#mobile-thumbnail-watch");
-                animeDownloadModel.ImageUrl = eDivDelImag.QuerySelector("img").GetAttribute("src");
+                var eDivDelImag = document.QuerySelector("#mobile-thumbnail-watch");
+                model.ImageUrl = eDivDelImag?.QuerySelector("img")?.GetAttribute("src") ?? string.Empty;
 
-                // valorizazione Uri
-                animeDownloadModel.UriDetail = uriDetail;
+                model.UriDetail = uriDetail;
+                model.Year = ExtractYear(document);
 
-                // seleziona il div padre contenente tutti i div range
-                animeDownloadModel.EpisodeModels = AnimeDownloadModel.GetEpisodes(document, animeDownloadModel.AnimeDirectoryPath());
+                // Cartella: [BasePath configurabile]\NomeAnime (Anno)\
+                string folderName = SanitizeName($"{model.Name} ({model.Year})");
+                model.DownloadFolderPath = Path.Combine(AppSettings.DownloadBasePath, folderName);
+
+                // Nome file base: Nome_Anime (underscore al posto degli spazi)
+                string fileNameBase = SanitizeName(model.Name).Replace(' ', '_');
+
+                string baseUrl = GetBaseUrl(uriDetail);
+                model.EpisodeModels = GetEpisodes(document, baseUrl, model.DownloadFolderPath, fileNameBase);
             }
 
-            return animeDownloadModel;
+            return model;
         }
 
-        //Directory.GetCurrentDirectory()
-        private string AnimeDirectoryPath() { return Path.Combine(@"D:\GitHub\AnimeWorldDownloader\AnimeWorldDownloader_App\bin", Name.Replace(" ", "")); }
-
-        private static List<EpisodeModel> GetEpisodes(IDocument document, string animePath)
+        private static string ExtractYear(AngleSharp.Dom.IDocument document)
         {
-            AngleSharp.Dom.IElement eServerEpisodeActive = document.QuerySelector("div.server.active");
-            IHtmlCollection<AngleSharp.Dom.IElement> eLiEpisode = eServerEpisodeActive.QuerySelectorAll("li.episode");
-            
+            var eDTs = document.QuerySelectorAll("dt");
+            var eDDs = document.QuerySelectorAll("dd");
+
+            for (int i = 0; i < eDTs.Length && i < eDDs.Length; i++)
+            {
+                string label = eDTs[i].InnerHtml.ToUpper();
+                if (label.Contains("DATA DI USCITA"))
+                {
+                    var match = Regex.Match(eDDs[i].InnerHtml, @"\d{4}");
+                    if (match.Success)
+                        return match.Value;
+                }
+            }
+
+            return "Sconosciuto";
+        }
+
+        private static string SanitizeName(string name)
+        {
+            char[] invalid = Path.GetInvalidFileNameChars();
+            foreach (char c in invalid)
+                name = name.Replace(c, '_');
+            return name.Trim();
+        }
+
+        private static string GetBaseUrl(string url)
+        {
+            if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
+                return $"{uri.Scheme}://{uri.Host}";
+            return "https://www.animeworld.ac";
+        }
+
+        private static List<EpisodeModel> GetEpisodes(AngleSharp.Dom.IDocument document, string baseUrl, string animePath, string fileNameBase)
+        {
+            var eServerEpisodeActive = document.QuerySelector("div.server.active");
+            if (eServerEpisodeActive == null)
+                return new List<EpisodeModel>();
+
+            var eLiEpisode = eServerEpisodeActive.QuerySelectorAll("li.episode");
             List<EpisodeModel> episodeModels = new(eLiEpisode.Length);
 
-            // itera tutti i i contenuti di ogni div "item"
-            for (int i = 0; eLiEpisode.Length > i; i++)
+            for (int i = 0; i < eLiEpisode.Length; i++)
             {
+                var eA = eLiEpisode[i].QuerySelector("a");
+                string? href = eA?.GetAttribute("href");
+                if (string.IsNullOrEmpty(href)) continue;
 
-                //AngleSharp.Dom.IElement  = eLiEpisode[i].QuerySelector($"[data-comment='{i}']");
-                AngleSharp.Dom.IElement eA = eLiEpisode[i].QuerySelector("a");
-                string href = eA.GetAttribute("href");
-                string urlPageEpisode = $"https://www.animeworld.tv{href}";
+                string episodePageUrl = href.StartsWith("http")
+                    ? href
+                    : $"{baseUrl}{href}";
 
-                HttpTalker httpTalker = HttpTalker.GetInstance();
-                // Recupero la sorgente html
-                string html = httpTalker.GetResoultFromUri(urlPageEpisode);
+                int epNum = i + 1;
+                // Nome file: NomeAnime_Ep_01.mp4
+                string fileName = $"{fileNameBase}_Ep_{epNum:D2}.mp4";
 
-                // crea un contesto e apre il documento HTML
-                IBrowsingContext context = BrowsingContext.New(Configuration.Default);
-                IDocument documentPageEpisode = context.OpenAsync(req => req.Content(html)).Result;
+                var episodeModel = new EpisodeModel
+                {
+                    NEpisode = epNum,
+                    UriWatch = episodePageUrl,
+                    FileLocation = Path.Combine(animePath, fileName)
+                };
 
-                AngleSharp.Dom.IElement eidownloadLink = documentPageEpisode.QuerySelector("#downloadLink");
-                Uri urlDowloadEpisode = new(eidownloadLink.GetAttribute("href"));
-                
-                EpisodeModel episodeModel = EpisodeModel.GetEpisode(urlDowloadEpisode, animePath);
-
-                episodeModels.Insert(i, episodeModel);
+                episodeModels.Add(episodeModel);
             }
 
             return episodeModels;

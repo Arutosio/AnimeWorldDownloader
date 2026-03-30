@@ -1,75 +1,56 @@
-﻿using System.Windows;
 using AnimeWorldDownloader_App.Models;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
-using AnimeWorldDownloader_App.Data;
 
 namespace AnimeWorldDownloader_App.ViewModels
 {
     internal class SearchAnimeViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        string _searchText = string.Empty;
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private string _searchText = string.Empty;
         private ObservableCollection<AnimeViewModel> _animeViewModels = new();
+        private bool _isBusy;
 
         public string SearchText
         {
-            get { return _searchText; }
-            set
-            {
-                if (_searchText != value)
-                {
-                    _searchText = value;
-                    OnPropertyChanged(); // reports this property
-                }
-            }
+            get => _searchText;
+            set { if (_searchText != value) { _searchText = value; OnPropertyChanged(); } }
         }
 
         public ObservableCollection<AnimeViewModel> AnimeViewModels
         {
-            get { return _animeViewModels; }
-            set
-            {
-                if (_animeViewModels != value)
-                {
-                    _animeViewModels = value;
-                    OnPropertyChanged(); // reports this property
-                }
-            }
+            get => _animeViewModels;
+            set { if (_animeViewModels != value) { _animeViewModels = value; OnPropertyChanged(); } }
+        }
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set { if (_isBusy != value) { _isBusy = value; OnPropertyChanged(); } }
         }
 
         public void OnPropertyChanged([CallerMemberName] string name = "") =>
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        public SearchAnimeViewModel()
+        public async Task GetSearchAnimeAsync()
         {
-
-        }
-
-        public void GetSearchAnime()
-        {
-            List<AnimeModel> animeModels = new();
-            if (!string.IsNullOrWhiteSpace(SearchText))
+            IsBusy = true;
+            try
             {
-                animeModels = AnimeModel.GetAnimes(SearchText);
+                List<AnimeModel> animeModels = new();
+                if (!string.IsNullOrWhiteSpace(SearchText))
+                {
+                    animeModels = await AnimeModel.GetAnimesAsync(SearchText);
+                }
+
+                List<AnimeViewModel> animeViewModels = animeModels.Select(a => new AnimeViewModel(a)).ToList();
+                AnimeViewModels = new ObservableCollection<AnimeViewModel>(animeViewModels);
             }
-
-            List<AnimeViewModel> animeViewModels = animeModels.Select(a => new AnimeViewModel(a)).ToList();
-            AnimeViewModels = new ObservableCollection<AnimeViewModel>(animeViewModels);
-        }
-
-        public async void GetSearchAnimeAsync()
-        {
-            List<AnimeModel> animeModels = new();
-            if (!string.IsNullOrWhiteSpace(SearchText))
+            finally
             {
-                animeModels = await AnimeModel.GetAnimesAsync(SearchText);
+                IsBusy = false;
             }
-
-            List<AnimeViewModel> animeViewModels = animeModels.Select(a => new AnimeViewModel(a)).ToList();
-            AnimeViewModels = new ObservableCollection<AnimeViewModel>(animeViewModels);
         }
     }
 }

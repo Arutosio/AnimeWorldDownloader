@@ -37,6 +37,14 @@
                     VerticalTextAlignment="Center"
                     FontAttributes="Bold" />
             </Border>
+            <!-- Loading -->
+            <ActivityIndicator Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                Color="Orange"
+                HorizontalOptions="Center"
+                Margin="10" />
+
             <!--STATO-->
             <Label Grid.Column="0" Grid.Row="2"
                 Text="Stato"

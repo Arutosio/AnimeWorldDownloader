@@ -1,98 +1,58 @@
-﻿using AngleSharp;
-using AngleSharp.Dom;
+using AngleSharp;
 using AnimeWorldDownloader_App.Data;
-using AnimeWorldDownloader_App.ViewModels;
-using System.Collections.ObjectModel;
-using System.Net.Http;
 
 namespace AnimeWorldDownloader_App.Models
 {
     public class AnimeModel
     {
-        public string Name { get; set; }
-        public string ImageUrl { get; set; }
-        public string UriDetail { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
+        public string UriDetail { get; set; } = string.Empty;
 
         private static AnimeModel GetAnime(AngleSharp.Dom.IElement eDivItem)
         {
             AnimeModel animeModel = new();
             if (!string.IsNullOrWhiteSpace(eDivItem.InnerHtml))
             {
-                //Ottengo la parte del URL mancante
-                AngleSharp.Dom.IElement eDivInner = eDivItem.QuerySelector("div.inner");
-                AngleSharp.Dom.IElement eAPoster = eDivInner.QuerySelector("a.poster");
-                AngleSharp.Dom.IElement eImage = eAPoster.QuerySelector("img");
-                AngleSharp.Dom.IElement eAName = eDivInner.QuerySelector("a.name");
+                var eDivInner = eDivItem.QuerySelector("div.inner");
+                var eAPoster = eDivInner?.QuerySelector("a.poster");
+                var eImage = eAPoster?.QuerySelector("img");
+                var eAName = eDivInner?.QuerySelector("a.name");
 
-                // recupero i valori degli elementi
-                animeModel.UriDetail = string.Concat($"https://www.animeworld.tv{eAPoster.GetAttribute("href")}");
-                animeModel.ImageUrl = eImage.GetAttribute("src");
-                animeModel.Name = eAName.TextContent;
+                animeModel.UriDetail = $"https://www.animeworld.ac{eAPoster?.GetAttribute("href")}";
+                animeModel.ImageUrl = eImage?.GetAttribute("src") ?? string.Empty;
+                animeModel.Name = eAName?.TextContent ?? string.Empty;
             }
 
             return animeModel;
         }
-
-        public static List<AnimeModel> GetAnimes(string searchText)
-        {
-            List<AnimeModel> animeModels = new();
-            if (!string.IsNullOrWhiteSpace(searchText))
-            {
-                string searchTextAdatpting = searchText.Replace(" ", "+");
-                string searchUri = $"https://www.animeworld.tv/search?keyword={searchTextAdatpting}";
-
-                HttpTalker httpTalker = HttpTalker.GetInstance();
-                // Recupero la sorgente html
-                string html = httpTalker.GetResoultFromUri(searchUri);
-
-                // crea un contesto e apre il documento HTML
-                IBrowsingContext context = BrowsingContext.New(Configuration.Default);
-                IDocument document = context.OpenAsync(req => req.Content(html)).Result;
-
-                // seleziona il div padre e tutti i div figli con la classe "item"
-                AngleSharp.Dom.IElement parent = document.QuerySelector($"div.film-list");
-                IHtmlCollection<AngleSharp.Dom.IElement> childrens = parent.QuerySelectorAll($"div.item");
-
-                // itera tutti i i contenuti di ogni div "item"
-                foreach (AngleSharp.Dom.IElement elements in childrens)
-                {
-                    animeModels.Add(GetAnime(elements));
-                }
-            }
-
-            return animeModels;
-        }
-
 
         public static async Task<List<AnimeModel>> GetAnimesAsync(string searchText)
         {
             List<AnimeModel> animeModels = new();
             if (!string.IsNullOrWhiteSpace(searchText))
             {
-                string searchTextAdatpting = searchText.Replace(" ", "+");
-                string searchUri = $"https://www.animeworld.tv/search?keyword={searchTextAdatpting}";
+                string searchTextAdapting = searchText.Replace(" ", "+");
+                string searchUri = $"https://www.animeworld.ac/search?keyword={searchTextAdapting}";
 
                 HttpTalker httpTalker = HttpTalker.GetInstance();
-                // Recupero la sorgente html
-                string html = await httpTalker.GetAsyncResoultFromUri(searchUri);
+                string html = await httpTalker.GetResultFromUriAsync(searchUri);
 
-                // crea un contesto e apre il documento HTML
-                IBrowsingContext context = BrowsingContext.New(Configuration.Default);
-                IDocument document = context.OpenAsync(req => req.Content(html)).Result;
+                var context = BrowsingContext.New(Configuration.Default);
+                var document = await context.OpenAsync(req => req.Content(html));
 
-                // seleziona il div padre e tutti i div figli con la classe "item"
-                AngleSharp.Dom.IElement parent = document.QuerySelector($"div.film-list");
-                IHtmlCollection<AngleSharp.Dom.IElement> childrens = parent.QuerySelectorAll($"div.item");
-
-                // itera tutti i i contenuti di ogni div "item"
-                foreach (AngleSharp.Dom.IElement elements in childrens)
+                var parent = document.QuerySelector("div.film-list");
+                if (parent != null)
                 {
-                    animeModels.Add(GetAnime(elements));
+                    var childrens = parent.QuerySelectorAll("div.item");
+                    foreach (var element in childrens)
+                    {
+                        animeModels.Add(GetAnime(element));
+                    }
                 }
             }
 
             return animeModels;
         }
-
     }
 }

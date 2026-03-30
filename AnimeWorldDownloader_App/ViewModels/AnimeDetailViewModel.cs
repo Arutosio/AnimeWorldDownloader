@@ -1,133 +1,91 @@
-﻿using AnimeWorldDownloader_App.Data;
 using AnimeWorldDownloader_App.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using AngleSharp;
-using AngleSharp.Dom;
-
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AnimeWorldDownloader_App.ViewModels
 {
     public class AnimeDetailViewModel : AnimeViewModel
     {
-        private string _state;
-        private string _dateRelease;
-        private string _numEpisodes;
-        private string _genere;
-        private string _time;
+        private string _state = string.Empty;
+        private string _dateRelease = string.Empty;
+        private string _numEpisodes = string.Empty;
+        private string _genere = string.Empty;
+        private string _time = string.Empty;
         private double _views;
-        private string _description;
+        private string _description = string.Empty;
+        private bool _isBusy;
 
-        public AnimeDetailViewModel(string uriDetail)
+        public string UriDetailParam { get; set; } = string.Empty;
+
+        public async Task InitializeAsync(string uriDetail)
         {
-            AnimeDetailModel animeDetailModel = AnimeDetailModel.GetAnimeDetail(uriDetail);
+            IsBusy = true;
+            try
+            {
+                UriDetailParam = uriDetail;
+                AnimeDetailModel animeDetailModel = await AnimeDetailModel.GetAnimeDetailAsync(uriDetail);
 
-            this.Name = animeDetailModel.Name;
-            this.UriDetail = animeDetailModel.UriDetail;
-            this.ImageUrl = animeDetailModel.ImageUrl;
-            this.State = animeDetailModel.State;
-            this.DateRelease = animeDetailModel.DateRelease;
-            this.NumEpisodes = animeDetailModel.NumEpisodes;
-            this.Genere = animeDetailModel.Genere;
-            this.Time = animeDetailModel.Time;
-            this.Views = animeDetailModel.Views;
-            this.Description = animeDetailModel.Description;
+                Name = animeDetailModel.Name;
+                UriDetail = animeDetailModel.UriDetail;
+                ImageUrl = animeDetailModel.ImageUrl;
+                State = animeDetailModel.State;
+                DateRelease = animeDetailModel.DateRelease;
+                NumEpisodes = animeDetailModel.NumEpisodes;
+                Genere = animeDetailModel.Genere;
+                Time = animeDetailModel.Time;
+                Views = animeDetailModel.Views;
+                Description = animeDetailModel.Description;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set { if (_isBusy != value) { _isBusy = value; OnPropertyChanged(); } }
         }
 
         public string State
         {
-            get { return _state; }
-            set
-            {
-                if (_state != value)
-                {
-                    _state = value;
-                    OnPropertyChanged(); // reports this property
-                }
-            }
+            get => _state;
+            set { if (_state != value) { _state = value; OnPropertyChanged(); } }
         }
 
         public string DateRelease
         {
-            get { return _dateRelease; }
-            set
-            {
-                if (_dateRelease != value)
-                {
-                    _dateRelease = value;
-                    OnPropertyChanged(); // reports this property
-                }
-            }
+            get => _dateRelease;
+            set { if (_dateRelease != value) { _dateRelease = value; OnPropertyChanged(); } }
         }
 
         public string NumEpisodes
         {
-            get { return _numEpisodes; }
-            set
-            {
-                if (_numEpisodes != value)
-                {
-                    _numEpisodes = value;
-                    OnPropertyChanged(); // reports this property
-                }
-            }
+            get => _numEpisodes;
+            set { if (_numEpisodes != value) { _numEpisodes = value; OnPropertyChanged(); } }
         }
 
         public string Genere
         {
-            get { return _genere; }
-            set
-            {
-                if (_genere != value)
-                {
-                    _genere = value;
-                    OnPropertyChanged(); // reports this property
-                }
-            }
+            get => _genere;
+            set { if (_genere != value) { _genere = value; OnPropertyChanged(); } }
         }
 
         public string Time
         {
-            get { return _time; }
-            set
-            {
-                if (_time != value)
-                {
-                    _time = value;
-                    OnPropertyChanged();
-                }
-            }
+            get => _time;
+            set { if (_time != value) { _time = value; OnPropertyChanged(); } }
         }
 
         public double Views
         {
-            get { return _views; }
-            set
-            {
-                if (_views != value)
-                {
-                    _views = value;
-                    OnPropertyChanged();
-                }
-            }
+            get => _views;
+            set { if (_views != value) { _views = value; OnPropertyChanged(); } }
         }
 
         public string Description
         {
-            get { return _description; }
-            set
-            {
-                if (_description != value)
-                {
-                    _description = value;
-                    OnPropertyChanged(); // reports this property
-                }
-            }
+            get => _description;
+            set { if (_description != value) { _description = value; OnPropertyChanged(); } }
         }
     }
 }

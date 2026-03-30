@@ -4,27 +4,33 @@ namespace AnimeWorldDownloader_App.Views;
 
 public partial class AnimeDetailView : ContentPage
 {
-	AnimeDetailViewModel animeDetailViewModel;
+    private readonly AnimeDetailViewModel _viewModel = new();
+    private readonly string _uriDetail;
 
-	public AnimeDetailView(string uriDetail)
-	{
-		InitializeComponent();
-		
-		animeDetailViewModel = new AnimeDetailViewModel(uriDetail);
-		this.BindingContext = animeDetailViewModel;
-	}
+    public AnimeDetailView(string uriDetail)
+    {
+        InitializeComponent();
+        _uriDetail = uriDetail;
+        BindingContext = _viewModel;
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await _viewModel.InitializeAsync(_uriDetail);
+    }
 
     private void OnButtonClickedGoBackToSearch(object sender, EventArgs e)
     {
-        this.Navigation.PopModalAsync();
+        Navigation.PopModalAsync();
     }
 
     private void OnButtonClickedGoToDownload(object sender, EventArgs e)
     {
-		var botton = (Button)sender;
-		var item = (AnimeViewModel)botton.BindingContext;
-		var uriDetail = item.UriDetail;
-
-		this.Navigation.PushModalAsync(new AnimeDownloadView(uriDetail), true);
+        var uriDetail = _viewModel.UriDetailParam;
+        if (!string.IsNullOrEmpty(uriDetail))
+        {
+            Navigation.PushModalAsync(new AnimeDownloadView(uriDetail), true);
+        }
     }
 }

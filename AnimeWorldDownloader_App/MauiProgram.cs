@@ -1,4 +1,4 @@
-﻿using System.Windows;
+﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 
 namespace AnimeWorldDownloader_App
@@ -10,6 +10,7 @@ namespace AnimeWorldDownloader_App
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkitMediaElement(false)
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
