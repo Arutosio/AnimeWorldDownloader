@@ -1,0 +1,74 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install MAUI workload
+        run: dotnet workload install maui-windows
+
+      - name: Restore
+        run: dotnet restore AnimeWorldDownloader_App/AnimeWorldDownloader_App.csproj
+
+      - name: Publish
+        run: |
+          dotnet publish AnimeWorldDownloader_App/AnimeWorldDownloader_App.csproj `
+            -c Release `
+            -f net10.0-windows10.0.19041.0 `
+            -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -o ./publish
+
+      - name: Get version
+        id: version
+        run: |
+          $date = Get-Date -Format "yyyy.MM.dd"
+          $sha = "${{ github.sha }}".Substring(0, 7)
+          echo "tag=v$date-$sha" >> $env:GITHUB_OUTPUT
+          echo "name=AnimeWorldDownloader $date" >> $env:GITHUB_OUTPUT
+
+      - name: Create zip
+        run: Compress-Archive -Path ./publish/* -DestinationPath ./AnimeWorldDownloader_App.zip
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: ${{ steps.version.outputs.name }}
+          body: |
+            ## AnimeWorldDownloader
+
+            Eseguibile Windows standalone (non richiede .NET installato).
+
+            ### Come usare
+            1. Scarica `AnimeWorldDownloader_App.zip`
+            2. Estrai la cartella
+            3. Esegui `AnimeWorldDownloader_App.exe`
+
+            ### Funzionalità
+            - Ricerca anime su AnimeWorld
+            - Streaming episodi con player integrato
+            - Download singolo o multiplo con selezione episodi
+            - Gestione download attivi con annullamento
+            - Cartella di salvataggio configurabile
+          files: ./AnimeWorldDownloader_App.zip
+          draft: false
+          prerelease: false
