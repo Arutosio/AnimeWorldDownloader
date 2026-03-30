@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:AnimeWorldDownloader_App.ViewModels"
+             x:Class="AnimeWorldDownloader_App.Views.AnimeView"
+             x:DataType="local:AnimeViewModel">
+             
+    <VerticalStackLayout>
+        <Grid Padding="10" Grid.Column="1" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="0" Grid.RowSpan="2"
+                Source="{Binding ImageUrl}"
+                Aspect="AspectFill"/>
+            <Label Grid.Column="2" Grid.Row="1"
+                Text="{Binding Name}"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+            <Button Grid.Column="2" Grid.Row="2"
+                Text="Info Page"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                CommandParameter="{Binding UriDetail}"/>
+        </Grid>
+    </VerticalStackLayout>
+</ContentView>

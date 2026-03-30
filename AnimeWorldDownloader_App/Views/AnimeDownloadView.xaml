@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AnimeWorldDownloader_App.ViewModels"
+             xmlns:models="clr-namespace:AnimeWorldDownloader_App.Models"
+             x:Class="AnimeWorldDownloader_App.Views.AnimeDownloadView"
+             Title="AnimeDownloadView"
+             x:DataType="vm:AnimeDownloadViewModel"
+             BackgroundImageSource="{Binding ImageUrl}">
+
+    <Grid BackgroundColor="#98000000"
+          HorizontalOptions="FillAndExpand"
+          VerticalOptions="FillAndExpand"
+          Padding="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Titolo + Bottone Downloads -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+            <Border Grid.Column="0" BackgroundColor="#99000000" Padding="5">
+                <Label Text="{Binding Name}"
+                       FontSize="18"
+                       HorizontalTextAlignment="Center"
+                       FontAttributes="Bold"
+                       LineBreakMode="WordWrap" />
+            </Border>
+            <Button Grid.Column="1"
+                    Text="{Binding ActiveDownloadCount, StringFormat='DL ({0})'}"
+                    FontSize="12"
+                    FontAttributes="Bold"
+                    BackgroundColor="OrangeRed"
+                    TextColor="White"
+                    Padding="8,4"
+                    Margin="3,0"
+                    VerticalOptions="Center"
+                    Command="{Binding ToggleDownloadsPanelCommand}" />
+        </Grid>
+
+        <!-- Loading -->
+        <ActivityIndicator Grid.Row="1"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Color="Orange"
+                           HorizontalOptions="Center"
+                           Margin="10" />
+
+        <!-- Seleziona tutto / Deseleziona / Apri cartella -->
+        <HorizontalStackLayout Grid.Row="2" Spacing="8" Margin="10,5" HorizontalOptions="Center">
+            <Button Text="Seleziona tutti"
+                    FontSize="12"
+                    BackgroundColor="#444"
+                    TextColor="White"
+                    Padding="8,4"
+                    Command="{Binding SelectAllCommand}" />
+            <Button Text="Deseleziona"
+                    FontSize="12"
+                    BackgroundColor="#444"
+                    TextColor="White"
+                    Padding="8,4"
+                    Command="{Binding DeselectAllCommand}" />
+            <Button Text="Apri cartella"
+                    FontSize="12"
+                    BackgroundColor="#555"
+                    TextColor="White"
+                    Padding="8,4"
+                    Command="{Binding OpenDownloadFolderCommand}" />
+            <Button Text="Cambia cartella"
+                    FontSize="12"
+                    BackgroundColor="#666"
+                    TextColor="White"
+                    Padding="8,4"
+                    Command="{Binding ChangeDownloadFolderCommand}" />
+        </HorizontalStackLayout>
+
+        <!-- Lista episodi -->
+        <CollectionView Grid.Row="3"
+                        x:Name="EpisodeList"
+                        ItemsSource="{Binding EpisodeModels}"
+                        Margin="5">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="4" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:EpisodeModel">
+                    <Border BackgroundColor="#CC333333" Padding="8,6" StrokeShape="RoundRectangle 6">
+                        <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                            <CheckBox Grid.Column="0"
+                                      IsChecked="{Binding IsSelected}"
+                                      Color="Orange"
+                                      VerticalOptions="Center" />
+                            <Label Grid.Column="1"
+                                   Text="{Binding NEpisode, StringFormat='Episodio {0}'}"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   TextColor="White"
+                                   VerticalTextAlignment="Center"
+                                   Margin="5,0" />
+                            <Button Grid.Column="2"
+                                    Text="&#9654;"
+                                    FontSize="16"
+                                    BackgroundColor="DarkGreen"
+                                    TextColor="White"
+                                    WidthRequest="45"
+                                    HeightRequest="38"
+                                    Padding="0"
+                                    Margin="2,0"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AnimeDownloadViewModel}}, Path=WatchEpisodeCommand}"
+                                    CommandParameter="{Binding .}" />
+                            <Button Grid.Column="3"
+                                    Text="&#11015;"
+                                    FontSize="16"
+                                    BackgroundColor="DarkSlateBlue"
+                                    TextColor="White"
+                                    WidthRequest="45"
+                                    HeightRequest="38"
+                                    Padding="0"
+                                    Margin="2,0"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AnimeDownloadViewModel}}, Path=DownloadEpisodeCommand}"
+                                    CommandParameter="{Binding .}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <Label Text="Nessun episodio trovato"
+                       FontSize="16"
+                       HorizontalTextAlignment="Center"
+                       TextColor="Gray" />
+            </CollectionView.EmptyView>
+        </CollectionView>
+
+        <!-- PANNELLO DOWNLOADS ATTIVI (toggle) -->
+        <Grid Grid.Row="3"
+              IsVisible="{Binding ShowDownloadsPanel}"
+              BackgroundColor="#DD111111"
+              Padding="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0"
+                   Text="Download in corso"
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   TextColor="Orange"
+                   HorizontalTextAlignment="Center"
+                   Margin="5" />
+
+            <CollectionView Grid.Row="1"
+                            ItemsSource="{Binding ActiveDownloads}"
+                            Margin="5">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="6" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:DownloadTaskModel">
+                        <Border BackgroundColor="#CC222222" Padding="8" StrokeShape="RoundRectangle 6">
+                            <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                                <!-- Ep + Status -->
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="White">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="Ep. {0} - {1}">
+                                            <Binding Path="Episode.NEpisode" />
+                                            <Binding Path="Status" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+
+                                <!-- Bottone Annulla -->
+                                <Button Grid.Row="0" Grid.Column="1"
+                                        Text="X"
+                                        FontSize="12"
+                                        FontAttributes="Bold"
+                                        BackgroundColor="DarkRed"
+                                        TextColor="White"
+                                        WidthRequest="35"
+                                        HeightRequest="30"
+                                        Padding="0"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AnimeDownloadViewModel}}, Path=CancelDownloadCommand}"
+                                        CommandParameter="{Binding .}" />
+
+                                <!-- Progress Bar -->
+                                <ProgressBar Grid.Row="1" Grid.ColumnSpan="2"
+                                             Progress="{Binding Progress}"
+                                             ProgressColor="Orange"
+                                             Margin="0,4" />
+
+                                <!-- Path file -->
+                                <Label Grid.Row="2" Grid.ColumnSpan="2"
+                                       Text="{Binding SavePath}"
+                                       FontSize="10"
+                                       TextColor="#AAA"
+                                       LineBreakMode="MiddleTruncation" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <Label Text="Nessun download"
+                           FontSize="14"
+                           HorizontalTextAlignment="Center"
+                           TextColor="Gray"
+                           Margin="20" />
+                </CollectionView.EmptyView>
+            </CollectionView>
+
+            <Button Grid.Row="2"
+                    Text="Annulla tutti"
+                    FontSize="14"
+                    FontAttributes="Bold"
+                    BackgroundColor="DarkRed"
+                    TextColor="White"
+                    Margin="5"
+                    Command="{Binding CancelAllDownloadsCommand}"
+                    HorizontalOptions="Center" />
+        </Grid>
+
+        <!-- Status + Bottoni -->
+        <VerticalStackLayout Grid.Row="4" Margin="5,2">
+            <Label Text="{Binding StatusMessage}"
+                   FontSize="13"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+
+        <Grid Grid.Row="5" ColumnDefinitions="*,*" Margin="2,5">
+            <Button Grid.Column="0"
+                    Text="Back"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    BackgroundColor="Black"
+                    TextColor="White"
+                    BorderColor="AntiqueWhite"
+                    BorderWidth="2"
+                    Clicked="OnButtonClickedGoBackToDetail"
+                    HorizontalOptions="Start"
+                    VerticalOptions="End" />
+
+            <Button Grid.Column="1"
+                    Text="{Binding SelectedCount, StringFormat='Scarica selezionati ({0})'}"
+                    FontSize="14"
+                    FontAttributes="Bold"
+                    BackgroundColor="DeepSkyBlue"
+                    TextColor="White"
+                    BorderColor="AntiqueWhite"
+                    BorderWidth="2"
+                    Command="{Binding DownloadSelectedCommand}"
+                    HorizontalOptions="End"
+                    VerticalOptions="End" />
+        </Grid>
+    </Grid>
+
+</ContentPage>

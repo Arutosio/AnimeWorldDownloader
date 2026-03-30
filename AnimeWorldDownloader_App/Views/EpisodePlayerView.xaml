@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="AnimeWorldDownloader_App.Views.EpisodePlayerView"
+             Title="Player"
+             BackgroundColor="Black">
+
+    <Grid RowDefinitions="Auto,*,Auto" BackgroundColor="Black">
+
+        <!-- Titolo -->
+        <Label Grid.Row="0"
+               x:Name="TitleLabel"
+               FontSize="16"
+               FontAttributes="Bold"
+               TextColor="White"
+               HorizontalTextAlignment="Center"
+               Margin="10" />
+
+        <!-- Player Video -->
+        <toolkit:MediaElement Grid.Row="1"
+                              x:Name="Player"
+                              ShouldAutoPlay="True"
+                              ShouldShowPlaybackControls="True"
+                              Aspect="AspectFit"
+                              BackgroundColor="Black" />
+
+        <!-- Bottone Back -->
+        <Button Grid.Row="2"
+                Text="Chiudi"
+                FontSize="16"
+                FontAttributes="Bold"
+                BackgroundColor="#333"
+                TextColor="White"
+                Margin="10"
+                Clicked="OnCloseClicked"
+                HorizontalOptions="Center" />
+    </Grid>
+
+</ContentPage>
