@@ -11,6 +11,7 @@ namespace AnimeWorldDownloader_App.Models
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private bool _isSelected;
+        private readonly AppLogger _log = AppLogger.Instance;
 
         public int NEpisode { get; set; }
         public string UriWatch { get; set; } = string.Empty;
@@ -35,8 +36,13 @@ namespace AnimeWorldDownloader_App.Models
         /// </summary>
         public async Task<string> ResolveDirectDownloadUrlAsync()
         {
+            string src = $"Ep.{NEpisode}";
+
             if (!string.IsNullOrEmpty(UriDirectDownload))
+            {
+                _log.Debug($"URL diretto gia' risolto: {UriDirectDownload}", src);
                 return UriDirectDownload;
+            }
 
             HttpTalker httpTalker = HttpTalker.GetInstance();
 
@@ -44,35 +50,70 @@ namespace AnimeWorldDownloader_App.Models
             if (string.IsNullOrEmpty(UriDownloadPage))
             {
                 if (string.IsNullOrEmpty(UriWatch))
+                {
+                    _log.Error("UriWatch e' vuoto, impossibile risolvere download URL", src);
                     throw new InvalidOperationException("UriWatch e' vuoto");
+                }
 
+                _log.Info($"Step 1: Fetch pagina episodio: {UriWatch}", src);
                 string episodeHtml = await httpTalker.GetResultFromUriAsync(UriWatch);
+                _log.Debug($"HTML episodio ricevuto: {episodeHtml.Length} chars", src);
+
                 var ctx1 = BrowsingContext.New(Configuration.Default);
                 var doc1 = await ctx1.OpenAsync(req => req.Content(episodeHtml));
 
                 string? downloadPageHref = doc1.QuerySelector("#downloadLink")?.GetAttribute("href");
-                if (string.IsNullOrEmpty(downloadPageHref))
-                    throw new InvalidOperationException($"#downloadLink non trovato nella pagina: {UriWatch}");
 
+                if (string.IsNullOrEmpty(downloadPageHref))
+                {
+                    // Log HTML parziale per debug
+                    string htmlPreview = episodeHtml.Length > 2000
+                        ? episodeHtml[..2000] + "... [TRONCATO]"
+                        : episodeHtml;
+                    _log.Error($"#downloadLink non trovato nella pagina: {UriWatch}", src);
+                    _log.Debug($"HTML preview della pagina (per debug):\n{htmlPreview}", src);
+
+                    // Cerca selettori alternativi
+                    var allLinks = doc1.QuerySelectorAll("a[href]");
+                    _log.Debug($"Numero totale link nella pagina: {allLinks.Length}", src);
+                    foreach (var link in allLinks)
+                    {
+                        string? href = link.GetAttribute("href");
+                        string? id = link.GetAttribute("id");
+                        string? cls = link.GetAttribute("class");
+                        if (href != null && (href.Contains("download") || href.Contains("DDL") || href.Contains(".mp4")))
+                            _log.Debug($"  Link potenziale: id={id ?? "null"}, class={cls ?? "null"}, href={href}", src);
+                    }
+
+                    throw new InvalidOperationException($"#downloadLink non trovato nella pagina: {UriWatch}");
+                }
+
+                _log.Info($"#downloadLink trovato: {downloadPageHref}", src);
                 UriDownloadPage = downloadPageHref;
             }
 
             // Step 2: prova a costruire il link diretto dal parametro "id" dell'URL intermedio
-            // Esempio: https://srv18.example.org/download-file.php?id=DDL/ANIME/File.mp4
-            //       -> https://srv18.example.org/DDL/ANIME/File.mp4
+            _log.Info($"Step 2: Parsing URL intermedio: {UriDownloadPage}", src);
             if (Uri.TryCreate(UriDownloadPage, UriKind.Absolute, out var intermediateUri))
             {
                 string? idParam = HttpUtility.ParseQueryString(intermediateUri.Query).Get("id");
                 if (!string.IsNullOrEmpty(idParam))
                 {
                     string directUrl = $"{intermediateUri.Scheme}://{intermediateUri.Host}/{idParam}";
+                    _log.Info($"URL diretto costruito da parametro 'id': {directUrl}", src);
                     UriDirectDownload = directUrl;
                     UpdateFileLocationFromUrl(directUrl);
                     return UriDirectDownload;
                 }
+                _log.Warn($"Parametro 'id' non trovato in query string: {intermediateUri.Query}", src);
+            }
+            else
+            {
+                _log.Warn($"URL intermedio non e' un URI assoluto valido: {UriDownloadPage}", src);
             }
 
             // Fallback: fetch la pagina intermedia e cerca il bottone "Scarica"
+            _log.Info($"Step 3 (Fallback): Fetch pagina intermedia: {UriDownloadPage}", src);
             string intermediateHtml = await httpTalker.GetResultFromUriAsync(UriDownloadPage);
             var ctx2 = BrowsingContext.New(Configuration.Default);
             var doc2 = await ctx2.OpenAsync(req => req.Content(intermediateHtml));
@@ -83,12 +124,21 @@ namespace AnimeWorldDownloader_App.Models
 
             string? fallbackUrl = downloadButton?.GetAttribute("href");
             if (string.IsNullOrEmpty(fallbackUrl))
+            {
+                _log.Error($"Nessun bottone download trovato nella pagina intermedia: {UriDownloadPage}", src);
+                _log.Debug($"HTML pagina intermedia:\n{intermediateHtml[..Math.Min(2000, intermediateHtml.Length)]}", src);
                 throw new InvalidOperationException(
                     $"Link diretto non trovato. Pagina intermedia: {UriDownloadPage}");
+            }
+
+            _log.Info($"Fallback URL trovato: {fallbackUrl}", src);
 
             // Se l'URL e' relativo, risolvi rispetto alla pagina intermedia
             if (!fallbackUrl.StartsWith("http") && intermediateUri != null)
+            {
                 fallbackUrl = $"{intermediateUri.Scheme}://{intermediateUri.Host}/{fallbackUrl.TrimStart('/')}";
+                _log.Debug($"URL relativo risolto a: {fallbackUrl}", src);
+            }
 
             UriDirectDownload = fallbackUrl;
             UpdateFileLocationFromUrl(fallbackUrl);

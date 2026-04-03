@@ -13,33 +13,48 @@ namespace AnimeWorldDownloader_App.Models
 
         public static async Task<AnimeDownloadModel> GetAnimeDownloadModelAsync(string uriDetail)
         {
+            var log = AppLogger.Instance;
             AnimeDownloadModel model = new();
 
             if (!string.IsNullOrWhiteSpace(uriDetail))
             {
+                log.Info($"Caricamento anime da: {uriDetail}", "AnimeDownloadModel");
+
                 HttpTalker httpTalker = HttpTalker.GetInstance();
                 string html = await httpTalker.GetResultFromUriAsync(uriDetail);
+                log.Debug($"HTML pagina dettaglio: {html.Length} chars", "AnimeDownloadModel");
 
                 var context = BrowsingContext.New(Configuration.Default);
                 var document = await context.OpenAsync(req => req.Content(html));
 
                 model.Name = document.QuerySelector("h2.title")?.TextContent ?? string.Empty;
+                log.Info($"Titolo anime: '{model.Name}'", "AnimeDownloadModel");
 
                 var eDivDelImag = document.QuerySelector("#mobile-thumbnail-watch");
                 model.ImageUrl = eDivDelImag?.QuerySelector("img")?.GetAttribute("src") ?? string.Empty;
 
                 model.UriDetail = uriDetail;
                 model.Year = ExtractYear(document);
+                log.Debug($"Anno: {model.Year}", "AnimeDownloadModel");
 
                 // Cartella: [BasePath configurabile]\NomeAnime (Anno)\
                 string folderName = SanitizeName($"{model.Name} ({model.Year})");
                 model.DownloadFolderPath = Path.Combine(AppSettings.DownloadBasePath, folderName);
+                log.Info($"Cartella download: {model.DownloadFolderPath}", "AnimeDownloadModel");
 
                 // Nome file base: Nome_Anime (underscore al posto degli spazi)
                 string fileNameBase = SanitizeName(model.Name).Replace(' ', '_');
 
                 string baseUrl = GetBaseUrl(uriDetail);
                 model.EpisodeModels = GetEpisodes(document, baseUrl, model.DownloadFolderPath, fileNameBase);
+                log.Info($"Episodi trovati: {model.EpisodeModels.Count}", "AnimeDownloadModel");
+
+                foreach (var ep in model.EpisodeModels)
+                    log.Debug($"  Ep.{ep.NEpisode}: UriWatch={ep.UriWatch}", "AnimeDownloadModel");
+            }
+            else
+            {
+                log.Warn("uriDetail vuoto o nullo", "AnimeDownloadModel");
             }
 
             return model;

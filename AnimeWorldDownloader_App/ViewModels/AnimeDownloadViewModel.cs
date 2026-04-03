@@ -2,6 +2,7 @@ using AnimeWorldDownloader_App.Data;
 using AnimeWorldDownloader_App.Models;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Input;
 
 namespace AnimeWorldDownloader_App.ViewModels
@@ -16,6 +17,7 @@ namespace AnimeWorldDownloader_App.ViewModels
         private int _selectedCount;
         private bool _showDownloadsPanel;
         private string _downloadFolderPath = string.Empty;
+        private readonly AppLogger _log = AppLogger.Instance;
 
         public AnimeDownloadViewModel()
         {
@@ -36,6 +38,7 @@ namespace AnimeWorldDownloader_App.ViewModels
         {
             IsBusy = true;
             StatusMessage = $"Caricamento da: {uriAnimeDetail}";
+            _log.Info($"=== Inizializzazione download per: {uriAnimeDetail} ===", "ViewModel");
             try
             {
                 AnimeDownloadModel animeDownloadModel = await AnimeDownloadModel.GetAnimeDownloadModelAsync(uriAnimeDetail);
@@ -45,10 +48,12 @@ namespace AnimeWorldDownloader_App.ViewModels
                 DownloadFolderPath = animeDownloadModel.DownloadFolderPath;
                 EpisodeModels = new ObservableCollection<EpisodeModel>(animeDownloadModel.EpisodeModels);
                 StatusMessage = $"{EpisodeModels.Count} episodi trovati — Salvataggio: {DownloadFolderPath}";
+                _log.Info($"Inizializzazione completata: '{Name}', {EpisodeModels.Count} episodi", "ViewModel");
             }
             catch (Exception ex)
             {
                 StatusMessage = $"Errore caricamento: {ex.Message}";
+                _log.Error("Errore durante inizializzazione download", ex, "ViewModel");
             }
             finally
             {
@@ -105,18 +110,25 @@ namespace AnimeWorldDownloader_App.ViewModels
         {
             if (dt.IsFinished) return;
 
+            int epNum = dt.Episode.NEpisode;
+            _log.Info($"--- Inizio download Ep.{epNum} ---", "ViewModel");
+
             try
             {
-                dt.Status = $"Resolving Ep. {dt.Episode.NEpisode}...";
-                StatusMessage = $"Resolving Ep. {dt.Episode.NEpisode}... (UriWatch: {dt.Episode.UriWatch})";
+                dt.Status = $"Resolving Ep. {epNum}...";
+                StatusMessage = $"Resolving Ep. {epNum}... (UriWatch: {dt.Episode.UriWatch})";
+                _log.Info($"Resolving URL per Ep.{epNum}: UriWatch={dt.Episode.UriWatch}", "ViewModel");
 
                 dt.Cts.Token.ThrowIfCancellationRequested();
 
                 string directUrl = await dt.Episode.ResolveDirectDownloadUrlAsync();
                 dt.SavePath = dt.Episode.FileLocation;
+                _log.Info($"URL risolto Ep.{epNum}: {directUrl}", "ViewModel");
+                _log.Info($"SavePath Ep.{epNum}: {dt.SavePath}", "ViewModel");
 
-                dt.Status = $"Download Ep. {dt.Episode.NEpisode}...";
-                StatusMessage = $"Download Ep. {dt.Episode.NEpisode}... → {dt.SavePath}";
+                dt.Status = $"Download Ep. {epNum}...";
+                StatusMessage = $"Download Ep. {epNum}... → {dt.SavePath}";
+                _log.LogDownloadStart(epNum, directUrl, dt.SavePath);
 
                 HttpTalker httpTalker = HttpTalker.GetInstance();
                 await httpTalker.DownloadFileAsync(
@@ -125,22 +137,27 @@ namespace AnimeWorldDownloader_App.ViewModels
                     progress => MainThread.BeginInvokeOnMainThread(() => dt.Progress = progress),
                     dt.Cts.Token);
 
+                long fileSize = new FileInfo(dt.SavePath).Length;
                 dt.Status = "Completato";
-                StatusMessage = $"Ep. {dt.Episode.NEpisode} completato! → {dt.SavePath}";
+                StatusMessage = $"Ep. {epNum} completato! → {dt.SavePath}";
+                _log.LogDownloadComplete(epNum, dt.SavePath, fileSize);
             }
             catch (OperationCanceledException)
             {
                 dt.Status = "Annullato";
-                StatusMessage = $"Ep. {dt.Episode.NEpisode} annullato";
+                StatusMessage = $"Ep. {epNum} annullato";
+                _log.Warn($"Download Ep.{epNum} annullato dall'utente", "ViewModel");
             }
             catch (Exception ex)
             {
                 dt.Status = "Errore";
-                StatusMessage = $"Errore Ep. {dt.Episode.NEpisode}: {ex.Message}";
+                StatusMessage = $"Errore Ep. {epNum}: {ex.Message}";
+                _log.LogDownloadError(epNum, dt.Episode.UriDirectDownload ?? dt.Episode.UriWatch, ex);
             }
             finally
             {
                 OnPropertyChanged(nameof(ActiveDownloadCount));
+                await _log.FlushAsync();
             }
         }
 

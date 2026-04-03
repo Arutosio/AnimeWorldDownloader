@@ -29,11 +29,14 @@ namespace AnimeWorldDownloader_App.Models
 
         public static async Task<List<AnimeModel>> GetAnimesAsync(string searchText)
         {
+            var log = AppLogger.Instance;
             List<AnimeModel> animeModels = new();
             if (!string.IsNullOrWhiteSpace(searchText))
             {
                 string searchTextAdapting = searchText.Replace(" ", "+");
                 string searchUri = $"https://www.animeworld.ac/search?keyword={searchTextAdapting}";
+
+                log.Info($"Ricerca anime: '{searchText}' → {searchUri}", "Search");
 
                 HttpTalker httpTalker = HttpTalker.GetInstance();
                 string html = await httpTalker.GetResultFromUriAsync(searchUri);
@@ -49,6 +52,11 @@ namespace AnimeWorldDownloader_App.Models
                     {
                         animeModels.Add(GetAnime(element));
                     }
+                    log.Info($"Risultati ricerca: {animeModels.Count} anime trovati", "Search");
+                }
+                else
+                {
+                    log.Warn($"div.film-list non trovato nella pagina di ricerca. HTML: {html[..Math.Min(1000, html.Length)]}", "Search");
                 }
             }
 
