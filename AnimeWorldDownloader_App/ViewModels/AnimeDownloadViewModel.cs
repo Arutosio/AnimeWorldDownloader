@@ -10,7 +10,6 @@ namespace AnimeWorldDownloader_App.ViewModels
     public class AnimeDownloadViewModel : AnimeViewModel
     {
         private ObservableCollection<EpisodeModel> _episodeModels = new();
-        private ObservableCollection<DownloadTaskModel> _activeDownloads = new();
         private bool _isDownloading;
         private bool _isBusy;
         private string _statusMessage = string.Empty;
@@ -217,12 +216,10 @@ namespace AnimeWorldDownloader_App.ViewModels
         }
 
         public ObservableCollection<DownloadTaskModel> ActiveDownloads
-        {
-            get => _activeDownloads;
-            set { if (_activeDownloads != value) { _activeDownloads = value; OnPropertyChanged(); } }
-        }
+            => DownloadManagerService.Instance.ActiveDownloads;
 
-        public int ActiveDownloadCount => ActiveDownloads.Count(d => !d.IsFinished);
+        public int ActiveDownloadCount
+            => DownloadManagerService.Instance.ActiveDownloadCount;
 
         public bool IsDownloading
         {
