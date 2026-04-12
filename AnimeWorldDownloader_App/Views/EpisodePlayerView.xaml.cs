@@ -18,6 +18,7 @@ public partial class EpisodePlayerView : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        RegisterKeyboardHandler();
         await LoadAndPlayAsync();
     }
 
@@ -48,6 +49,7 @@ public partial class EpisodePlayerView : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+        UnregisterKeyboardHandler();
         Player.Stop();
         Player.Handler?.DisconnectHandler();
     }
@@ -56,4 +58,49 @@ public partial class EpisodePlayerView : ContentPage
     {
         Navigation.PopModalAsync();
     }
+
+    #region Keyboard – Spacebar play/pause (Windows)
+
+    private void RegisterKeyboardHandler()
+    {
+#if WINDOWS
+        var nativeWindow = this.Window?.Handler?.PlatformView as Microsoft.UI.Xaml.Window;
+        if (nativeWindow?.Content is Microsoft.UI.Xaml.UIElement root)
+        {
+            root.KeyDown += OnNativeKeyDown;
+        }
+#endif
+    }
+
+    private void UnregisterKeyboardHandler()
+    {
+#if WINDOWS
+        var nativeWindow = this.Window?.Handler?.PlatformView as Microsoft.UI.Xaml.Window;
+        if (nativeWindow?.Content is Microsoft.UI.Xaml.UIElement root)
+        {
+            root.KeyDown -= OnNativeKeyDown;
+        }
+#endif
+    }
+
+#if WINDOWS
+    private void OnNativeKeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+    {
+        if (e.Key == Windows.System.VirtualKey.Space)
+        {
+            TogglePlayPause();
+            e.Handled = true;
+        }
+    }
+#endif
+
+    private void TogglePlayPause()
+    {
+        if (Player.CurrentState == CommunityToolkit.Maui.Core.MediaElementState.Playing)
+            Player.Pause();
+        else
+            Player.Play();
+    }
+
+    #endregion
 }
