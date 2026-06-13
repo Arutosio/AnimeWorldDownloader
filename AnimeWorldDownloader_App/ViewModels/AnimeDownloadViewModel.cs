@@ -1,6 +1,7 @@
 using AnimeWorldDownloader_App.Data;
 using AnimeWorldDownloader_App.Models;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Input;
@@ -16,6 +17,7 @@ namespace AnimeWorldDownloader_App.ViewModels
         private int _selectedCount;
         private bool _showDownloadsPanel;
         private string _downloadFolderPath = string.Empty;
+        private bool _initialized;
         private readonly AppLogger _log = AppLogger.Instance;
 
         public AnimeDownloadViewModel()
@@ -35,6 +37,7 @@ namespace AnimeWorldDownloader_App.ViewModels
 
         public async Task InitializeAsync(string uriAnimeDetail)
         {
+            if (_initialized) return;
             IsBusy = true;
             StatusMessage = $"Caricamento da: {uriAnimeDetail}";
             _log.Info($"=== Inizializzazione download per: {uriAnimeDetail} ===", "ViewModel");
@@ -47,6 +50,7 @@ namespace AnimeWorldDownloader_App.ViewModels
                 DownloadFolderPath = animeDownloadModel.DownloadFolderPath;
                 EpisodeModels = new ObservableCollection<EpisodeModel>(animeDownloadModel.EpisodeModels);
                 StatusMessage = $"{EpisodeModels.Count} episodi trovati — Salvataggio: {DownloadFolderPath}";
+                _initialized = true;
                 _log.Info($"Inizializzazione completata: '{Name}', {EpisodeModels.Count} episodi", "ViewModel");
             }
             catch (Exception ex)
@@ -88,11 +92,16 @@ namespace AnimeWorldDownloader_App.ViewModels
                 await ExecuteDownloadAsync(task);
             }
 
+            foreach (var ep in selected)
+                ep.IsSelected = false;
+
             StatusMessage = $"Download completato! ({selected.Count} episodi)";
         }
 
         private DownloadTaskModel CreateDownloadTask(EpisodeModel episode)
         {
+            DownloadManagerService.Instance.RemoveFinished();
+
             var dt = new DownloadTaskModel
             {
                 Episode = episode,
@@ -212,7 +221,30 @@ namespace AnimeWorldDownloader_App.ViewModels
         public ObservableCollection<EpisodeModel> EpisodeModels
         {
             get => _episodeModels;
-            set { if (_episodeModels != value) { _episodeModels = value; OnPropertyChanged(); } }
+            set
+            {
+                if (_episodeModels != value)
+                {
+                    if (_episodeModels != null)
+                        foreach (var ep in _episodeModels)
+                            ep.PropertyChanged -= OnEpisodePropertyChanged;
+
+                    _episodeModels = value;
+
+                    if (_episodeModels != null)
+                        foreach (var ep in _episodeModels)
+                            ep.PropertyChanged += OnEpisodePropertyChanged;
+
+                    OnPropertyChanged();
+                    UpdateSelectedCount();
+                }
+            }
+        }
+
+        private void OnEpisodePropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(EpisodeModel.IsSelected))
+                UpdateSelectedCount();
         }
 
         public ObservableCollection<DownloadTaskModel> ActiveDownloads

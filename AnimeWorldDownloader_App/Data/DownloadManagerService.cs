@@ -13,5 +13,12 @@ namespace AnimeWorldDownloader_App.Data
         public ObservableCollection<DownloadTaskModel> ActiveDownloads { get; } = new();
 
         public int ActiveDownloadCount => ActiveDownloads.Count(d => !d.IsFinished);
+
+        public void RemoveFinished()
+        {
+            for (int i = ActiveDownloads.Count - 1; i >= 0; i--)
+                if (ActiveDownloads[i].IsFinished)
+                    ActiveDownloads.RemoveAt(i);
+        }
     }
 }
