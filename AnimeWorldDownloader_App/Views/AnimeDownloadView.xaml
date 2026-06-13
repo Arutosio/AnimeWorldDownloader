@@ -95,7 +95,7 @@
                                       Color="Orange"
                                       VerticalOptions="Center" />
                             <Label Grid.Column="1"
-                                   Text="{Binding NEpisode, StringFormat='Episodio {0}'}"
+                                   Text="{Binding NumberLabel, StringFormat='Episodio {0}'}"
                                    FontSize="15"
                                    FontAttributes="Bold"
                                    TextColor="White"
@@ -171,7 +171,7 @@
                                        TextColor="White">
                                     <Label.Text>
                                         <MultiBinding StringFormat="Ep. {0} - {1}">
-                                            <Binding Path="Episode.NEpisode" />
+                                            <Binding Path="Episode.NumberLabel" />
                                             <Binding Path="Status" />
                                         </MultiBinding>
                                     </Label.Text>

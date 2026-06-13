@@ -14,6 +14,8 @@ namespace AnimeWorldDownloader_App.Models
         private readonly AppLogger _log = AppLogger.Instance;
 
         public int NEpisode { get; set; }
+        // Etichetta numero come sul sito (es. "6" o "6.5"); usata per display e nome file
+        public string NumberLabel { get; set; } = string.Empty;
         public string UriWatch { get; set; } = string.Empty;
         public string UriDownloadPage { get; set; } = string.Empty;
         public string UriDirectDownload { get; set; } = string.Empty;

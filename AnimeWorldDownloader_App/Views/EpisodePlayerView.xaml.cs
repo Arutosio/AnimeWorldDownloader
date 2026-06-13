@@ -12,7 +12,7 @@ public partial class EpisodePlayerView : ContentPage
     {
         InitializeComponent();
         _episode = episode;
-        TitleLabel.Text = $"Episodio {episode.NEpisode}";
+        TitleLabel.Text = $"Episodio {episode.NumberLabel}";
     }
 
     protected override async void OnAppearing()
@@ -26,23 +26,23 @@ public partial class EpisodePlayerView : ContentPage
     {
         try
         {
-            TitleLabel.Text = $"Episodio {_episode.NEpisode} - Caricamento da: {_episode.UriWatch}";
+            TitleLabel.Text = $"Episodio {_episode.NumberLabel} - Caricamento da: {_episode.UriWatch}";
 
             string directUrl = await _episode.ResolveDirectDownloadUrlAsync();
 
             if (!string.IsNullOrEmpty(directUrl))
             {
-                TitleLabel.Text = $"Episodio {_episode.NEpisode} - Streaming: {directUrl}";
+                TitleLabel.Text = $"Episodio {_episode.NumberLabel} - Streaming: {directUrl}";
                 Player.Source = new UriMediaSource { Uri = new Uri(directUrl) };
             }
             else
             {
-                TitleLabel.Text = $"Episodio {_episode.NEpisode} - Link non trovato. UriWatch: {_episode.UriWatch}, UriDownloadPage: {_episode.UriDownloadPage}";
+                TitleLabel.Text = $"Episodio {_episode.NumberLabel} - Link non trovato. UriWatch: {_episode.UriWatch}, UriDownloadPage: {_episode.UriDownloadPage}";
             }
         }
         catch (Exception ex)
         {
-            TitleLabel.Text = $"Errore Ep. {_episode.NEpisode}: {ex.Message} | UriWatch: {_episode.UriWatch} | UriDownloadPage: {_episode.UriDownloadPage}";
+            TitleLabel.Text = $"Errore Ep. {_episode.NumberLabel}: {ex.Message} | UriWatch: {_episode.UriWatch} | UriDownloadPage: {_episode.UriDownloadPage}";
         }
     }
 

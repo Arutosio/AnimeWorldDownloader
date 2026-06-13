@@ -79,7 +79,7 @@ namespace AnimeWorldDownloader_App.Models
             return "Sconosciuto";
         }
 
-        private static int ParseEpisodeNumber(AngleSharp.Dom.IElement? eA, int index)
+        private static string ParseEpisodeLabel(AngleSharp.Dom.IElement? eA, int index)
         {
             string? raw = eA?.GetAttribute("data-episode-num")
                        ?? eA?.GetAttribute("data-num")
@@ -87,13 +87,28 @@ namespace AnimeWorldDownloader_App.Models
 
             if (!string.IsNullOrWhiteSpace(raw))
             {
-                // Gestisce numeri decimali tipo "6.5" prendendo la parte intera
-                var match = Regex.Match(raw, @"\d+");
-                if (match.Success && int.TryParse(match.Value, out int n))
-                    return n;
+                // Estrae numero anche decimale (es. "6.5")
+                var match = Regex.Match(raw, @"\d+(?:\.\d+)?");
+                if (match.Success)
+                    return match.Value;
             }
 
-            return index + 1;
+            return (index + 1).ToString();
+        }
+
+        // Parte intera dell'etichetta, per ordinamento/log (NEpisode)
+        private static int IntPart(string label)
+        {
+            var match = Regex.Match(label, @"\d+");
+            return match.Success && int.TryParse(match.Value, out int n) ? n : 0;
+        }
+
+        // Suffisso file con parte intera a 2 cifre, mantenendo l'eventuale decimale: "06" / "06.5"
+        private static string FormatFileSuffix(string label)
+        {
+            string[] parts = label.Split('.');
+            string intPadded = int.TryParse(parts[0], out int n) ? n.ToString("D2") : parts[0];
+            return parts.Length > 1 ? $"{intPadded}.{parts[1]}" : intPadded;
         }
 
         private static string SanitizeName(string name)
@@ -133,13 +148,15 @@ namespace AnimeWorldDownloader_App.Models
                 // Numero reale dal sito (data-episode-num): gli episodi sono
                 // divisi in range, l'indice DOM non corrisponde al numero
                 // quando la numerazione non parte da 1 o ha buchi/speciali.
-                int epNum = ParseEpisodeNumber(eA, i);
-                // Nome file: NomeAnime_Ep_01.mp4
-                string fileName = $"{fileNameBase}_Ep_{epNum:D2}.mp4";
+                string numberLabel = ParseEpisodeLabel(eA, i);
+                int epNum = IntPart(numberLabel);
+                // Nome file: NomeAnime_Ep_01.mp4 (o _Ep_06.5.mp4 per i decimali)
+                string fileName = $"{fileNameBase}_Ep_{FormatFileSuffix(numberLabel)}.mp4";
 
                 var episodeModel = new EpisodeModel
                 {
                     NEpisode = epNum,
+                    NumberLabel = numberLabel,
                     UriWatch = episodePageUrl,
                     FileLocation = Path.Combine(animePath, fileName)
                 };
