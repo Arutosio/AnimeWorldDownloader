@@ -18,7 +18,10 @@ namespace AnimeWorldDownloader_App.Data
         {
             for (int i = ActiveDownloads.Count - 1; i >= 0; i--)
                 if (ActiveDownloads[i].IsFinished)
+                {
+                    ActiveDownloads[i].Cts.Dispose();
                     ActiveDownloads.RemoveAt(i);
+                }
         }
     }
 }

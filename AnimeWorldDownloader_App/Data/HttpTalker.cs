@@ -120,12 +120,32 @@ namespace AnimeWorldDownloader_App.Data
             catch (OperationCanceledException)
             {
                 _log.Warn($"Download annullato: {url}", "HttpTalker");
+                TryDeletePartialFile(savePath);
                 throw;
             }
             catch (Exception ex)
             {
                 _log.Error($"Download fallito: {url} → {savePath}", ex, "HttpTalker");
+                TryDeletePartialFile(savePath);
                 throw;
+            }
+        }
+
+        private void TryDeletePartialFile(string path)
+        {
+            // Le 'using' declaration del FileStream sono già state disposte
+            // quando arriviamo qui, quindi il file non è più in lock.
+            try
+            {
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                    _log.Info($"File parziale rimosso: {path}", "HttpTalker");
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Warn($"Impossibile rimuovere file parziale {path}: {ex.Message}", "HttpTalker");
             }
         }
     }

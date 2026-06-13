@@ -75,6 +75,13 @@ namespace AnimeWorldDownloader_App.ViewModels
         // --- Download singolo ---
         private async Task DownloadSingleEpisodeAsync(EpisodeModel episode)
         {
+            if (HasActiveDownloadFor(episode))
+            {
+                StatusMessage = $"Ep. {episode.NEpisode} è già in download";
+                ShowDownloadsPanel = true;
+                return;
+            }
+
             var task = CreateDownloadTask(episode);
             await ExecuteDownloadAsync(task);
         }
@@ -85,7 +92,9 @@ namespace AnimeWorldDownloader_App.ViewModels
             var selected = EpisodeModels.Where(ep => ep.IsSelected).ToList();
             if (selected.Count == 0) return;
 
-            var tasks = selected.Select(CreateDownloadTask).ToList();
+            // Evita task duplicati per episodi già in download
+            var toDownload = selected.Where(ep => !HasActiveDownloadFor(ep)).ToList();
+            var tasks = toDownload.Select(CreateDownloadTask).ToList();
 
             foreach (var task in tasks)
             {
@@ -95,8 +104,11 @@ namespace AnimeWorldDownloader_App.ViewModels
             foreach (var ep in selected)
                 ep.IsSelected = false;
 
-            StatusMessage = $"Download completato! ({selected.Count} episodi)";
+            StatusMessage = $"Download completato! ({tasks.Count} episodi)";
         }
+
+        private bool HasActiveDownloadFor(EpisodeModel episode)
+            => ActiveDownloads.Any(dt => dt.Episode == episode && !dt.IsFinished);
 
         private DownloadTaskModel CreateDownloadTask(EpisodeModel episode)
         {
