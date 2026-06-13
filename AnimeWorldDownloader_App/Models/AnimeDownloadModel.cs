@@ -123,7 +123,7 @@ namespace AnimeWorldDownloader_App.Models
         {
             if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
                 return $"{uri.Scheme}://{uri.Host}";
-            return "https://www.animeworld.ac";
+            return AppSettings.BaseUrl;
         }
 
         private static List<EpisodeModel> GetEpisodes(AngleSharp.Dom.IDocument document, string baseUrl, string animePath, string fileNameBase)

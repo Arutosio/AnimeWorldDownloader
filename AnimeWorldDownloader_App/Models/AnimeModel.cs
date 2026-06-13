@@ -19,7 +19,10 @@ namespace AnimeWorldDownloader_App.Models
                 var eImage = eAPoster?.QuerySelector("img");
                 var eAName = eDivInner?.QuerySelector("a.name");
 
-                animeModel.UriDetail = $"https://www.animeworld.ac{eAPoster?.GetAttribute("href")}";
+                string? href = eAPoster?.GetAttribute("href");
+                animeModel.UriDetail = string.IsNullOrEmpty(href)
+                    ? string.Empty
+                    : $"{AppSettings.BaseUrl}{href}";
                 animeModel.ImageUrl = eImage?.GetAttribute("src") ?? string.Empty;
                 animeModel.Name = eAName?.TextContent ?? string.Empty;
             }
@@ -34,7 +37,7 @@ namespace AnimeWorldDownloader_App.Models
             if (!string.IsNullOrWhiteSpace(searchText))
             {
                 string searchTextAdapting = searchText.Replace(" ", "+");
-                string searchUri = $"https://www.animeworld.ac/search?keyword={searchTextAdapting}";
+                string searchUri = $"{AppSettings.BaseUrl}/search?keyword={searchTextAdapting}";
 
                 log.Info($"Ricerca anime: '{searchText}' → {searchUri}", "Search");
 

@@ -8,6 +8,7 @@ public partial class AnimeDownloadView : ContentPage
 {
     private readonly AnimeDownloadViewModel _viewModel = new();
     private readonly string _uriAnimeDetail;
+    private bool _isNavigating;
 
     public AnimeDownloadView(string uriAnimeDetail)
     {
@@ -34,7 +35,20 @@ public partial class AnimeDownloadView : ContentPage
 
     private async void OnNavigateToPlayer(EpisodeModel episode)
     {
-        await Navigation.PushModalAsync(new EpisodePlayerView(episode), true);
+        if (_isNavigating) return;
+        _isNavigating = true;
+        try
+        {
+            await Navigation.PushModalAsync(new EpisodePlayerView(episode), true);
+        }
+        catch (Exception ex)
+        {
+            AppLogger.Instance.Error("Apertura player fallita", ex, "Navigation");
+        }
+        finally
+        {
+            _isNavigating = false;
+        }
     }
 
     private async Task OnRequestChangeFolderDialog()
@@ -54,8 +68,21 @@ public partial class AnimeDownloadView : ContentPage
         }
     }
 
-    private void OnButtonClickedGoBackToDetail(object sender, EventArgs e)
+    private async void OnButtonClickedGoBackToDetail(object sender, EventArgs e)
     {
-        Navigation.PopModalAsync();
+        if (_isNavigating) return;
+        _isNavigating = true;
+        try
+        {
+            await Navigation.PopModalAsync();
+        }
+        catch (Exception ex)
+        {
+            AppLogger.Instance.Error("Navigazione indietro fallita", ex, "Navigation");
+        }
+        finally
+        {
+            _isNavigating = false;
+        }
     }
 }

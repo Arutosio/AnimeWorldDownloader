@@ -7,6 +7,12 @@ namespace AnimeWorldDownloader_App.Data
     {
         private const string DownloadPathKey = "DownloadBasePath";
 
+        /// <summary>
+        /// Host base del sito. Centralizzato qui perché questi siti cambiano
+        /// dominio spesso: si aggiorna in un solo punto.
+        /// </summary>
+        public const string BaseUrl = "https://www.animeworld.ac";
+
         public static string DefaultDownloadPath =>
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "AnimeDownloads");
 

@@ -7,6 +7,7 @@ namespace AnimeWorldDownloader_App.Views;
 public partial class EpisodePlayerView : ContentPage
 {
     private readonly EpisodeModel _episode;
+    private bool _isNavigating;
 
     public EpisodePlayerView(EpisodeModel episode)
     {
@@ -54,9 +55,22 @@ public partial class EpisodePlayerView : ContentPage
         Player.Handler?.DisconnectHandler();
     }
 
-    private void OnCloseClicked(object sender, EventArgs e)
+    private async void OnCloseClicked(object sender, EventArgs e)
     {
-        Navigation.PopModalAsync();
+        if (_isNavigating) return;
+        _isNavigating = true;
+        try
+        {
+            await Navigation.PopModalAsync();
+        }
+        catch (Exception ex)
+        {
+            AppLogger.Instance.Error("Chiusura player fallita", ex, "Navigation");
+        }
+        finally
+        {
+            _isNavigating = false;
+        }
     }
 
     #region Keyboard – Spacebar play/pause (Windows)

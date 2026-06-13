@@ -1,0 +1,287 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1781381253286,
+  "projectRoot": "E:\\GitHub\\AnimeWorldDownloader",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [],
+    "gitBranches": {
+      "defaultBranch": "master",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "AnimeWorldDownloader_App": {
+      "path": "AnimeWorldDownloader_App",
+      "purpose": null,
+      "fileCount": 7,
+      "lastAccessed": 1781381253256,
+      "keyFiles": [
+        "AnimeWorldDownloader_App.csproj",
+        "AnimeWorldDownloader_App.csproj.user",
+        "App.xaml",
+        "App.xaml.cs",
+        "AppShell.xaml"
+      ]
+    },
+    "AnimeWorldDownloader_Console": {
+      "path": "AnimeWorldDownloader_Console",
+      "purpose": null,
+      "fileCount": 6,
+      "lastAccessed": 1781381253258,
+      "keyFiles": [
+        "AnimeWorldDownloader_Console.csproj",
+        "AnimeWorldDownloader_Console.csproj.user",
+        "App.config",
+        "NumberEpisode.cs",
+        "Program.cs"
+      ]
+    },
+    "AnimeWorldDownloader_App\\bin": {
+      "path": "AnimeWorldDownloader_App\\bin",
+      "purpose": "Executable scripts",
+      "fileCount": 0,
+      "lastAccessed": 1781381253258,
+      "keyFiles": []
+    },
+    "AnimeWorldDownloader_App\\Data": {
+      "path": "AnimeWorldDownloader_App\\Data",
+      "purpose": "Data files",
+      "fileCount": 5,
+      "lastAccessed": 1781381253259,
+      "keyFiles": [
+        "AppLogger.cs",
+        "AppSettings.cs",
+        "DownloadManagerService.cs"
+      ]
+    },
+    "AnimeWorldDownloader_App\\Models": {
+      "path": "AnimeWorldDownloader_App\\Models",
+      "purpose": "Data models",
+      "fileCount": 5,
+      "lastAccessed": 1781381253259,
+      "keyFiles": [
+        "AnimeDetailModel.cs",
+        "AnimeDownloadModel.cs",
+        "AnimeModel.cs"
+      ]
+    },
+    "AnimeWorldDownloader_Console\\bin": {
+      "path": "AnimeWorldDownloader_Console\\bin",
+      "purpose": "Executable scripts",
+      "fileCount": 0,
+      "lastAccessed": 1781381253260,
+      "keyFiles": []
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "AnimeWorldDownloader_App\\ViewModels\\AnimeDownloadViewModel.cs",
+      "accessCount": 15,
+      "lastAccessed": 1781385462758,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App",
+      "accessCount": 10,
+      "lastAccessed": 1781384802889,
+      "type": "directory"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Views\\AnimeDownloadView.xaml.cs",
+      "accessCount": 10,
+      "lastAccessed": 1781385254895,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Models\\AnimeDownloadModel.cs",
+      "accessCount": 9,
+      "lastAccessed": 1781385451553,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Views\\SearchAnimeView.xaml.cs",
+      "accessCount": 8,
+      "lastAccessed": 1781385285949,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 7,
+      "lastAccessed": 1781383748609,
+      "type": "directory"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Models\\EpisodeModel.cs",
+      "accessCount": 7,
+      "lastAccessed": 1781385254431,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Views\\AnimeDetailView.xaml.cs",
+      "accessCount": 7,
+      "lastAccessed": 1781385260642,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Views\\EpisodePlayerView.xaml.cs",
+      "accessCount": 7,
+      "lastAccessed": 1781385261116,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Data\\HttpTalker.cs",
+      "accessCount": 7,
+      "lastAccessed": 1781385274784,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\AnimeWorldDownloader_App.csproj",
+      "accessCount": 7,
+      "lastAccessed": 1781385483529,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Data\\DownloadManagerService.cs",
+      "accessCount": 6,
+      "lastAccessed": 1781385252977,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Views\\AnimeDownloadView.xaml",
+      "accessCount": 6,
+      "lastAccessed": 1781385266333,
+      "type": "file"
+    },
+    {
+      "path": "C:\\Users\\Aruto\\AppData\\Local\\Temp\\op.html",
+      "accessCount": 5,
+      "lastAccessed": 1781384376187,
+      "type": "directory"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\ViewModels\\AnimeDetailViewModel.cs",
+      "accessCount": 5,
+      "lastAccessed": 1781385265867,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\ViewModels\\SearchAnimeViewModel.cs",
+      "accessCount": 4,
+      "lastAccessed": 1781384837176,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Models\\AnimeModel.cs",
+      "accessCount": 4,
+      "lastAccessed": 1781384986590,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Models\\DownloadTaskModel.cs",
+      "accessCount": 4,
+      "lastAccessed": 1781385261586,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\ViewModels\\AnimeViewModel.cs",
+      "accessCount": 3,
+      "lastAccessed": 1781383765022,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Data\\AppSettings.cs",
+      "accessCount": 3,
+      "lastAccessed": 1781384972700,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Models\\AnimeDetailModel.cs",
+      "accessCount": 2,
+      "lastAccessed": 1781384090732,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Data\\HtmlReader.cs",
+      "accessCount": 2,
+      "lastAccessed": 1781384778988,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Views\\AnimeView.xaml.cs",
+      "accessCount": 2,
+      "lastAccessed": 1781384780212,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Data\\AppLogger.cs",
+      "accessCount": 2,
+      "lastAccessed": 1781384803094,
+      "type": "file"
+    },
+    {
+      "path": "C:\\Users\\Aruto\\.claude\\plans\\app-ha-un-bug-rosy-wave.md",
+      "accessCount": 1,
+      "lastAccessed": 1781381740269,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\Views\\EpisodePlayerView.xaml",
+      "accessCount": 1,
+      "lastAccessed": 1781383753768,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\App.xaml.cs",
+      "accessCount": 1,
+      "lastAccessed": 1781383757468,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\AppShell.xaml.cs",
+      "accessCount": 1,
+      "lastAccessed": 1781383757973,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\MauiProgram.cs",
+      "accessCount": 1,
+      "lastAccessed": 1781383758384,
+      "type": "file"
+    },
+    {
+      "path": "AnimeWorldDownloader_App\\AppShell.xaml",
+      "accessCount": 1,
+      "lastAccessed": 1781383772574,
+      "type": "file"
+    },
+    {
+      "path": "C:\\Users\\Aruto\\AppData\\Local\\Temp\\session.diff",
+      "accessCount": 1,
+      "lastAccessed": 1781385247817,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
