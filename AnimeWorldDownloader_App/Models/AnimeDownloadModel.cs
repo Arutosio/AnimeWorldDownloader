@@ -79,6 +79,23 @@ namespace AnimeWorldDownloader_App.Models
             return "Sconosciuto";
         }
 
+        private static int ParseEpisodeNumber(AngleSharp.Dom.IElement? eA, int index)
+        {
+            string? raw = eA?.GetAttribute("data-episode-num")
+                       ?? eA?.GetAttribute("data-num")
+                       ?? eA?.TextContent;
+
+            if (!string.IsNullOrWhiteSpace(raw))
+            {
+                // Gestisce numeri decimali tipo "6.5" prendendo la parte intera
+                var match = Regex.Match(raw, @"\d+");
+                if (match.Success && int.TryParse(match.Value, out int n))
+                    return n;
+            }
+
+            return index + 1;
+        }
+
         private static string SanitizeName(string name)
         {
             char[] invalid = Path.GetInvalidFileNameChars();
@@ -113,7 +130,10 @@ namespace AnimeWorldDownloader_App.Models
                     ? href
                     : $"{baseUrl}{href}";
 
-                int epNum = i + 1;
+                // Numero reale dal sito (data-episode-num): gli episodi sono
+                // divisi in range, l'indice DOM non corrisponde al numero
+                // quando la numerazione non parte da 1 o ha buchi/speciali.
+                int epNum = ParseEpisodeNumber(eA, i);
                 // Nome file: NomeAnime_Ep_01.mp4
                 string fileName = $"{fileNameBase}_Ep_{epNum:D2}.mp4";
 
