@@ -1,3 +1,4 @@
+using AnimeWorldDownloader_App.Data;
 using AnimeWorldDownloader_App.Models;
 
 namespace AnimeWorldDownloader_App.ViewModels
@@ -33,6 +34,11 @@ namespace AnimeWorldDownloader_App.ViewModels
                 Time = animeDetailModel.Time;
                 Views = animeDetailModel.Views;
                 Description = animeDetailModel.Description;
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Instance.Error("Caricamento dettaglio anime fallito", ex, "AnimeDetail");
+                Description = $"Errore caricamento: {ex.Message}";
             }
             finally
             {

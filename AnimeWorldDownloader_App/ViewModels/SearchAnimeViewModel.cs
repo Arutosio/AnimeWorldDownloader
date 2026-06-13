@@ -1,3 +1,4 @@
+using AnimeWorldDownloader_App.Data;
 using AnimeWorldDownloader_App.Models;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -46,6 +47,11 @@ namespace AnimeWorldDownloader_App.ViewModels
 
                 List<AnimeViewModel> animeViewModels = animeModels.Select(a => new AnimeViewModel(a)).ToList();
                 AnimeViewModels = new ObservableCollection<AnimeViewModel>(animeViewModels);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Instance.Error("Ricerca anime fallita", ex, "Search");
+                AnimeViewModels = new ObservableCollection<AnimeViewModel>();
             }
             finally
             {
