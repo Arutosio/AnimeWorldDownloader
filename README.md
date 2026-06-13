@@ -10,9 +10,23 @@ Applicazione desktop per cercare, guardare e scaricare anime da AnimeWorld.
 
 Link Download: [AnimeWorldDownloader Releases](https://github.com/Arutosio/AnimeWorldDownloader/releases)
 
+## Installazione e avvio (utenti)
+
+Non serve installare nulla: l'app è portable e include già tutto il necessario.
+
+1. Vai alla pagina [Releases](https://github.com/Arutosio/AnimeWorldDownloader/releases) e scarica l'ultima versione: il file **`AnimeWorldDownloader-win-x64.zip`**.
+2. **Estrai** lo zip in una cartella a tua scelta (tasto destro → *Estrai tutto…*).
+3. Apri la cartella estratta e fai doppio clic su **`AnimeWorldDownloader_App.exe`**.
+4. Al primo avvio Windows SmartScreen potrebbe mostrare un avviso ("Windows ha protetto il PC"): clicca **Ulteriori informazioni → Esegui comunque** (l'app non è firmata).
+
+> Gli anime scaricati finiscono di default in `Desktop\AnimeDownloads\`. Puoi cambiare cartella dall'app ("Cambia cartella").
+
 ## Requisiti
 
-- Windows 10/11
+**Per usare l'app (utenti):**
+- Windows 10/11 (64-bit) — nessun altro prerequisito, il runtime .NET è incluso nello zip
+
+**Per compilare dai sorgenti (sviluppatori):**
 - .NET 10 SDK
 
 ## Progetti
