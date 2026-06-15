@@ -6,7 +6,7 @@
              Title="Player"
              BackgroundColor="Black">
 
-    <Grid RowDefinitions="Auto,*,Auto" BackgroundColor="Black">
+    <Grid RowDefinitions="Auto,Auto,*,Auto" BackgroundColor="Black">
 
         <!-- Titolo -->
         <Label Grid.Row="0"
@@ -15,10 +15,28 @@
                FontAttributes="Bold"
                TextColor="White"
                HorizontalTextAlignment="Center"
-               Margin="10" />
+               Margin="10,10,10,2" />
+
+        <!-- Stato / caricamento -->
+        <HorizontalStackLayout Grid.Row="1"
+                               x:Name="StatusBar"
+                               HorizontalOptions="Center"
+                               Spacing="8"
+                               Margin="10,0,10,8">
+            <ActivityIndicator x:Name="LoadingIndicator"
+                               Color="Orange"
+                               WidthRequest="18"
+                               HeightRequest="18"
+                               IsRunning="False"
+                               IsVisible="False" />
+            <Label x:Name="StatusLabel"
+                   FontSize="13"
+                   TextColor="#CCC"
+                   HorizontalTextAlignment="Center" />
+        </HorizontalStackLayout>
 
         <!-- Player Video -->
-        <toolkit:MediaElement Grid.Row="1"
+        <toolkit:MediaElement Grid.Row="2"
                               x:Name="Player"
                               ShouldAutoPlay="True"
                               ShouldShowPlaybackControls="True"
@@ -26,7 +44,7 @@
                               BackgroundColor="Black" />
 
         <!-- Bottone Back -->
-        <Button Grid.Row="2"
+        <Button Grid.Row="3"
                 Text="Chiudi"
                 FontSize="16"
                 FontAttributes="Bold"

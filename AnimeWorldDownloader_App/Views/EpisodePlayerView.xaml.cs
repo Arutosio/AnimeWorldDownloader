@@ -18,6 +18,13 @@ public partial class EpisodePlayerView : ContentPage
         TitleLabel.Text = $"Episodio {episode.NumberLabel}";
     }
 
+    private void SetLoading(bool loading, string status)
+    {
+        LoadingIndicator.IsVisible = loading;
+        LoadingIndicator.IsRunning = loading;
+        StatusLabel.Text = status;
+    }
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -34,7 +41,8 @@ public partial class EpisodePlayerView : ContentPage
     {
         try
         {
-            TitleLabel.Text = $"Episodio {_episode.NumberLabel} - Caricamento da: {_episode.UriWatch}";
+            TitleLabel.Text = $"Episodio {_episode.NumberLabel}";
+            SetLoading(true, "Caricamento in corso...");
 
             string directUrl = await _episode.ResolveDirectDownloadUrlAsync();
 
@@ -44,12 +52,13 @@ public partial class EpisodePlayerView : ContentPage
 
             if (!string.IsNullOrEmpty(directUrl))
             {
-                TitleLabel.Text = $"Episodio {_episode.NumberLabel} - Streaming: {directUrl}";
+                SetLoading(false, string.Empty);
+                StatusBar.IsVisible = false;
                 Player.Source = new UriMediaSource { Uri = new Uri(directUrl) };
             }
             else
             {
-                TitleLabel.Text = $"Episodio {_episode.NumberLabel} - Link non trovato. UriWatch: {_episode.UriWatch}, UriDownloadPage: {_episode.UriDownloadPage}";
+                SetLoading(false, "Link dello streaming non trovato. Riprova più tardi.");
                 AppLogger.Instance.Error(
                     $"Link streaming non trovato Ep.{_episode.NumberLabel} | ApiId: {_episode.EpisodeApiId} | UriWatch: {_episode.UriWatch}",
                     "Player");
@@ -57,7 +66,7 @@ public partial class EpisodePlayerView : ContentPage
         }
         catch (Exception ex)
         {
-            TitleLabel.Text = $"Errore Ep. {_episode.NumberLabel}: {ex.Message} | UriWatch: {_episode.UriWatch} | UriDownloadPage: {_episode.UriDownloadPage}";
+            SetLoading(false, "Impossibile caricare l'episodio. Controlla la connessione.");
             AppLogger.Instance.Error(
                 $"Caricamento player fallito Ep.{_episode.NumberLabel} | ApiId: {_episode.EpisodeApiId} | UriWatch: {_episode.UriWatch}",
                 ex, "Player");

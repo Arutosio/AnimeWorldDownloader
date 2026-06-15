@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using System.Net;
+using System.Net.Http.Headers;
 
 namespace AnimeWorldDownloader_App.Data
 {
@@ -69,17 +71,31 @@ namespace AnimeWorldDownloader_App.Data
             }
         }
 
-        public async Task DownloadFileAsync(string url, string savePath, Action<double> updateDownloadProgress, CancellationToken ct = default)
+        /// <summary>
+        /// Scarica un file con supporto alla ripresa (HTTP Range).
+        /// </summary>
+        /// <param name="onProgress">Callback (downloadedBytes, totalBytes, bytesPerSec). totalBytes=0 se sconosciuto.</param>
+        /// <param name="resumeFrom">Offset da cui riprendere (0 = da capo). Se &gt;0 invia Range e apre il file in append.</param>
+        /// <remarks>
+        /// NON elimina il file parziale in caso di errore/annullamento: la
+        /// decisione spetta al chiamante (pausa/errore tengono il parziale per
+        /// la ripresa, l'annullamento lo elimina). Qui si fa solo rethrow.
+        /// </remarks>
+        public async Task DownloadFileAsync(string url, string savePath, Action<long, long, double> onProgress, long resumeFrom = 0, CancellationToken ct = default)
         {
-            _log.LogHttpRequest("GET (download)", url, "HttpTalker");
+            _log.LogHttpRequest($"GET (download, resumeFrom={resumeFrom})", url, "HttpTalker");
 
             try
             {
-                using var response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
-                int statusCode = (int)response.StatusCode;
-                long? totalBytes = response.Content.Headers.ContentLength;
+                using var request = new HttpRequestMessage(HttpMethod.Get, url);
+                if (resumeFrom > 0)
+                    request.Headers.Range = new RangeHeaderValue(resumeFrom, null);
 
-                _log.LogHttpResponse(url, statusCode, totalBytes, "HttpTalker");
+                using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, ct);
+                int statusCode = (int)response.StatusCode;
+                long? contentLength = response.Content.Headers.ContentLength;
+
+                _log.LogHttpResponse(url, statusCode, contentLength, "HttpTalker");
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -89,63 +105,64 @@ namespace AnimeWorldDownloader_App.Data
 
                 response.EnsureSuccessStatusCode();
 
-                _log.Debug($"Download stream avviato: {url} → {savePath} (Size: {totalBytes?.ToString() ?? "sconosciuta"} bytes)", "HttpTalker");
+                // Se abbiamo chiesto un Range ma il server ha risposto 200 (no range),
+                // ricominciamo da zero per non corrompere il file.
+                bool serverHonoredRange = response.StatusCode == HttpStatusCode.PartialContent;
+                long startOffset = (resumeFrom > 0 && serverHonoredRange) ? resumeFrom : 0;
+                if (resumeFrom > 0 && !serverHonoredRange)
+                    _log.Warn($"Server non ha onorato il Range (status {statusCode}): riparto da 0", "HttpTalker");
 
-                long readBytes = 0L;
-                byte[] buffer = new byte[8192];
+                // Totale assoluto: per il 206 ContentLength è la parte rimanente.
+                long totalBytes = contentLength.HasValue ? startOffset + contentLength.Value : 0L;
+
+                _log.Debug($"Download stream avviato: {url} → {savePath} (offset {startOffset}, totale {(totalBytes > 0 ? totalBytes.ToString() : "sconosciuto")} bytes)", "HttpTalker");
 
                 Directory.CreateDirectory(Path.GetDirectoryName(savePath)!);
 
-                using FileStream fileStream = new(savePath, FileMode.Create, FileAccess.Write, FileShare.None);
+                FileMode mode = startOffset > 0 ? FileMode.Append : FileMode.Create;
+                long downloaded = startOffset;
+                byte[] buffer = new byte[81920];
+
+                using FileStream fileStream = new(savePath, mode, FileAccess.Write, FileShare.None);
                 using Stream stream = await response.Content.ReadAsStreamAsync(ct);
 
+                var sw = Stopwatch.StartNew();
+                long lastReport = 0L;
+                long bytesSinceReport = 0L;
+                onProgress(downloaded, totalBytes, 0);
+
                 int bytesRead;
-                do
+                while ((bytesRead = await stream.ReadAsync(buffer, ct)) > 0)
                 {
-                    ct.ThrowIfCancellationRequested();
-                    bytesRead = await stream.ReadAsync(buffer, ct);
-                    readBytes += bytesRead;
-
-                    if (totalBytes.HasValue && totalBytes.Value > 0)
-                    {
-                        double percentage = (double)readBytes / totalBytes.Value;
-                        updateDownloadProgress.Invoke(percentage);
-                    }
-
                     await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead), ct);
-                } while (bytesRead > 0);
+                    downloaded += bytesRead;
+                    bytesSinceReport += bytesRead;
 
-                _log.Info($"Download file completato: {savePath} ({readBytes} bytes)", "HttpTalker");
+                    // Campiona ~ogni 500 ms per non floodare la UI
+                    long elapsedMs = sw.ElapsedMilliseconds;
+                    if (elapsedMs - lastReport >= 500)
+                    {
+                        double intervalSec = (elapsedMs - lastReport) / 1000.0;
+                        double speed = intervalSec > 0 ? bytesSinceReport / intervalSec : 0;
+                        onProgress(downloaded, totalBytes, speed);
+                        lastReport = elapsedMs;
+                        bytesSinceReport = 0;
+                    }
+                }
+
+                onProgress(downloaded, totalBytes, 0);
+                _log.Info($"Download file completato: {savePath} ({downloaded} bytes)", "HttpTalker");
             }
             catch (OperationCanceledException)
             {
-                _log.Warn($"Download annullato: {url}", "HttpTalker");
-                TryDeletePartialFile(savePath);
+                // Pausa o annullo: il parziale resta su disco, decide il chiamante.
+                _log.Warn($"Download interrotto (pausa/annullo): {url}", "HttpTalker");
                 throw;
             }
             catch (Exception ex)
             {
                 _log.Error($"Download fallito: {url} → {savePath}", ex, "HttpTalker");
-                TryDeletePartialFile(savePath);
                 throw;
-            }
-        }
-
-        private void TryDeletePartialFile(string path)
-        {
-            // Le 'using' declaration del FileStream sono già state disposte
-            // quando arriviamo qui, quindi il file non è più in lock.
-            try
-            {
-                if (File.Exists(path))
-                {
-                    File.Delete(path);
-                    _log.Info($"File parziale rimosso: {path}", "HttpTalker");
-                }
-            }
-            catch (Exception ex)
-            {
-                _log.Warn($"Impossibile rimuovere file parziale {path}: {ex.Message}", "HttpTalker");
             }
         }
     }

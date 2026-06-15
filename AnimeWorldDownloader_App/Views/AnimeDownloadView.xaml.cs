@@ -18,6 +18,7 @@ public partial class AnimeDownloadView : ContentPage
 
         _viewModel.NavigateToPlayer += OnNavigateToPlayer;
         _viewModel.RequestChangeFolderDialog += OnRequestChangeFolderDialog;
+        _viewModel.RequestConfirm += OnRequestConfirm;
         _viewModel.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(AnimeDownloadViewModel.ShowDownloadsPanel))
@@ -50,6 +51,9 @@ public partial class AnimeDownloadView : ContentPage
             _isNavigating = false;
         }
     }
+
+    private Task<bool> OnRequestConfirm(string message)
+        => DisplayAlertAsync("Conferma", message, "Sì", "No");
 
     private async Task OnRequestChangeFolderDialog()
     {

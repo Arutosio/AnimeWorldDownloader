@@ -29,8 +29,12 @@ namespace AnimeWorldDownloader_App.ViewModels
             DeselectAllCommand = new Command(() => SetAllSelected(false));
             DownloadSelectedCommand = new Command(async () => await DownloadSelectedAsync(), () => SelectedCount > 0);
             ToggleDownloadsPanelCommand = new Command(() => ShowDownloadsPanel = !ShowDownloadsPanel);
-            CancelDownloadCommand = new Command<DownloadTaskModel>(dt => dt.Cancel());
-            CancelAllDownloadsCommand = new Command(CancelAllDownloads);
+            CancelDownloadCommand = new Command<DownloadTaskModel>(CancelDownload);
+            PauseDownloadCommand = new Command<DownloadTaskModel>(dt => dt.RequestPause());
+            ResumeDownloadCommand = new Command<DownloadTaskModel>(async dt => await ResumeDownloadAsync(dt));
+            RetryDownloadCommand = new Command<DownloadTaskModel>(async dt => await ResumeDownloadAsync(dt));
+            RemoveDownloadCommand = new Command<DownloadTaskModel>(RemoveDownload);
+            CancelAllDownloadsCommand = new Command(async () => await CancelAllDownloadsAsync());
             OpenDownloadFolderCommand = new Command(OpenDownloadFolder);
             ChangeDownloadFolderCommand = new Command(async () => { if (RequestChangeFolderDialog != null) await RequestChangeFolderDialog.Invoke(); });
         }
@@ -107,18 +111,18 @@ namespace AnimeWorldDownloader_App.ViewModels
             StatusMessage = $"Download completato! ({tasks.Count} episodi)";
         }
 
+        // I task completati/annullati si auto-rimuovono: ogni item ancora in
+        // lista (Queued/Running/Paused/Error) blocca un download duplicato.
         private bool HasActiveDownloadFor(EpisodeModel episode)
-            => ActiveDownloads.Any(dt => dt.Episode == episode && !dt.IsFinished);
+            => ActiveDownloads.Any(dt => dt.Episode == episode);
 
         private DownloadTaskModel CreateDownloadTask(EpisodeModel episode)
         {
-            DownloadManagerService.Instance.RemoveFinished();
-
             var dt = new DownloadTaskModel
             {
                 Episode = episode,
                 SavePath = episode.FileLocation,
-                Status = "In attesa..."
+                State = DownloadState.Queued
             };
             ActiveDownloads.Add(dt);
             OnPropertyChanged(nameof(ActiveDownloadCount));
@@ -126,58 +130,160 @@ namespace AnimeWorldDownloader_App.ViewModels
             return dt;
         }
 
-        private async Task ExecuteDownloadAsync(DownloadTaskModel dt)
+        private async Task ExecuteDownloadAsync(DownloadTaskModel dt, long resumeFrom = 0)
         {
             if (dt.IsFinished) return;
 
             int epNum = dt.Episode.NEpisode;
-            _log.Info($"--- Inizio download Ep.{epNum} ---", "ViewModel");
+            _log.Info($"--- Inizio download Ep.{epNum} (resumeFrom={resumeFrom}) ---", "ViewModel");
 
             try
             {
-                dt.Status = $"Resolving Ep. {epNum}...";
-                StatusMessage = $"Resolving Ep. {epNum}... (UriWatch: {dt.Episode.UriWatch})";
+                dt.PauseRequested = false;
+                dt.State = DownloadState.Running;
+                StatusMessage = resumeFrom > 0
+                    ? $"Ripresa Ep. {epNum}..."
+                    : $"Risoluzione link Ep. {epNum}...";
                 _log.Info($"Resolving URL per Ep.{epNum}: UriWatch={dt.Episode.UriWatch}", "ViewModel");
 
                 dt.Cts.Token.ThrowIfCancellationRequested();
 
                 string directUrl = await dt.Episode.ResolveDirectDownloadUrlAsync();
                 dt.SavePath = dt.Episode.FileLocation;
-                _log.Info($"URL risolto Ep.{epNum}: {directUrl}", "ViewModel");
-                _log.Info($"SavePath Ep.{epNum}: {dt.SavePath}", "ViewModel");
+                _log.Info($"URL risolto Ep.{epNum}: {directUrl} → {dt.SavePath}", "ViewModel");
 
-                dt.Status = $"Download Ep. {epNum}...";
-                StatusMessage = $"Download Ep. {epNum}... → {dt.SavePath}";
+                StatusMessage = $"Download Ep. {epNum}...";
                 _log.LogDownloadStart(epNum, directUrl, dt.SavePath);
 
                 HttpTalker httpTalker = HttpTalker.GetInstance();
                 await httpTalker.DownloadFileAsync(
                     directUrl,
                     dt.SavePath,
-                    progress => MainThread.BeginInvokeOnMainThread(() => dt.Progress = progress),
+                    (downloaded, total, speed) => MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        dt.DownloadedBytes = downloaded;
+                        dt.TotalBytes = total;
+                        dt.BytesPerSec = speed;
+                        dt.Progress = total > 0 ? (double)downloaded / total : 0;
+                    }),
+                    resumeFrom,
                     dt.Cts.Token);
 
                 long fileSize = new FileInfo(dt.SavePath).Length;
-                dt.Status = "Completato";
-                StatusMessage = $"Ep. {epNum} completato! → {dt.SavePath}";
+                dt.BytesPerSec = 0;
+                dt.State = DownloadState.Completed;
+                StatusMessage = $"Ep. {epNum} completato!";
                 _log.LogDownloadComplete(epNum, dt.SavePath, fileSize);
+
+                // Completato: sparisce dal pannello
+                RemoveTask(dt);
             }
             catch (OperationCanceledException)
             {
-                dt.Status = "Annullato";
-                StatusMessage = $"Ep. {epNum} annullato";
-                _log.Warn($"Download Ep.{epNum} annullato dall'utente", "ViewModel");
+                dt.BytesPerSec = 0;
+                if (dt.PauseRequested)
+                {
+                    // Pausa: conserva il parziale e l'offset, l'item resta
+                    dt.DownloadedBytes = SafeFileLength(dt.SavePath);
+                    dt.State = DownloadState.Paused;
+                    StatusMessage = $"Ep. {epNum} in pausa";
+                    _log.Info($"Download Ep.{epNum} in pausa a {dt.DownloadedBytes} bytes", "ViewModel");
+                }
+                else
+                {
+                    // Annullo: elimina il parziale e rimuovi l'item
+                    dt.State = DownloadState.Cancelled;
+                    StatusMessage = $"Ep. {epNum} annullato";
+                    _log.Warn($"Download Ep.{epNum} annullato dall'utente", "ViewModel");
+                    TryDeleteFile(dt.SavePath);
+                    RemoveTask(dt);
+                }
             }
             catch (Exception ex)
             {
-                dt.Status = "Errore";
+                dt.BytesPerSec = 0;
+                dt.State = DownloadState.Error;
+                dt.ErrorMessage = ex.Message;
                 StatusMessage = $"Errore Ep. {epNum}: {ex.Message}";
-                _log.LogDownloadError(epNum, dt.Episode.UriDirectDownload ?? dt.Episode.UriWatch, ex);
+                _log.LogDownloadError(epNum, string.IsNullOrEmpty(dt.Episode.UriDirectDownload) ? dt.Episode.UriWatch : dt.Episode.UriDirectDownload, ex);
+                // Errore: l'item resta (parziale conservato per Riprova)
             }
             finally
             {
                 OnPropertyChanged(nameof(ActiveDownloadCount));
                 await _log.FlushAsync();
+            }
+        }
+
+        // --- Pausa / Ripresa / Riprova ---
+        private async Task ResumeDownloadAsync(DownloadTaskModel dt)
+        {
+            if (dt == null || dt.State == DownloadState.Running) return;
+
+            dt.Cts = new CancellationTokenSource();
+            dt.ErrorMessage = string.Empty;
+            long offset = SafeFileLength(dt.SavePath);
+            _log.Info($"Ripresa/Riprova Ep.{dt.Episode.NEpisode} da offset {offset}", "ViewModel");
+            await ExecuteDownloadAsync(dt, offset);
+        }
+
+        // --- Annulla singolo ---
+        private void CancelDownload(DownloadTaskModel dt)
+        {
+            if (dt == null) return;
+
+            if (dt.State == DownloadState.Running)
+            {
+                // Il loop attivo lancerà OperationCanceled: il catch gestisce delete + remove
+                dt.Cancel();
+            }
+            else
+            {
+                // Queued/Paused/Error: nessun loop in esecuzione, cleanup sincrono
+                dt.Cancel();
+                dt.State = DownloadState.Cancelled;
+                TryDeleteFile(dt.SavePath);
+                RemoveTask(dt);
+                StatusMessage = $"Ep. {dt.Episode.NEpisode} annullato";
+            }
+        }
+
+        // --- Rimuovi item in errore (senza riscaricare) ---
+        private void RemoveDownload(DownloadTaskModel dt)
+        {
+            if (dt == null) return;
+            TryDeleteFile(dt.SavePath);
+            RemoveTask(dt);
+        }
+
+        private void RemoveTask(DownloadTaskModel dt)
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                if (ActiveDownloads.Remove(dt))
+                {
+                    dt.Cts.Dispose();
+                    OnPropertyChanged(nameof(ActiveDownloadCount));
+                }
+            });
+        }
+
+        private static long SafeFileLength(string path)
+            => File.Exists(path) ? new FileInfo(path).Length : 0L;
+
+        private void TryDeleteFile(string path)
+        {
+            try
+            {
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                    _log.Info($"File parziale rimosso: {path}", "ViewModel");
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Warn($"Impossibile rimuovere file {path}: {ex.Message}", "ViewModel");
             }
         }
 
@@ -201,11 +307,24 @@ namespace AnimeWorldDownloader_App.ViewModels
             ((Command)DownloadSelectedCommand).ChangeCanExecute();
         }
 
-        // --- Cancellazione ---
-        private void CancelAllDownloads()
+        // --- Cancellazione di massa (con conferma) ---
+        public event Func<string, Task<bool>>? RequestConfirm;
+
+        private async Task CancelAllDownloadsAsync()
         {
-            foreach (var dt in ActiveDownloads)
-                dt.Cancel();
+            if (ActiveDownloads.Count == 0) return;
+
+            if (RequestConfirm != null)
+            {
+                bool ok = await RequestConfirm.Invoke(
+                    $"Annullare tutti i {ActiveDownloads.Count} download? I file parziali verranno eliminati.");
+                if (!ok) return;
+            }
+
+            // Copia: CancelDownload modifica la collezione
+            foreach (var dt in ActiveDownloads.ToList())
+                CancelDownload(dt);
+
             StatusMessage = "Tutti i download annullati";
         }
 
@@ -310,6 +429,10 @@ namespace AnimeWorldDownloader_App.ViewModels
         public ICommand DownloadSelectedCommand { get; }
         public ICommand ToggleDownloadsPanelCommand { get; }
         public ICommand CancelDownloadCommand { get; }
+        public ICommand PauseDownloadCommand { get; }
+        public ICommand ResumeDownloadCommand { get; }
+        public ICommand RetryDownloadCommand { get; }
+        public ICommand RemoveDownloadCommand { get; }
         public ICommand CancelAllDownloadsCommand { get; }
         public ICommand OpenDownloadFolderCommand { get; }
         public ICommand ChangeDownloadFolderCommand { get; }

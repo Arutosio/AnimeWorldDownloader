@@ -162,45 +162,115 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:DownloadTaskModel">
-                        <Border BackgroundColor="#CC222222" Padding="8" StrokeShape="RoundRectangle 6">
-                            <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
-                                <!-- Ep + Status -->
-                                <Label Grid.Row="0" Grid.Column="0"
-                                       FontSize="14"
-                                       FontAttributes="Bold"
-                                       TextColor="White">
-                                    <Label.Text>
-                                        <MultiBinding StringFormat="Ep. {0} - {1}">
-                                            <Binding Path="Episode.NumberLabel" />
-                                            <Binding Path="Status" />
-                                        </MultiBinding>
-                                    </Label.Text>
-                                </Label>
+                        <Border BackgroundColor="#CC222222" Padding="10" StrokeShape="RoundRectangle 8">
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="4">
 
-                                <!-- Bottone Annulla -->
-                                <Button Grid.Row="0" Grid.Column="1"
-                                        Text="X"
-                                        FontSize="12"
-                                        FontAttributes="Bold"
-                                        BackgroundColor="DarkRed"
-                                        TextColor="White"
-                                        WidthRequest="35"
-                                        HeightRequest="30"
-                                        Padding="0"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AnimeDownloadViewModel}}, Path=CancelDownloadCommand}"
-                                        CommandParameter="{Binding .}" />
+                                <!-- Riga 0: chip stato + Episodio + azioni contestuali -->
+                                <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto">
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="{Binding StateColor}"
+                                            Padding="7,2"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 4"
+                                            VerticalOptions="Center">
+                                        <Label Text="{Binding Status}"
+                                               FontSize="11"
+                                               FontAttributes="Bold"
+                                               TextColor="Black" />
+                                    </Border>
 
-                                <!-- Progress Bar -->
-                                <ProgressBar Grid.Row="1" Grid.ColumnSpan="2"
-                                             Progress="{Binding Progress}"
-                                             ProgressColor="Orange"
-                                             Margin="0,4" />
+                                    <Label Grid.Column="1"
+                                           Text="{Binding Episode.NumberLabel, StringFormat='Ep. {0}'}"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           VerticalTextAlignment="Center"
+                                           Margin="8,0" />
 
-                                <!-- Path file -->
-                                <Label Grid.Row="2" Grid.ColumnSpan="2"
+                                    <HorizontalStackLayout Grid.Column="2" Spacing="5">
+                                        <Button Text="Pausa"
+                                                FontSize="11"
+                                                BackgroundColor="#555"
+                                                TextColor="White"
+                                                Padding="8,2"
+                                                IsVisible="{Binding CanPause}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AnimeDownloadViewModel}}, Path=PauseDownloadCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        <Button Text="Riprendi"
+                                                FontSize="11"
+                                                BackgroundColor="DarkGreen"
+                                                TextColor="White"
+                                                Padding="8,2"
+                                                IsVisible="{Binding CanResume}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AnimeDownloadViewModel}}, Path=ResumeDownloadCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        <Button Text="Riprova"
+                                                FontSize="11"
+                                                BackgroundColor="DarkOrange"
+                                                TextColor="White"
+                                                Padding="8,2"
+                                                IsVisible="{Binding CanRetry}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AnimeDownloadViewModel}}, Path=RetryDownloadCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        <Button Text="Rimuovi"
+                                                FontSize="11"
+                                                BackgroundColor="#777"
+                                                TextColor="White"
+                                                Padding="8,2"
+                                                IsVisible="{Binding CanRetry}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AnimeDownloadViewModel}}, Path=RemoveDownloadCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        <Button Text="✕"
+                                                FontSize="12"
+                                                FontAttributes="Bold"
+                                                BackgroundColor="DarkRed"
+                                                TextColor="White"
+                                                WidthRequest="34"
+                                                Padding="0"
+                                                IsVisible="{Binding IsActive}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AnimeDownloadViewModel}}, Path=CancelDownloadCommand}"
+                                                CommandParameter="{Binding .}" />
+                                    </HorizontalStackLayout>
+                                </Grid>
+
+                                <!-- Riga 1: progress + percentuale -->
+                                <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
+                                    <ProgressBar Grid.Column="0"
+                                                 Progress="{Binding Progress}"
+                                                 ProgressColor="{Binding StateColor}"
+                                                 VerticalOptions="Center" />
+                                    <Label Grid.Column="1"
+                                           Text="{Binding ProgressPercent, StringFormat='{0}%'}"
+                                           FontSize="12"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           WidthRequest="44"
+                                           HorizontalTextAlignment="End"
+                                           Margin="6,0,0,0" />
+                                </Grid>
+
+                                <!-- Riga 2: dimensione · velocità · ETA -->
+                                <HorizontalStackLayout Grid.Row="2" Spacing="12">
+                                    <Label Text="{Binding SizeText}" FontSize="11" TextColor="#CCC" />
+                                    <Label Text="{Binding SpeedText}" FontSize="11" TextColor="#9CF" />
+                                    <Label Text="{Binding EtaText, StringFormat='ETA {0}'}"
+                                           FontSize="11" TextColor="#CCC"
+                                           IsVisible="{Binding CanPause}" />
+                                </HorizontalStackLayout>
+
+                                <!-- Riga 3: messaggio di errore -->
+                                <Label Grid.Row="3"
+                                       Text="{Binding ErrorMessage}"
+                                       IsVisible="{Binding CanRetry}"
+                                       FontSize="11"
+                                       TextColor="#FF8888"
+                                       LineBreakMode="WordWrap" />
+
+                                <!-- Riga 4: percorso file -->
+                                <Label Grid.Row="4"
                                        Text="{Binding SavePath}"
                                        FontSize="10"
-                                       TextColor="#AAA"
+                                       TextColor="#888"
                                        LineBreakMode="MiddleTruncation" />
                             </Grid>
                         </Border>
