@@ -24,6 +24,10 @@ namespace AnimeWorldDownloader_App.Models
         public string SavePath { get; set; } = string.Empty;
         public CancellationTokenSource Cts { get; set; } = new();
 
+        // Offset da cui far ripartire il download quando il task viene
+        // rimesso in coda per ripresa/riprova (0 = da capo). Lo legge il pump.
+        public long ResumeFrom { get; set; }
+
         public DownloadState State
         {
             get => _state;

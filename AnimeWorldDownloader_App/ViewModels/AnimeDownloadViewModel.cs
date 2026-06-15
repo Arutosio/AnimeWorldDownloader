@@ -86,8 +86,8 @@ namespace AnimeWorldDownloader_App.ViewModels
                 return;
             }
 
-            var task = CreateDownloadTask(episode);
-            await ExecuteDownloadAsync(task);
+            CreateDownloadTask(episode); // accodato (Queued)
+            await PumpQueueAsync();
         }
 
         // --- Download selezionati ---
@@ -97,18 +97,44 @@ namespace AnimeWorldDownloader_App.ViewModels
             if (selected.Count == 0) return;
 
             // Evita task duplicati per episodi già in download
-            var toDownload = selected.Where(ep => !HasActiveDownloadFor(ep)).ToList();
-            var tasks = toDownload.Select(CreateDownloadTask).ToList();
-
-            foreach (var task in tasks)
-            {
-                await ExecuteDownloadAsync(task);
-            }
+            foreach (var ep in selected.Where(ep => !HasActiveDownloadFor(ep)))
+                CreateDownloadTask(ep); // tutti Queued
 
             foreach (var ep in selected)
                 ep.IsSelected = false;
+            UpdateSelectedCount();
 
-            StatusMessage = $"Download completato! ({tasks.Count} episodi)";
+            await PumpQueueAsync();
+        }
+
+        // Coda sequenziale (uno alla volta). Si ferma se l'item attivo viene
+        // messo in pausa: gli episodi in coda NON partono finché non lo si
+        // riprende. La ripresa riavvia la coda (vedi ResumeDownloadAsync).
+        private bool _queueRunning;
+
+        private async Task PumpQueueAsync()
+        {
+            if (_queueRunning) return;
+            _queueRunning = true;
+            try
+            {
+                while (true)
+                {
+                    var next = ActiveDownloads.FirstOrDefault(d => d.State == DownloadState.Queued);
+                    if (next == null) break;
+
+                    long offset = next.ResumeFrom;
+                    next.ResumeFrom = 0;
+                    await ExecuteDownloadAsync(next, offset);
+
+                    // Pausa dell'item attivo = ferma la coda
+                    if (next.State == DownloadState.Paused) break;
+                }
+            }
+            finally
+            {
+                _queueRunning = false;
+            }
         }
 
         // I task completati/annullati si auto-rimuovono: ogni item ancora in
@@ -216,15 +242,18 @@ namespace AnimeWorldDownloader_App.ViewModels
         }
 
         // --- Pausa / Ripresa / Riprova ---
+        // Rimette il task in coda con l'offset del parziale: lo esegue il pump
+        // (un solo download alla volta, niente esecuzioni concorrenti).
         private async Task ResumeDownloadAsync(DownloadTaskModel dt)
         {
-            if (dt == null || dt.State == DownloadState.Running) return;
+            if (dt == null || dt.State == DownloadState.Running || dt.State == DownloadState.Queued) return;
 
             dt.Cts = new CancellationTokenSource();
             dt.ErrorMessage = string.Empty;
-            long offset = SafeFileLength(dt.SavePath);
-            _log.Info($"Ripresa/Riprova Ep.{dt.Episode.NEpisode} da offset {offset}", "ViewModel");
-            await ExecuteDownloadAsync(dt, offset);
+            dt.ResumeFrom = SafeFileLength(dt.SavePath);
+            dt.State = DownloadState.Queued;
+            _log.Info($"Ripresa/Riprova Ep.{dt.Episode.NEpisode} da offset {dt.ResumeFrom}", "ViewModel");
+            await PumpQueueAsync();
         }
 
         // --- Annulla singolo ---
