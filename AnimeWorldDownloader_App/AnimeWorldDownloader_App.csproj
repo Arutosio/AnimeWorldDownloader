@@ -16,8 +16,8 @@
 		<ApplicationIdGuid>23d23180-d0de-434e-a47a-cc12659441fd</ApplicationIdGuid>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.7</ApplicationDisplayVersion>
-		<ApplicationVersion>8</ApplicationVersion>
+		<ApplicationDisplayVersion>1.8</ApplicationDisplayVersion>
+		<ApplicationVersion>9</ApplicationVersion>
 
 		<TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>

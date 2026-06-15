@@ -141,6 +141,9 @@ namespace AnimeWorldDownloader_App.Models
                 string? href = eA?.GetAttribute("href");
                 if (string.IsNullOrEmpty(href)) continue;
 
+                // data-id: identificativo episodio per l'API /api/episode/info
+                string apiId = eA?.GetAttribute("data-id") ?? string.Empty;
+
                 string episodePageUrl = href.StartsWith("http")
                     ? href
                     : $"{baseUrl}{href}";
@@ -157,6 +160,7 @@ namespace AnimeWorldDownloader_App.Models
                 {
                     NEpisode = epNum,
                     NumberLabel = numberLabel,
+                    EpisodeApiId = apiId,
                     UriWatch = episodePageUrl,
                     FileLocation = Path.Combine(animePath, fileName)
                 };

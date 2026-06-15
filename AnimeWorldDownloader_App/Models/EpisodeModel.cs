@@ -2,6 +2,7 @@ using AngleSharp;
 using AnimeWorldDownloader_App.Data;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Web;
 
 namespace AnimeWorldDownloader_App.Models
@@ -16,6 +17,8 @@ namespace AnimeWorldDownloader_App.Models
         public int NEpisode { get; set; }
         // Etichetta numero come sul sito (es. "6" o "6.5"); usata per display e nome file
         public string NumberLabel { get; set; } = string.Empty;
+        // data-id dell'episodio (es. "ZXFbr"): usato per l'API /api/episode/info
+        public string EpisodeApiId { get; set; } = string.Empty;
         public string UriWatch { get; set; } = string.Empty;
         public string UriDownloadPage { get; set; } = string.Empty;
         public string UriDirectDownload { get; set; } = string.Empty;
@@ -28,13 +31,12 @@ namespace AnimeWorldDownloader_App.Models
         }
 
         /// <summary>
-        /// Risolve il link diretto di download seguendo il flusso:
-        /// 1. Fetch pagina episodio -> trova #downloadLink href (download-file.php?id=...)
-        /// 2. Dall'URL intermedio, costruisce il link diretto al file .mp4
-        ///    Esempio: https://srv18.../download-file.php?id=DDL/ANIME/File.mp4
-        ///          -> https://srv18.../DDL/ANIME/File.mp4
-        /// Se la costruzione diretta non funziona, fa fetch della pagina intermedia
-        /// e cerca il link "Scarica".
+        /// Risolve il link diretto al file .mp4.
+        /// Flusso attuale (il sito ha spostato il link su JS/XHR):
+        /// 1. Chiama l'API /api/episode/info?id={EpisodeApiId} che restituisce
+        ///    JSON con il campo "grabber" = URL diretto al .mp4.
+        /// Fallback legacy: scraping di #downloadLink dall'HTML della pagina
+        /// episodio (non piu' presente nell'HTML statico, tenuto per robustezza).
         /// </summary>
         public async Task<string> ResolveDirectDownloadUrlAsync()
         {
@@ -48,7 +50,43 @@ namespace AnimeWorldDownloader_App.Models
 
             HttpTalker httpTalker = HttpTalker.GetInstance();
 
-            // Step 1: fetch pagina episodio per trovare #downloadLink
+            // Step 0: API ufficiale. Il link non e' piu' nell'HTML statico
+            // (#downloadLink iniettato via JS): si ricava dal campo "grabber"
+            // di /api/episode/info?id={data-id}.
+            string apiUrl = BuildEpisodeInfoApiUrl();
+            if (!string.IsNullOrEmpty(apiUrl))
+            {
+                try
+                {
+                    _log.Info($"Step 0: API episodio: {apiUrl}", src);
+                    string json = await httpTalker.GetResultFromUriAsync(apiUrl);
+                    using var jdoc = JsonDocument.Parse(json);
+                    string? grabber = jdoc.RootElement.TryGetProperty("grabber", out var g)
+                        ? g.GetString()
+                        : null;
+
+                    if (!string.IsNullOrEmpty(grabber))
+                    {
+                        _log.Info($"grabber risolto da API: {grabber}", src);
+                        UriDirectDownload = grabber;
+                        UpdateFileLocationFromUrl(grabber);
+                        return UriDirectDownload;
+                    }
+
+                    _log.Warn($"Campo 'grabber' assente/vuoto nella risposta API. JSON: {json[..Math.Min(300, json.Length)]}", src);
+                }
+                catch (Exception ex)
+                {
+                    // Logga il motivo e prosegue col fallback legacy
+                    _log.Error($"Chiamata API episodio fallita: {apiUrl}", ex, src);
+                }
+            }
+            else
+            {
+                _log.Warn("EpisodeApiId vuoto: API non utilizzabile, passo al fallback HTML legacy", src);
+            }
+
+            // Step 1 (legacy fallback): fetch pagina episodio per trovare #downloadLink
             if (string.IsNullOrEmpty(UriDownloadPage))
             {
                 if (string.IsNullOrEmpty(UriWatch))
@@ -145,6 +183,19 @@ namespace AnimeWorldDownloader_App.Models
             UriDirectDownload = fallbackUrl;
             UpdateFileLocationFromUrl(fallbackUrl);
             return UriDirectDownload;
+        }
+
+        // Costruisce l'URL dell'API info usando l'host della pagina episodio
+        // (fallback a AppSettings.BaseUrl). Vuoto se manca EpisodeApiId.
+        private string BuildEpisodeInfoApiUrl()
+        {
+            if (string.IsNullOrEmpty(EpisodeApiId)) return string.Empty;
+
+            string host = AppSettings.BaseUrl;
+            if (Uri.TryCreate(UriWatch, UriKind.Absolute, out var uri))
+                host = $"{uri.Scheme}://{uri.Host}";
+
+            return $"{host}/api/episode/info?id={EpisodeApiId}";
         }
 
         private void UpdateFileLocationFromUrl(string url)

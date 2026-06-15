@@ -50,11 +50,17 @@ public partial class EpisodePlayerView : ContentPage
             else
             {
                 TitleLabel.Text = $"Episodio {_episode.NumberLabel} - Link non trovato. UriWatch: {_episode.UriWatch}, UriDownloadPage: {_episode.UriDownloadPage}";
+                AppLogger.Instance.Error(
+                    $"Link streaming non trovato Ep.{_episode.NumberLabel} | ApiId: {_episode.EpisodeApiId} | UriWatch: {_episode.UriWatch}",
+                    "Player");
             }
         }
         catch (Exception ex)
         {
             TitleLabel.Text = $"Errore Ep. {_episode.NumberLabel}: {ex.Message} | UriWatch: {_episode.UriWatch} | UriDownloadPage: {_episode.UriDownloadPage}";
+            AppLogger.Instance.Error(
+                $"Caricamento player fallito Ep.{_episode.NumberLabel} | ApiId: {_episode.EpisodeApiId} | UriWatch: {_episode.UriWatch}",
+                ex, "Player");
         }
     }
 
