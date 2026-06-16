@@ -1,8 +1,12 @@
 name: Build and Release
 
+# Si attiva SOLO quando viene pushato un tag di versione (es. v1.10).
+# Niente release automatiche sui push a master, niente nomi con la data:
+# il nome è sempre "AnimeWorldDownloader <tag>".
 on:
   push:
-    branches: [master]
+    tags:
+      - 'v*'
 
 permissions:
   contents: write
@@ -37,38 +41,23 @@ jobs:
             -p:IncludeNativeLibrariesForSelfExtract=true `
             -o ./publish
 
-      - name: Get version
-        id: version
-        run: |
-          $date = Get-Date -Format "yyyy.MM.dd"
-          $sha = "${{ github.sha }}".Substring(0, 7)
-          echo "tag=v$date-$sha" >> $env:GITHUB_OUTPUT
-          echo "name=AnimeWorldDownloader $date" >> $env:GITHUB_OUTPUT
-
       - name: Create zip
-        run: Compress-Archive -Path ./publish/* -DestinationPath ./AnimeWorldDownloader_App.zip
+        run: Compress-Archive -Path ./publish/* -DestinationPath ./AnimeWorldDownloader_${{ github.ref_name }}_win-x64.zip
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.version.outputs.tag }}
-          name: ${{ steps.version.outputs.name }}
+          name: AnimeWorldDownloader ${{ github.ref_name }}
           body: |
-            ## AnimeWorldDownloader
+            ## AnimeWorldDownloader ${{ github.ref_name }}
 
             Eseguibile Windows standalone (non richiede .NET installato).
 
             ### Come usare
-            1. Scarica `AnimeWorldDownloader_App.zip`
+            1. Scarica lo zip allegato
             2. Estrai la cartella
             3. Esegui `AnimeWorldDownloader_App.exe`
-
-            ### Funzionalità
-            - Ricerca anime su AnimeWorld
-            - Streaming episodi con player integrato
-            - Download singolo o multiplo con selezione episodi
-            - Gestione download attivi con annullamento
-            - Cartella di salvataggio configurabile
-          files: ./AnimeWorldDownloader_App.zip
+          files: ./AnimeWorldDownloader_${{ github.ref_name }}_win-x64.zip
           draft: false
           prerelease: false
+          make_latest: true
